@@ -30,6 +30,8 @@
     <link href="muigui.css" rel="stylesheet">
 <body>
 <h1>muigui</h1>
+<h1 style="color: red;">Nothing to see here. NOT READY!</h1>
+
 <p>Nothing to see here...yet?</p>
 <div style="display: flex">
   <div id="ui"></div>
@@ -49,6 +51,7 @@ const s = {
   viscosity: 0.5,
   shoes: 1,
   show: () => { document.querySelector('#result').textContent = JSON.stringify(s, null, 2)},
+  background: '#123456',
 };
 
 const gui = new GUI(document.querySelector('#ui'));
@@ -59,6 +62,7 @@ gui.add(s, 'run');
 gui.add(s, 'animal', ['Cat', 'Bird', 'Dog']);
 gui.add(s, 'viscosity', [['Slow', 0.1], ['Medium', 0.5], ['Fast', 1.0]]);
 gui.add(s, 'shoes', {"Loafers": 0, "Sandals": 1, "Sneakers": 2});
+gui.addColor(s, 'background');
 gui.add(s, 'show');
 </script>
 </html>

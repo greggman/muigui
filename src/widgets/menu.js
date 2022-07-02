@@ -1,4 +1,5 @@
 import { createElem } from '../libs/elem.js';
+import Color from './color.js';
 import { createWidget } from './createWidget.js';
 import Widget from './widget.js';
 
@@ -34,6 +35,11 @@ export default class Menu extends Widget {
   }
   add(object, property, ...args) {
     const widget = createWidget(object, property, ...args);
+    this._widgetsElem.appendChild(widget.elem);
+    return this;
+  }
+  addColor(object, property, ...args) {
+    const widget = new Color(object, property, ...args);
     this._widgetsElem.appendChild(widget.elem);
     return this;
   }

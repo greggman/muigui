@@ -1,6 +1,6 @@
 # muigui
 
-> Nothing to see here...yet?
+> # Nothing to see here. NOT READY!
 
 <img src="./images/muigui.png" style="max-width: 640px">
 
