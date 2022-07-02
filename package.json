@@ -1,0 +1,40 @@
+{
+  "name": "muigui",
+  "version": "0.0.1",
+  "description": "A Simple GUI",
+  "main": "muigui.js",
+  "module": "src/muigui.js",
+  "scripts": {
+    "build": "rollup -c",
+    "eslint": "eslint \"**/*.js\"",
+    "pre-push": "npm run eslint",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/greggman/muigui.git"
+  },
+  "keywords": [
+    "muigui",
+    "gui",
+    "ui"
+  ],
+  "author": "Gregg Tavares",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/greggman/muigui/issues"
+  },
+  "files": [
+    "muigui.js",
+    "src/**/*"
+  ],
+  "homepage": "https://github.com/greggman/muiguiy#readme",
+  "devDependencies": {
+    "eslint": "^7.5.0",
+    "eslint-plugin-html": "^6.0.2",
+    "eslint-plugin-optional-comma-spacing": "0.0.4",
+    "eslint-plugin-require-trailing-comma": "0.0.1",
+    "rollup": "^2.23.0",
+    "rollup-plugin-node-resolve": "^5.2.0"
+  }
+}

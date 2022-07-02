@@ -1,0 +1,17 @@
+.muigui-widget {
+  word-wrap: initial;
+  display: flex;
+  min-width: 0;
+}
+.muigui-root {
+  display: block;
+}
+.muigui-widget>*:nth-child(1) {
+  flex: 0 0 120px;
+}
+.muigui-widget>*:nth-child(2) {
+  flex: 0 0 150px;
+}
+.muigui-widget>*:nth-child(3) {
+  flex: 0 0 100px;
+}

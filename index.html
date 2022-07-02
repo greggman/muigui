@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>muigui</title>
+
+    <meta name="description" content="muigui: A Small Simple JS GUI" />
+    <meta name="keywords" content="javascript gui ui muigui" />
+    <meta name="thumbnail" content="https://greggman.github.io/muigui/images/muigui.png" />
+
+    <meta property="og:title" content="muigui" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://greggman.github.io/muigui/images/muigui.png" />
+    <meta property="og:description" content="muigui: A Small Simple JS GUI" />
+    <meta property="og:url" content="https://greggman.github.io/muigui/">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@greggman">
+    <meta name="twitter:creator" content="@greggman">
+    <meta name="twitter:domain" content="greggman.github.io">
+    <meta name="twitter:title" content="muigui">
+    <meta name="twitter:url" content="https://greggman.github.io/muigui/">
+    <meta name="twitter:description" content="muigui: A Small Simple JS GUI" />
+    <meta name="twitter:image:src" content="https://greggman.github.io/muigui/images/muigui.png">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.0/showdown.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/languages/javascript.min.js"></script>
+    <link href="muigui.css" rel="stylesheet">
+<body>
+<h1>muigui</h1>
+<p>Nothing to see here...yet?</p>
+</body>
+<script type="module">
+import {GUI} from './src/muigui.js';
+
+const s = {
+  speed: 0.5,
+  direction: 45,
+  friction: 0.01,
+};
+
+const gui = new GUI();
+gui.add(s, 'speed', 0, 100, 1);
+gui.add(s, 'direction', 0, 360, 1);
+gui.add(s, 'friction');
+</script>
+</html>
