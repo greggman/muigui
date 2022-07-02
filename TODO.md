@@ -1,0 +1,22 @@
+# To Do
+
+- [ ] Tests
+- [ ] Color RGB, HSL, LAB, Alpha? (just input=color for now?)
+- [ ] Direction? (an arrow, low-pri)
+- [ ] onChange
+- [ ] name
+- [ ] listen
+- [ ] update
+- [ ] disable
+- [ ] remove
+- [ ] hide
+- [ ] styles (form)
+- [ ] deg to rad 
+- [ ] format slider number?
+- [ ] submenus
+- [ ] menu open/close
+- [ ] scroll on long (css)
+- [ ] x, y, z
+- [ ] copy paste all (???)
+- [ ] single line text
+- [ ] popout text (or expand in place?)

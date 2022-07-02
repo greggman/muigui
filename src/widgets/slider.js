@@ -9,12 +9,10 @@ export default class Slider extends Widget {
     const root = this.elem;
     const id = this.id;
 
-    const value = this.getValue();
     this._rangeElem = createElem('input', {
       type: 'range',
       min,
       max,
-      value,
       step,
       id,
       onInput: (e) => {
@@ -25,17 +23,20 @@ export default class Slider extends Widget {
 
     this._textElem = createElem('input', {
       type: 'number',
-      value: value,
       onInput: (e) => {
         this.setValue(parseFloat(this._textElem.value));
       },
     });
     root.appendChild(this._textElem);
+    this.update();
   }
-  setValue(v) {
-    super.setValue(v);
+  update() {
     const newV = super.getValue();
     this._textElem.value = newV;
     this._rangeElem.value = newV;
+  }
+  setValue(v) {
+    super.setValue(v);
+    this.update();
   }
 }
