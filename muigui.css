@@ -30,6 +30,9 @@
   font-size: var(--muigui-font-size);
 }
 
+.muigui-show { /* */ }
+.muigui-hide { display: none !important; }
+
 .muigui-widget {
   word-wrap: initial;
   display: flex;
