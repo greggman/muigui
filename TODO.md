@@ -2,6 +2,13 @@
 
 - [ ] Tests
 - [ ] Color RGB, HSL, LAB, Alpha? (just input=color for now?)
+  - [ ] #RRGGBB
+  - [ ] #RRGGBBAA
+  - [ ] [255, 255, 255],
+  - [ ] [255, 255, 255, 255],
+  - [ ] [1, 1, 1],
+  - [ ] [1, 1, 1, 1],
+- [ ] wrapping slider? (0-360)
 - [ ] Direction? (an arrow, low-pri)
 - [ ] onChange
 - [ ] name

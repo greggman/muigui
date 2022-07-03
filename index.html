@@ -28,14 +28,19 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/languages/javascript.min.js"></script>
     <link href="muigui.css" rel="stylesheet">
+    <style>
+      #ui {
+        columns: 300px;
+      }
+      #ui>div {
+        margin-bottom: 1em;
+      }
+    </style>
 <body>
 <h1>muigui</h1>
 <h1 style="color: red;">Nothing to see here. NOT READY!</h1>
+<div id="ui">
 
-<p>Nothing to see here...yet?</p>
-<div style="display: flex">
-  <div id="ui"></div>
-  <pre id="result"></pre>
 </div>
 <hr>
 </body>
@@ -54,15 +59,21 @@ const s = {
   background: '#123456',
 };
 
-const gui = new GUI(document.querySelector('#ui'));
-gui.add(s, 'speed', 0, 100, 1); 
-gui.add(s, 'direction', 0, 360, 1);
-gui.add(s, 'friction');
-gui.add(s, 'run');
-gui.add(s, 'animal', ['Cat', 'Bird', 'Dog']);
-gui.add(s, 'viscosity', [['Slow', 0.1], ['Medium', 0.5], ['Fast', 1.0]]);
-gui.add(s, 'shoes', {"Loafers": 0, "Sandals": 1, "Sneakers": 2});
-gui.addColor(s, 'background');
-gui.add(s, 'show');
+const uiElem = document.querySelector('#ui');
+
+for (let i = 0; i < 10; ++i) {
+  const div = document.createElement('div');
+  uiElem.appendChild(div);
+  const gui = new GUI(div);
+  gui.add(s, 'speed', 0, 100, 1); 
+  gui.add(s, 'direction', 0, 360, 1);
+  gui.add(s, 'friction');
+  gui.add(s, 'run');
+  gui.add(s, 'animal', ['Cat', 'Bird', 'Dog']);
+  gui.add(s, 'viscosity', [['Slow', 0.1], ['Medium', 0.5], ['Fast', 1.0]]);
+  gui.add(s, 'shoes', {"Loafers": 0, "Sandals": 1, "Sneakers": 2});
+  gui.addColor(s, 'background');
+  gui.add(s, 'show');
+}
 </script>
 </html>

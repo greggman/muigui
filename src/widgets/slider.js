@@ -1,9 +1,9 @@
 import {
   createElem,
 } from '../libs/elem.js';
-import Widget from './widget.js';
+import ValueWidget from './valuewidget.js';
 
-export default class Slider extends Widget {
+export default class Slider extends ValueWidget {
   constructor(object, property, min = 0, max = 1, step = 0.01) {
     super(object, property, 'muigui-slider');
     const root = this.elem;

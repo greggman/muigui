@@ -1,19 +1,16 @@
 import { createElem } from '../libs/elem.js';
 import Color from './color.js';
 import { createWidget } from './createWidget.js';
-import Widget from './widget.js';
+import LabelWidget from './labelwidget.js';
 
 
-// FIX: Menu should not be based on Widget
 // Clicking should only be first child
-export default class Menu extends Widget {
-  constructor(parent, className = 'muigui-menu') {
-    super({}, 'Controls', className);
-    if (!parent) {
-      parent =  document.body;
-    }
+export default class Menu extends LabelWidget {
+  constructor(parent, className = 'muigui-menu', name = 'Controls') {
+    super(className, name);
     parent.appendChild(this.elem);
-    this.elem.addEventListener('click', () => {
+    this._labelElem = this.elem.querySelector('label');
+    this._labelElem.addEventListener('click', () => {
       console.log('click');
 
       this.toggleOpen();

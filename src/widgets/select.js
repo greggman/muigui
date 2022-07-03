@@ -1,7 +1,7 @@
 import {
   createElem,
 } from '../libs/elem.js';
-import Widget from './widget.js';
+import ValueWidget from './valuewidget.js';
 
 // 4 cases
 //   (a) keyValues is array of arrays, each sub array is key value
@@ -28,7 +28,7 @@ function convertToKeyValues(keyValues, valueIsNumber) {
   }
 }
 
-export default class Select extends Widget {
+export default class Select extends ValueWidget {
   constructor(object, property, keyValuesInput) {
     super(object, property, 'muigui-select');
     const root = this.elem;

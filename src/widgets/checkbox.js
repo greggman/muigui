@@ -1,9 +1,9 @@
 import {
   createElem,
 } from '../libs/elem.js';
-import Widget from './widget.js';
+import ValueWidget from './valuewidget.js';
 
-export default class Checkbox extends Widget {
+export default class Checkbox extends ValueWidget {
   constructor(object, property) {
     super(object, property, 'muigui-checkbox');
     const root = this.elem;
@@ -17,7 +17,7 @@ export default class Checkbox extends Widget {
       } 
     });
     this.update();
-    root.appendChild(this._checkboxElem);
+    root.appendChild(createElem('label', {}, [this._checkboxElem]));
   }
   update() {
     const newV = super.getValue();

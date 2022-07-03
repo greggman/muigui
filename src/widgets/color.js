@@ -1,9 +1,9 @@
 import {
   createElem,
 } from '../libs/elem.js';
-import Widget from './widget.js';
+import ValueWidget from './valuewidget.js';
 
-export default class Color extends Widget {
+export default class Color extends ValueWidget {
   constructor(object, property) {
     super(object, property, 'muigui-color');
     const root = this.elem;
