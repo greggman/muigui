@@ -10,16 +10,17 @@
   - [ ] [1, 1, 1, 1],
 - [ ] wrapping slider? (0-360)
 - [ ] Direction? (an arrow, low-pri)
-- [ ] onChange
+- [X] onChange
 - [ ] name
-- [ ] listen
-- [ ] update
+- [X] listen
+- [X] update
 - [ ] disable
 - [ ] remove
 - [ ] hide
 - [ ] styles (form)
 - [ ] deg to rad 
 - [ ] format slider number?
+- [ ] TextArea (edit larger text)
 - [ ] submenus
 - [ ] menu open/close
 - [ ] scroll on long (css)

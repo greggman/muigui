@@ -2,6 +2,7 @@ import Button from './button.js';
 import Checkbox from './checkbox.js';
 import Select from './select.js';
 import Slider from './slider.js';
+import Text from './text.js';
 
 /**
  * possible inputs
@@ -24,7 +25,7 @@ export function createWidget(object, property, ...args) {
   }
 
   const t = typeof object[property];
-  switch (t) {    
+  switch (t) {
     case 'number':
       return new Slider(object, property, ...args);
     case 'boolean':

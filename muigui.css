@@ -1,7 +1,7 @@
 .muigui {
   --muigui-width: 250px;
   --muigui-bg-color: #222;
-  --muigui-color: #eee;
+  --muigui-color: #ddd;
   --muigui-value-color: #43e5f7;
   --muigui-value-bg-color: #444;
 
@@ -21,6 +21,7 @@
 
   --muigui-slider-left-color: #43e5f7;
   --muigui-slider-right-color: #444;
+  --muigui-slider-right-hover-color: var(--muigui-button-hover-bg-color);
 
   width: var(--muigui-width);
   color: var(--muigui-color);
@@ -92,15 +93,25 @@
   overflow: hidden;
 }
 
-select, option,
-.muigui-slider input[type=text],
-.muigui-slider input[type=number] {
+.muigui select,
+.muigui option,
+.muigui input,
+.muigui button {
   color: var(--muigui-value-color);
   background-color: var(--muigui-value-bg-color);
   font-family: var(--muigui-font-family);
   font-size: var(--muigui-font-size);
   border: none;
+  padding: 3px;
 }
+
+.muigui select:hover,
+.muigui option:hover,
+.muigui input:hover,
+.muigui button:hover {
+  background-color: var(--muigui-button-hover-bg-color);  
+}
+
 
 /* ------ [ button ] ------ */
 
@@ -109,10 +120,6 @@ select, option,
   color: var(--muigui-value-color);
   background-color: var(--muigui-button-bg-color);
   cursor: pointer;
-}
-
-.muigui-button button:hover {
-  background-color: var(--muigui-button-hover-bg-color);  
 }
 
 /* ------ [ color ] ------ */
@@ -152,7 +159,16 @@ select, option,
   content: "✔";
 }
 
-/* ------ [ slicer ] ------ */
+.muigui input[type=number]::-webkit-inner-spin-button, 
+.muigui input[type=number]::-webkit-outer-spin-button { 
+  appearance: none; 
+  margin: 0; 
+}
+.muigui input[type=number] {
+  -moz-appearance: textfield;
+}
+
+/* ------ [ slider ] ------ */
 
 /* fix below */
 .muigui-slider input[type=range] {
@@ -161,18 +177,26 @@ select, option,
 }
 
 .muigui-slider input[type=range] {
-  -webkit-appearance: none;
+  appearance: none;
   width: var(--muigui-slider-width);
   background-color: var(--muigui-slider-right-color);
 }
+.muigui-slider input[type=range]:hover {
+  background-color: var(--muigui-slider-right-hover-color);
+}
+
 .muigui-slider input[type=range]::-webkit-slider-runnable-track {
-  -webkit-appearance: none;
+  appearance: none;
   height: var(--muigui-slider-height);
   color: var(--muigui-slider-left-color);
   margin-top: -1px;
 }
+.muigui-slider input[type=range]::-webkit-slider-runnable-track {
+  color: red;
+}
+
 .muigui-slider input[type=range]::-webkit-slider-thumb {
-  -webkit-appearance: none;
+  appearance: none;
   width: 0px;
   height: var(--muigui-slider-height);
   box-shadow: calc(-1 * var(--muigui-slider-width)) 0 0 var(--muigui-slider-width) #43e5f7;
@@ -188,18 +212,4 @@ select, option,
   border: none;
   box-shadow: calc(-1 * var(--muigui-slider-width)) 0 0 var(--muigui-slider-width) #43e5f7;
   box-sizing: border-box;
-}
-
-.muigui-open {
-  transition: transform 1s;
-  transition: opacity 1s;
-  transform: scaleY(1);
-  opacity: 1;
-}
-
-.miugui-close {
-  transition: transform 1s;
-  transition: opacity 1s;
-  transform: scaleY(0);
-  opacity: 0;
 }

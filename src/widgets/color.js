@@ -16,11 +16,21 @@ export default class Color extends ValueWidget {
         this.setValue(this._colorElem.value);
       } 
     });
-    this.update();
     root.appendChild(this._colorElem);
+
+    this._textElem = createElem('input', {
+      type: 'text',
+      pattern: /[a-f0-9]{6}/i,
+      onInput: (e) => {
+        this.setValue(`#${this._textElem.value}`);
+      },
+    });
+    root.appendChild(this._textElem);
+    this.updateDisplay();
   }
-  update() {
+  updateDisplay() {
     const newV = super.getValue();
+    this._textElem.value = newV.substring(1);
     this._colorElem.value = newV;
   }
   setValue(v) {

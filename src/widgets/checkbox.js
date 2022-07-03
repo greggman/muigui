@@ -16,10 +16,10 @@ export default class Checkbox extends ValueWidget {
         this.setValue(this._checkboxElem.checked);
       } 
     });
-    this.update();
+    this.updateDisplay();
     root.appendChild(createElem('label', {}, [this._checkboxElem]));
   }
-  update() {
+  updateDisplay() {
     const newV = super.getValue();
     this._checkboxElem.checked = newV;
   }

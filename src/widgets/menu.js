@@ -11,8 +11,6 @@ export default class Menu extends LabelWidget {
     parent.appendChild(this.elem);
     this._labelElem = this.elem.querySelector('label');
     this._labelElem.addEventListener('click', () => {
-      console.log('click');
-
       this.toggleOpen();
     });
     this._widgetsElem = createElem('div');
@@ -20,7 +18,6 @@ export default class Menu extends LabelWidget {
     this.open();
   }
   open(open = true) {
-    console.log('open:', open);
     this.elem.classList.toggle('muigui-closed', !open);
     this.elem.classList.toggle('muigui-open', open);
   }
@@ -33,11 +30,11 @@ export default class Menu extends LabelWidget {
   add(object, property, ...args) {
     const widget = createWidget(object, property, ...args);
     this._widgetsElem.appendChild(widget.elem);
-    return this;
+    return widget;
   }
   addColor(object, property, ...args) {
     const widget = new Color(object, property, ...args);
     this._widgetsElem.appendChild(widget.elem);
-    return this;
+    return widget;
   }
 }

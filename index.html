@@ -42,6 +42,7 @@
 <div id="ui">
 
 </div>
+<pre id="result"></pre>
 <hr>
 </body>
 <script type="module">
@@ -57,6 +58,7 @@ const s = {
   shoes: 1,
   show: () => { document.querySelector('#result').textContent = JSON.stringify(s, null, 2)},
   background: '#123456',
+  name: 'gman',
 };
 
 const uiElem = document.querySelector('#ui');
@@ -66,14 +68,24 @@ for (let i = 0; i < 10; ++i) {
   uiElem.appendChild(div);
   const gui = new GUI(div);
   gui.add(s, 'speed', 0, 100, 1); 
-  gui.add(s, 'direction', 0, 360, 1);
+  gui.add(s, 'direction', 0, 360, 1).listen();
   gui.add(s, 'friction');
   gui.add(s, 'run');
-  gui.add(s, 'animal', ['Cat', 'Bird', 'Dog']);
+  gui.add(s, 'animal', ['Cat', 'Bird', 'Dog']).listen();
   gui.add(s, 'viscosity', [['Slow', 0.1], ['Medium', 0.5], ['Fast', 1.0]]);
   gui.add(s, 'shoes', {"Loafers": 0, "Sandals": 1, "Sneakers": 2});
-  gui.addColor(s, 'background');
-  gui.add(s, 'show');
+  gui.addColor(s, 'background').listen().onChange((v) => {
+    document.body.style.backgroundColor = v;
+  });
+  gui.add(s, 'show').name('Show Current Values');
+  gui.add(s, 'name').listen();
+}
+
+{
+
+  const div = document.createElement('div');
+  uiElem.appendChild(div);
+
 }
 </script>
 </html>

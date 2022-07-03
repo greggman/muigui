@@ -45,16 +45,16 @@ export default class Select extends ValueWidget {
       this._values.push(value);
       return createElem('option', {textContent: key});
     }));
-    this.update();
+    this.updateDisplay();
     root.appendChild(this._selectElem);
   }
-  update() {
+  updateDisplay() {
     const newV = super.getValue();
     const ndx = this._values.indexOf(newV);
     this._selectElem.selectedIndex = ndx;
   }
   setValue(v) {
     super.setValue(v);
-    this.update();
+    this.updateDisplay();
   }
 }

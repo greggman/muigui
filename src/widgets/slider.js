@@ -28,15 +28,15 @@ export default class Slider extends ValueWidget {
       },
     });
     root.appendChild(this._textElem);
-    this.update();
+    this.updateDisplay();
   }
-  update() {
+  updateDisplay() {
     const newV = super.getValue();
     this._textElem.value = newV;
     this._rangeElem.value = newV;
   }
   setValue(v) {
     super.setValue(v);
-    this.update();
+    this.updateDisplay();
   }
 }
