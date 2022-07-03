@@ -11,7 +11,7 @@
 - [ ] wrapping slider? (0-360)
 - [ ] Direction? (an arrow, low-pri)
 - [X] onChange
-- [ ] name
+- [X] name
 - [X] listen
 - [X] update
 - [ ] disable

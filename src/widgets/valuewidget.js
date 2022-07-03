@@ -1,4 +1,4 @@
-import {addTask, removeTask} from '../libs/poller.js';
+import {addTask, removeTask} from '../libs/taskrunner.js';
 import { removeElem } from '../libs/utils.js';
 import LabelWidget from './labelwidget.js';
 

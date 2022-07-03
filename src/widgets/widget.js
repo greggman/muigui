@@ -12,5 +12,13 @@ export default class Widget {
   get elem() {
     return this._root;
   }
+  show(show = true) {
+    this._root.classList.toggle('muigui-hide', !show);
+    this._root.classList.toggle('muigui-show', show);
+    return this;
+  }
+  hide() {
+    return this.show(false);
+  }
 }
 

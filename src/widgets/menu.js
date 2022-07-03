@@ -20,12 +20,17 @@ export default class Menu extends LabelWidget {
   open(open = true) {
     this.elem.classList.toggle('muigui-closed', !open);
     this.elem.classList.toggle('muigui-open', open);
+    return this;
   }
   close() {
-    this.open(false);
+    return this.open(false);
+  }
+  title(title) {
+    return this.name(title);
   }
   toggleOpen() {
     this.open(!this.elem.classList.contains('muigui-open'));
+    return this;
   }
   add(object, property, ...args) {
     const widget = createWidget(object, property, ...args);
