@@ -63,7 +63,7 @@ const s = {
 
 const uiElem = document.querySelector('#ui');
 
-for (let i = 0; i < 10; ++i) {
+for (let i = 0; i < 3; ++i) {
   const div = document.createElement('div');
   uiElem.appendChild(div);
   const gui = new GUI(div);
@@ -78,7 +78,35 @@ for (let i = 0; i < 10; ++i) {
     document.body.style.backgroundColor = v;
   });
   gui.add(s, 'show').name('Show Current Values');
+  const c = gui.addCanvas('sine wave');
   gui.add(s, 'name').listen();
+
+  function resizeCanvasToDisplaySize(canvas) {
+    const width = canvas.clientWidth;
+    const height = canvas.clientHeight;
+    const needResize = canvas.width !== width || canvas.height !== canvas.height;
+    if (needResize) {
+      canvas.width = width;
+      canvas.height = height;
+    }
+    return needResize;
+  }
+
+  const ctx = c.canvas.getContext('2d');
+  function draw(time) {
+    resizeCanvasToDisplaySize(ctx.canvas);
+    const {width, height} = ctx.canvas;
+    ctx.drawImage(
+        ctx.canvas,
+        1, 0, width - 1, height,
+        0, 0, width - 1, height);
+    ctx.fillStyle = '#000';
+    ctx.fillRect(width - 1, 0, 1, height);
+    ctx.fillStyle = '#0F0';
+    ctx.fillRect(width - 1, height / 2 + Math.sin(time * 0.01) * height / 2, 1, 1);
+    requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
 }
 
 {
@@ -86,6 +114,38 @@ for (let i = 0; i < 10; ++i) {
   const div = document.createElement('div');
   uiElem.appendChild(div);
 
+  const gui = new GUI().name('Appearance');
+
+  function getCSSRuleBySelector(selector) {
+    for (let s = 0; s < document.styleSheets.length; ++s) {
+      const rules = document.styleSheets[s].cssRules;
+      for (let i = 0; i < rules.length; ++i) {
+        const r = rules[i];
+        if (r.selectorText === selector) {
+          return r;
+        }
+      }
+    }
+  }
+
+  const temp = document.createElement('div');
+  const cssStringToHexColor = s => s.length === 7
+     ? s
+     : `#${s[1]}${s[1]}${s[2]}${s[2]}${s[3]}${s[3]}`;
+
+  const rule = getCSSRuleBySelector('.muigui');
+  const varNames = Object.values(rule.style).filter(s => s.startsWith('--'));
+  const obj = {};
+  for (const key of varNames) {
+    const value = rule.style.getPropertyValue(key).trim();
+    if (value.startsWith('#')) {
+      obj[key] = cssStringToHexColor(value);
+      gui.addColor(obj, key).onChange(v => rule.style.setProperty(key, v));
+    } else {
+      obj[key] = value;
+      gui.add(obj, key).onChange(v => rule.style.setProperty(key, v));
+    }
+  }
 }
 </script>
 </html>

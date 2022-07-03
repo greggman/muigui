@@ -23,6 +23,8 @@
   --muigui-slider-right-color: #444;
   --muigui-slider-right-hover-color: var(--muigui-button-hover-bg-color);
 
+  --muimui-canvas-color: #000;
+
   width: var(--muigui-width);
   color: var(--muigui-color);
   background-color: var(--muigui-bg-color);
@@ -32,6 +34,11 @@
 
 .muigui-show { /* */ }
 .muigui-hide { display: none !important; }
+
+.muigui canvas {
+  display: block;
+  background-color: var(--muimui-canvas-color);
+}
 
 .muigui-widget {
   word-wrap: initial;

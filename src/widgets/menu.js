@@ -1,4 +1,5 @@
 import { createElem } from '../libs/elem.js';
+import Canvas from './canvas.js';
 import Color from './color.js';
 import { createWidget } from './createWidget.js';
 import LabelWidget from './labelwidget.js';
@@ -8,7 +9,7 @@ import LabelWidget from './labelwidget.js';
 export default class Menu extends LabelWidget {
   constructor(parent, className = 'muigui-menu', name = 'Controls') {
     super(className, name);
-    parent.appendChild(this.elem);
+    parent.appendChild(this.elem);  // remove this!
     this._labelElem = this.elem.querySelector('label');
     this._labelElem.addEventListener('click', () => {
       this.toggleOpen();
@@ -39,6 +40,11 @@ export default class Menu extends LabelWidget {
   }
   addColor(object, property, ...args) {
     const widget = new Color(object, property, ...args);
+    this._widgetsElem.appendChild(widget.elem);
+    return widget;
+  }
+  addCanvas(name) {
+    const widget = new Canvas(name);
     this._widgetsElem.appendChild(widget.elem);
     return widget;
   }

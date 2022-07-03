@@ -16,7 +16,7 @@
 - [X] update
 - [ ] disable
 - [ ] remove
-- [ ] hide
+- [X] hide
 - [ ] styles (form)
 - [ ] deg to rad 
 - [ ] format slider number?
