@@ -1,5 +1,4 @@
 import { createElem } from '../libs/elem.js';
-import { makeId } from '../libs/ids.js';
 
 export default class Widget {
   constructor(className) {

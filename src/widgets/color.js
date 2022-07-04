@@ -9,14 +9,14 @@ export default class Color extends ValueWidget {
     const root = this.elem;
     const id = this.id;
 
-    this._colorElem =  createElem('input', {
+    this._colorElem = createElem('input', {
       type: 'color',
       id,
       onInput: (e) => {
         this.setValue(this._colorElem.value);
       } 
     });
-    root.appendChild(this._colorElem);
+    root.appendChild(createElem('div', {}, [this._colorElem]));
 
     this._textElem = createElem('input', {
       type: 'text',

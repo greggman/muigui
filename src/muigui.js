@@ -3,7 +3,8 @@ import Menu from './widgets/menu.js';
 
 export class GUI extends Menu {
   constructor(parent) {
-    super(parent ? parent : document.body);
+    super('Controls', 'muigui-root');
+    (parent ? parent : document.body).appendChild(this.elem);
     this.elem.classList.add('muigui');
   }
 }

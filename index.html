@@ -29,24 +29,52 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/languages/javascript.min.js"></script>
     <link href="muigui.css" rel="stylesheet">
     <style>
+      #ui-helper {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, 250px); /* as as column width */
+        gap: 10px; /* same as column gap */
+      }
       #ui {
-        columns: 300px;
+        columns: 250px;
+        column-gap: 10px;
+        grid-column: 1 / -1; /* take all the columns of the grid*/
       }
       #ui>div {
+        break-inside: avoid-column;
         margin-bottom: 1em;
-      }
+        display: inline-block;
+      }      
+    </style>
+    <style id="media-query">
     </style>
 <body>
+
+
+
+
+
+
 <h1>muigui</h1>
 <h1 style="color: red;">Nothing to see here. NOT READY!</h1>
-<div id="ui">
-
+<div id="ui-helper">
+  <div id="ui"></div>
 </div>
 <pre id="result"></pre>
-<hr>
 </body>
 <script type="module">
 import {GUI} from './src/muigui.js';
+
+function getCSSRuleBySelector(selector) {
+  for (let s = 0; s < document.styleSheets.length; ++s) {
+    const rules = document.styleSheets[s].cssRules;
+    for (let i = 0; i < rules.length; ++i) {
+      const r = rules[i];
+      if (r.selectorText === selector) {
+        return r;
+      }
+    }
+  }
+}
 
 const s = {
   speed: 0.5,
@@ -59,11 +87,12 @@ const s = {
   show: () => { document.querySelector('#result').textContent = JSON.stringify(s, null, 2)},
   background: '#123456',
   name: 'gman',
+  propertyWithLongName: 0,
 };
 
 const uiElem = document.querySelector('#ui');
 
-for (let i = 0; i < 3; ++i) {
+for (let i = 0; i < 5; ++i) {
   const div = document.createElement('div');
   uiElem.appendChild(div);
   const gui = new GUI(div);
@@ -78,8 +107,11 @@ for (let i = 0; i < 3; ++i) {
     document.body.style.backgroundColor = v;
   });
   gui.add(s, 'show').name('Show Current Values');
-  const c = gui.addCanvas('sine wave');
-  gui.add(s, 'name').listen();
+
+  const f = gui.addFolder('Submenu');
+  const c = f.addCanvas('sine wave');
+  f.add(s, 'name').listen();
+  f.add(s, 'propertyWithLongName', ['longNamedEnumThatWillPushSizeTooFar']);
 
   function resizeCanvasToDisplaySize(canvas) {
     const width = canvas.clientWidth;
@@ -96,14 +128,15 @@ for (let i = 0; i < 3; ++i) {
   function draw(time) {
     resizeCanvasToDisplaySize(ctx.canvas);
     const {width, height} = ctx.canvas;
+    ctx.globalCompositeOperation = 'copy';
     ctx.drawImage(
         ctx.canvas,
         1, 0, width - 1, height,
         0, 0, width - 1, height);
-    ctx.fillStyle = '#000';
-    ctx.fillRect(width - 1, 0, 1, height);
+    ctx.clearRect(width - 1, 0, 1, height);
+    ctx.globalCompositeOperation = 'source-over';
     ctx.fillStyle = '#0F0';
-    ctx.fillRect(width - 1, height / 2 + Math.sin(time * 0.01) * height / 2, 1, 1);
+    ctx.fillRect(width - 1, height / 2 + Math.sin(time * 0.01) * (height - 1) / 2, 1, 1);
     requestAnimationFrame(draw);
   }
   requestAnimationFrame(draw);
@@ -114,24 +147,35 @@ for (let i = 0; i < 3; ++i) {
   const div = document.createElement('div');
   uiElem.appendChild(div);
 
-  const gui = new GUI().name('Appearance');
-
-  function getCSSRuleBySelector(selector) {
-    for (let s = 0; s < document.styleSheets.length; ++s) {
-      const rules = document.styleSheets[s].cssRules;
-      for (let i = 0; i < rules.length; ++i) {
-        const r = rules[i];
-        if (r.selectorText === selector) {
-          return r;
-        }
-      }
-    }
-  }
+  const gui = new GUI(div).name('Appearance');
 
   const temp = document.createElement('div');
   const cssStringToHexColor = s => s.length === 7
      ? s
      : `#${s[1]}${s[1]}${s[2]}${s[2]}${s[3]}${s[3]}`;
+
+  const mediaQueryElem = document.createElement('style');
+  document.head.appendChild(mediaQueryElem);
+  const fixColumnMediaQueries = (width) => {
+    width = parseInt(width); // should do other CSS?
+    if (Number.isNaN(width) || width <= 0) {
+      return;
+    }
+    const lines = [];
+    for (let w = 0; w < 6000; w += width) {
+//      lines.push(`@media (max-width: ${w + width * 2 - 1}px ) { #ui { width: ${w + width}px; }`);
+      lines.push(`@media (max-width: ${w + width * 2 - 1}px ) { #ui { column-count: ${w / width + 1}; }`);
+    }
+    mediaQueryElem.textContent = lines.reverse().join('\n');
+    //uiElem.style.columns = `${width}px`;
+  };
+  
+
+  const fns = {
+    '--width': (v) => {
+      //fixColumnMediaQueries(v);
+    }
+  };
 
   const rule = getCSSRuleBySelector('.muigui');
   const varNames = Object.values(rule.style).filter(s => s.startsWith('--'));
@@ -143,7 +187,12 @@ for (let i = 0; i < 3; ++i) {
       gui.addColor(obj, key).onChange(v => rule.style.setProperty(key, v));
     } else {
       obj[key] = value;
-      gui.add(obj, key).onChange(v => rule.style.setProperty(key, v));
+      const widget = gui.add(obj, key).onChange(v => rule.style.setProperty(key, v));
+      const fn = fns[key];
+      if (fn) {
+        widget.onChange(fn);
+        fn(value);
+      }
     }
   }
 }

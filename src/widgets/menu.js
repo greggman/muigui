@@ -7,9 +7,8 @@ import LabelWidget from './labelwidget.js';
 
 // Clicking should only be first child
 export default class Menu extends LabelWidget {
-  constructor(parent, className = 'muigui-menu', name = 'Controls') {
+  constructor(name = 'Controls', className = 'muigui-menu') {
     super(className, name);
-    parent.appendChild(this.elem);  // remove this!
     this._labelElem = this.elem.querySelector('label');
     this._labelElem.addEventListener('click', () => {
       this.toggleOpen();
@@ -40,6 +39,11 @@ export default class Menu extends LabelWidget {
   }
   addColor(object, property, ...args) {
     const widget = new Color(object, property, ...args);
+    this._widgetsElem.appendChild(widget.elem);
+    return widget;
+  }
+  addFolder(name) {
+    const widget = new Menu(name);
     this._widgetsElem.appendChild(widget.elem);
     return widget;
   }
