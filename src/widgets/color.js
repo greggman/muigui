@@ -6,7 +6,7 @@ import ValueWidget from './valuewidget.js';
 export default class Color extends ValueWidget {
   constructor(object, property) {
     super(object, property, 'muigui-color');
-    const root = this.elem;
+    const root = this.domElement;
     const id = this.id;
 
     this._colorElem = createElem('input', {

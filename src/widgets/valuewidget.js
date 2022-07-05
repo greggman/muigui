@@ -7,6 +7,7 @@ export default class ValueWidget extends LabelWidget {
     super(className, property);
     this._object = object;
     this._property = property;
+    this._initialValue = this.getValue();
     this._changeFns = [];
     this._listening = false;
   }
@@ -17,7 +18,12 @@ export default class ValueWidget extends LabelWidget {
     this._object[this._property] = v;
     const newV = this.getValue(v);
     for (const fn of this._changeFns) {
-      fn(newV);
+      fn({
+        object: this._object,
+        property: this._property,
+        value: newV,
+        controller: this,
+      });
     }
   }
   getValue(v) {
@@ -25,6 +31,10 @@ export default class ValueWidget extends LabelWidget {
   }
   value(v) {
     this.setValue(v);
+    return this;
+  }
+  reset() {
+    this.setValue(this._initialValue);
     return this;
   }
   onChange(fn) {

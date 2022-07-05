@@ -1,12 +1,12 @@
 import {
   createElem,
 } from '../libs/elem.js';
-import Widget from './widget.js';
+import Controller from './controller.js';
 
-export default class Button extends Widget {
+export default class Button extends Controller {
   constructor(object, property) {
     super('muigui-button', '');
-    const root = this.elem;
+    const root = this.domElement;
     this._object = object;
     this._property = property;
 

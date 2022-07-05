@@ -1,13 +1,13 @@
 import { createElem } from '../libs/elem.js';
 import { makeId } from '../libs/ids.js';
-import Widget from './widget.js';
+import Controller from './controller.js';
 
-export default class LabelWidget extends Widget {
+export default class LabelWidget extends Controller {
   constructor(className = '', name = '') {
     super(className)
     this._id = makeId();
     this._nameElem = createElem('label', {textContent: name, for: this._id});
-    this.elem.appendChild(this._nameElem);    
+    this.domElement.appendChild(this._nameElem);    
   }
   get id() {
     return this._id;

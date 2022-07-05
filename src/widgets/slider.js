@@ -6,7 +6,7 @@ import ValueWidget from './valuewidget.js';
 export default class Slider extends ValueWidget {
   constructor(object, property, min = 0, max = 1, step = 0.01) {
     super(object, property, 'muigui-slider');
-    const root = this.elem;
+    const root = this.domElement;
     const id = this.id;
 
     this._rangeElem = createElem('input', {

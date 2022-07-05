@@ -18,6 +18,7 @@ export default [
         file: 'dist/0.x/muigui.js',
         indent: '  ',
         banner,
+        name: 'GUI',
       },
     ],
   },

@@ -1,6 +1,6 @@
 import { createElem } from '../libs/elem.js';
 
-export default class Widget {
+export default class Controller {
   constructor(className) {
     this._root = createElem('div', {className: `muigui-widget`});
     // we need the specialization to come last so it takes precedence.
@@ -8,7 +8,7 @@ export default class Widget {
       this._root.classList.add(className);
     }
   }
-  get elem() {
+  get domElement() {
     return this._root;
   }
   show(show = true) {

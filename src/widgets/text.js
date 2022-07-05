@@ -6,7 +6,7 @@ import ValueWidget from './valuewidget.js';
 export default class Text extends ValueWidget {
   constructor(object, property) {
     super(object, property, 'muigui-checkbox');
-    const root = this.elem;
+    const root = this.domElement;
     const id = this.id;
 
     this._textElem =  createElem('input', {

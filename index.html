@@ -90,6 +90,9 @@ const s = {
   propertyWithLongName: 0,
 };
 
+
+
+
 const uiElem = document.querySelector('#ui');
 
 for (let i = 0; i < 5; ++i) {
@@ -103,8 +106,8 @@ for (let i = 0; i < 5; ++i) {
   gui.add(s, 'animal', ['Cat', 'Bird', 'Dog']).listen();
   gui.add(s, 'viscosity', [['Slow', 0.1], ['Medium', 0.5], ['Fast', 1.0]]);
   gui.add(s, 'shoes', {"Loafers": 0, "Sandals": 1, "Sneakers": 2});
-  gui.addColor(s, 'background').listen().onChange((v) => {
-    document.body.style.backgroundColor = v;
+  gui.addColor(s, 'background').listen().onChange((e) => {
+    document.body.style.backgroundColor = e.value;
   });
   gui.add(s, 'show').name('Show Current Values');
 
@@ -170,13 +173,6 @@ for (let i = 0; i < 5; ++i) {
     //uiElem.style.columns = `${width}px`;
   };
   
-
-  const fns = {
-    '--width': (v) => {
-      //fixColumnMediaQueries(v);
-    }
-  };
-
   const rule = getCSSRuleBySelector('.muigui');
   const varNames = Object.values(rule.style).filter(s => s.startsWith('--'));
   const obj = {};
@@ -187,12 +183,7 @@ for (let i = 0; i < 5; ++i) {
       gui.addColor(obj, key).onChange(v => rule.style.setProperty(key, v));
     } else {
       obj[key] = value;
-      const widget = gui.add(obj, key).onChange(v => rule.style.setProperty(key, v));
-      const fn = fns[key];
-      if (fn) {
-        widget.onChange(fn);
-        fn(value);
-      }
+      gui.add(obj, key).onChange(e => rule.style.setProperty(key, e.value));
     }
   }
 }
