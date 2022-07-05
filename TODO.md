@@ -39,6 +39,7 @@
 - [ ] splitter
 - [ ] popout text (or expand in place?)
 - [ ] functions to query colors
+- [ ] maybe just add color-scheme to CSS
 - [ ] add all
   - [ ] add with filter? (pass in filter so you can make positive or negative)
   - [ ] add with list of fields?
@@ -47,13 +48,16 @@
   - [ ] match by instanceof ?
   - [ ] let user provide matcher?
 - [ ] look into add without object. eg
+    ```
+    gui.addButton('title', fn);
+    ```
 - [x] add hover for long name
 - [ ] try making custom controllers. In particular a list editor like unity
 - [ ] fix "RGB"
 - [ ] fix first column when changing width
 - [ ] do autoplace test
-- [ ] auto step
-- [ ] fix can't enter trailing '.' on input number (FF only?) (maybe don't set text when value from text)
+- [x] auto step (not going to do this for now)
+- [x] fix can't enter trailing '.' on input number (FF only?) (maybe don't set text when value from text)
 - [ ] consider more explicit layout
   - [ ] (1 part, 2 parts, 3 parts) or (1 part, 2 parts where 3 is [[1][2[1][2]]])
   

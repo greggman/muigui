@@ -96,7 +96,7 @@ const formatConverters = {
 export default class Color extends ValueController {
   constructor(object, property, format) {
     super(object, property, 'muigui-color');
-    const root = this.domElement;
+    const root = this.contentElement;
     const id = this.id;
 
     format = format || guessFormat(this.getValue());

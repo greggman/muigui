@@ -8,7 +8,7 @@ const identity = {from: v => v, to: v => v};
 export default class Slider extends ValueController {
   constructor(object, property, min = 0, max = 1, step = 0.01, conversion = identity) {
     super(object, property, 'muigui-slider');
-    const root = this.domElement;
+    const root = this.contentElement;
     const id = this.id;
 
     this._rangeElem = createElem('input', {

@@ -102,12 +102,22 @@ const css = `
   display: inline-grid;
 }
 .muigui-controller>*:nth-child(2) {
-  flex: 1 1 55%;
+  flex: 1 1 75%;
   min-width: 0;
 }
-.muigui-controller>*:nth-child(3) {
-  flex: 0 0 20%;
+.muigui-value {
+  display: flex;
+  align-items: stretch;
+}
+.muigui-value>* {
+  flex: 1 1 auto;
   min-width: 0;
+}
+.muigui-value>*:nth-child(1) {
+  flex: 1 1 60%;
+}
+.muigui-value>*:nth-child(2) {
+  flex: 1 1 40%;
   margin-left: 0.2em;
 }
 

@@ -6,7 +6,7 @@ import ValueController from './value-controller.js';
 export default class Checkbox extends ValueController {
   constructor(object, property) {
     super(object, property, 'muigui-checkbox');
-    const root = this.domElement;
+    const root = this.contentElement;
     const id = this.id;
 
     this._checkboxElem =  createElem('input', {

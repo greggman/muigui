@@ -7,11 +7,16 @@ export default class LabelController extends Controller {
     super(className)
     this._id = makeId();
     this._nameElem = createElem('label', {for: this._id});
+    this._contentElem = createElem('div', {className: 'muigui-value'});
     this.domElement.appendChild(this._nameElem);
+    this.domElement.appendChild(this._contentElem);
     this.name(name);
   }
   get id() {
     return this._id;
+  }
+  get contentElement() {
+    return this._contentElem;
   }
   name(name) {
     this._nameElem.textContent = name;

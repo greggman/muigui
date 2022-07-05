@@ -31,7 +31,7 @@ function convertToKeyValues(keyValues, valueIsNumber) {
 export default class Select extends ValueController {
   constructor(object, property, keyValuesInput) {
     super(object, property, 'muigui-select');
-    const root = this.domElement;
+    const root = this.contentElement;
 
     const valueIsNumber = typeof this.getValue() === 'number';
     const keyValues = convertToKeyValues(keyValuesInput, valueIsNumber);

@@ -6,7 +6,7 @@ import LabelController from './label-controller.js';
 export default class Canvas extends LabelController {
   constructor(name) {
     super('muigui-canvas', name);
-    const root = this.domElement;
+    const root = this.contentElement;
 
     this._canvasElem =  createElem('canvas', {
       onMouseDown: (e) => {

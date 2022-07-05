@@ -238,7 +238,6 @@ const uiElem = document.querySelector('#ui');
   gui.add(s, 'tempF', 0, 100, 0.1, {from: fToC, to: cToF})
       .name('F° ↔ C°')
       .onChange(v => log(`${v}F°`));
-
 }
 
 {
@@ -258,7 +257,7 @@ const uiElem = document.querySelector('#ui');
   gui.add({String: 'foo'}, 'String').onChange(change).onFinishChange(finishChange);
   gui.add({Boolean: true}, 'Boolean').onChange(change).onFinishChange(finishChange);
   gui.add({Slider: 0}, 'Slider', 0, 1).onChange(change).onFinishChange(finishChange);
-  gui.add({Select: 'a'}, 'Select', ['apple', 'banana', 'pear']).onChange(change).onFinishChange(finishChange);
+  gui.add({Select: 'pear'}, 'Select', ['apple', 'banana', 'pear']).onChange(change).onFinishChange(finishChange);
   gui.addColor({Color: '#FEDCBA'}, 'Color').onChange(change).onFinishChange(finishChange);
   gui.add({func() {}}, 'func').onChange(change).onFinishChange(finishChange);
 }
