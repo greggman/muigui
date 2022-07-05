@@ -1,7 +1,5 @@
 # muigui
 
-> # Nothing to see here. NOT READY!
-
 <img src="./images/muigui.png" style="max-width: 640px">
 
 A simple Web UI library.

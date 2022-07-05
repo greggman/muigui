@@ -30,3 +30,15 @@
 - [ ] splitter
 - [ ] popout text (or expand in place?)
 - [ ] functions to query colors
+- [ ] add all
+- [ ] look into add without object. eg
+- [ ] add hover for long name
+- [ ] try making custom controllers. In particular a list editor like unity
+  
+  ```
+  gui.addButton(title, fn);
+  gui.addSlider(title, get, set, min, max, step);
+  gui.addText(title, get, set)
+  gui.addCheckbox(title, get, set);
+  gui.addColor(title, get, set, format)
+  ```

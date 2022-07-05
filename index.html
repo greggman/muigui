@@ -27,8 +27,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.0/showdown.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/languages/javascript.min.js"></script>
-    <link href="muigui.css" rel="stylesheet">
     <style>
+      body {
+        font-size: sans-serif;
+      }
       #ui-helper {
         display: grid;
         grid-template-columns: repeat(auto-fit, 250px); /* as as column width */
@@ -49,13 +51,7 @@
     </style>
 <body>
 
-
-
-
-
-
 <h1>muigui</h1>
-<h1 style="color: red;">Nothing to see here. NOT READY!</h1>
 <div id="ui-helper">
   <div id="ui"></div>
 </div>
@@ -72,97 +68,102 @@
 import {GUI} from './src/muigui.js';
 import {cube} from './examples/js/cube.js';
 
-function getCSSRuleBySelector(selector) {
+function getCSSRulesBySelector(selector) {
+  const rules = [];
   for (let s = 0; s < document.styleSheets.length; ++s) {
-    const rules = document.styleSheets[s].cssRules;
-    for (let i = 0; i < rules.length; ++i) {
-      const r = rules[i];
+    const cssRules = document.styleSheets[s].cssRules;
+    for (let i = 0; i < cssRules.length; ++i) {
+      const r = cssRules[i];
       if (r.selectorText === selector) {
-        return r;
+        rules.push(r);
       }
     }
   }
+  return rules;
 }
-
-const s = {
-  speed: 0.5,
-  direction: 45,
-  friction: 0.01,
-  run: true,
-  animal: 'Bird',
-  viscosity: 0.5,
-  shoes: 1,
-  show: () => { document.querySelector('#result').textContent = JSON.stringify(s, null, 2)},
-  background: '#123456',
-  name: 'gman',
-  hobby: 'coding',
-  propertyWithLongName: 0,
-};
 
 const uiElem = document.querySelector('#ui');
 
-for (let i = 0; i < 0; ++i) {
-  const div = document.createElement('div');
-  uiElem.appendChild(div);
-  const gui = new GUI(div);
-  gui.add(s, 'speed', 0, 100, 1); 
-  gui.add(s, 'direction', 0, 360, 1).listen();
-  gui.add(s, 'friction');
-  gui.add(s, 'run');
-  gui.add(s, 'animal', ['Cat', 'Bird', 'Dog']).listen();
-  gui.add(s, 'viscosity', [['Slow', 0.1], ['Medium', 0.5], ['Fast', 1.0]]);
-  gui.add(s, 'shoes', {"Loafers": 0, "Sandals": 1, "Sneakers": 2});
-  gui.addColor(s, 'background').listen().onChange((e) => {
-    document.body.style.backgroundColor = e.value;
-  });
-  gui.add(s, 'show').name('Show Current Values');
+{
+  const s = {
+    speed: 0.5,
+    direction: 45,
+    friction: 0.01,
+    run: true,
+    animal: 'Bird',
+    viscosity: 0.5,
+    shoes: 1,
+    show: () => { document.querySelector('#result').textContent = JSON.stringify(s, null, 2)},
+    background: '#123456',
+    name: 'gman',
+    hobby: 'coding',
+    propertyWithLongName: 0,
+  };
 
-  if (i === 3) {
-    gui.disable();
-    if (false) {
-      const g = gui;
-      setTimeout(() => {
-        g.enable();
-      }, 3000);
+  for (let i = 0; i < 3; ++i) {
+    const div = document.createElement('div');
+    uiElem.appendChild(div);
+    const gui = new GUI(div);
+    gui.add(s, 'speed', 0, 100, 1); 
+    gui.add(s, 'direction', 0, 360, 1).listen();
+    gui.add(s, 'friction');
+    gui.add(s, 'run');
+    gui.add(s, 'animal', ['Cat', 'Bird', 'Dog']).listen();
+    gui.add(s, 'viscosity', [['Slow', 0.1], ['Medium', 0.5], ['Fast', 1.0]]);
+    gui.add(s, 'shoes', {"Loafers": 0, "Sandals": 1, "Sneakers": 2});
+    gui.addColor(s, 'background').listen().onChange((e) => {
+      document.body.style.backgroundColor = e.value;
+    });
+    gui.add(s, 'show').name('Show Current Values');
+
+    if (i === 2) {
+      gui.name('Disabled');
+      gui.disable();
+      if (false) {
+        const g = gui;
+        setTimeout(() => {
+          g.enable();
+        }, 3000);
+      }
     }
-  }
 
-  const f = gui.addFolder('Submenu');
-  const c = f.addCanvas('sine wave');
-  f.add(s, 'name').listen();  
-  f.add(s, 'hobby').onFinishChange(e => console.log(new Date, e.value));
-  f.add(s, 'propertyWithLongName', ['longNamedEnumThatWillPushSizeTooFar']);
+    const f = gui.addFolder('Submenu');
+    const c = f.addCanvas('sine wave');
+    f.add(s, 'name').listen();  
+    f.add(s, 'hobby').onFinishChange(e => console.log(new Date, e.value));
+    f.add(s, 'propertyWithLongName', ['longNamedEnumThatWillPushSizeTooFar']);
 
-  function resizeCanvasToDisplaySize(canvas) {
-    const width = canvas.clientWidth;
-    const height = canvas.clientHeight;
-    const needResize = canvas.width !== width || canvas.height !== canvas.height;
-    if (needResize) {
-      canvas.width = width;
-      canvas.height = height;
+    function resizeCanvasToDisplaySize(canvas) {
+      const width = canvas.clientWidth;
+      const height = canvas.clientHeight;
+      const needResize = canvas.width !== width || canvas.height !== canvas.height;
+      if (needResize) {
+        canvas.width = width;
+        canvas.height = height;
+      }
+      return needResize;
     }
-    return needResize;
-  }
 
-  const ctx = c.canvas.getContext('2d');
-  function draw(time) {
-    resizeCanvasToDisplaySize(ctx.canvas);
-    const {width, height} = ctx.canvas;
-    ctx.globalCompositeOperation = 'copy';
-    ctx.drawImage(
-        ctx.canvas,
-        1, 0, width - 1, height,
-        0, 0, width - 1, height);
-    ctx.clearRect(width - 1, 0, 1, height);
-    ctx.globalCompositeOperation = 'source-over';
-    ctx.fillStyle = '#0F0';
-    ctx.fillRect(width - 1, height / 2 + Math.sin(time * 0.01) * (height - 1) / 2, 1, 1);
+    const ctx = c.canvas.getContext('2d');
+    function draw(time) {
+      resizeCanvasToDisplaySize(ctx.canvas);
+      const {width, height} = ctx.canvas;
+      ctx.globalCompositeOperation = 'copy';
+      ctx.drawImage(
+          ctx.canvas,
+          1, 0, width - 1, height,
+          0, 0, width - 1, height);
+      ctx.clearRect(width - 1, 0, 1, height);
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.fillStyle = '#0F0';
+      ctx.fillRect(width - 1, height / 2 + Math.sin(time * 0.01) * (height - 1) / 2, 1, 1);
+      requestAnimationFrame(draw);
+    }
     requestAnimationFrame(draw);
   }
-  requestAnimationFrame(draw);
 }
 
-if (false) {
+{
   const div = document.createElement('div');
   uiElem.appendChild(div);
   const gui = new GUI(div);
@@ -175,14 +176,13 @@ if (false) {
   folder.add(changes, 'onChange').disable().listen();
   folder.add(changes, 'onFinishChange').disable().listen();
 
-  gui.add({Number: 0 }, 'Number' ).onChange(change).onFinishChange(finishChange);
-  gui.add({String: 'foo' }, 'String' ).onChange(change).onFinishChange(finishChange);
-  gui.add({Boolean: true }, 'Boolean' ).onChange(change).onFinishChange(finishChange);
-  gui.add({Slider: 0 }, 'Slider', 0, 1 ).onChange(change).onFinishChange(finishChange);
-  gui.add({Select: 'a' }, 'Select', ['apple', 'banana', 'pear'] ).onChange(change).onFinishChange(finishChange);
-  gui.add({func() {}}, 'func' ).onChange(change).onFinishChange(finishChange);
-  gui.addColor({Color: '#aa00ff' }, 'Color').onChange(change).onFinishChange(finishChange);
-
+  gui.add({Number: 0}, 'Number').onChange(change).onFinishChange(finishChange);
+  gui.add({String: 'foo'}, 'String').onChange(change).onFinishChange(finishChange);
+  gui.add({Boolean: true}, 'Boolean').onChange(change).onFinishChange(finishChange);
+  gui.add({Slider: 0}, 'Slider', 0, 1).onChange(change).onFinishChange(finishChange);
+  gui.add({Select: 'a'}, 'Select', ['apple', 'banana', 'pear']).onChange(change).onFinishChange(finishChange);
+  gui.addColor({Color: '#FEDCBA'}, 'Color').onChange(change).onFinishChange(finishChange);
+  gui.add({func() {}}, 'func').onChange(change).onFinishChange(finishChange);
 }
 
 {
@@ -191,36 +191,63 @@ if (false) {
   const gui = new GUI(div).name('Colors');
 
   const c = {
- //   '"#RRGGBB"': '#569AEF',
- //   '"RRGGBB"': '#569AEF',
+    '"#RRGGBB"': '#569AEF',
+    '"RRGGBB"': '#569AEF',
     '"#RGB"': '#F88',
- //   '"RGB"': '8F8',
-//    '"rgb(r, g, b)"': 'rgb(170,68,240)',
-//    '0xRRGGBB': 0xFEA956,
-//    '[u8, u8, u8]': [255, 192, 255],
-//    '[r, g, b]': [0, 1, 0],
-//    '{r, g, b}': {r:0, g:0, b:1},
+    '"RGB"': '8F8',
+    '"rgb(r, g, b)"': 'rgb(170,68,240)',
+    '0xRRGGBB': 0xFEA956,
+    '[r(u8), b(u8), c(u8)]': [255, 192, 255],
+    '[r(f), g(f), b(f)]': [0, 1, 0],
+    '{r, g, b}': {r:0, g:0, b:1},
   };
   for (const k of Object.keys(c)) {
     gui.addColor(c, k);
   }
 }
 
-/*
 {
   const div = document.createElement('div');
   uiElem.appendChild(div);
   const gui = new GUI(div).name('Material');
 
-  const s = cube(gui.addCanvas('three.js').canvas);
-  gui.addColor(s.material, 'diffuse');
-  gui.addColor(s.light, 'color');
+  const s = cube(gui.addCanvas('canvas').canvas);
+  gui.addColor(s.material, 'color').name('material color');
+  gui.add(s.material, 'shininess', 0, 300);
+  gui.addColor(s.light, 'color').name('light color');
   gui.add(s.light, 'intensity', 0, 5, 0.01);
-  gui.add(s.camera, fov, 1, 179);
+  gui.add(s.camera, 'fov', 1, 179).name('field of view');
 }
-*/
 
-if (false) {
+{
+  const div = document.createElement('div');
+  uiElem.appendChild(div);
+  const gui = new GUI({parent: div, title: 'Add/Remove'});
+  const rows = [];
+
+  function addRow() {
+    const name = rows.length + 1;
+    const obj = {};
+    obj[name] = Math.random() * 10;
+    rows.push(gui.add(obj, name, 0, 10));
+  }
+  
+  function delRow() {
+    const row = rows.pop();
+    if (row) {
+      gui.remove(row);
+    }
+  }
+
+
+  gui.add({Add: addRow}, 'Add');
+  gui.add({Del: delRow}, 'Del');
+  addRow();
+  addRow();
+  addRow();
+}
+
+{
   const themeElem = document.createElement('style');
   document.head.appendChild(themeElem);
 
@@ -270,10 +297,11 @@ if (false) {
   const gui = new GUI(div).name('Theme');
   gui.add({theme: 'default'}, 'theme', [...Object.keys(themes)]).onChange(v => {
     themeElem.innerText = themes[v];
+    updateAppearance();
   });
 }
 
-if (false) {
+const updateAppearance = function() {
 
   const div = document.createElement('div');
   uiElem.appendChild(div);
@@ -301,7 +329,7 @@ if (false) {
     //uiElem.style.columns = `${width}px`;
   };
   
-  const rule = getCSSRuleBySelector('.muigui');
+  const rule = getCSSRulesBySelector('.muigui')[0];  // assuming the first one
   const varNames = Object.values(rule.style).filter(s => s.startsWith('--'));
   const obj = {};
   for (const key of varNames) {
@@ -309,11 +337,27 @@ if (false) {
     if (value.startsWith('#')) {
       obj[key] = cssStringToHexColor(value);
       gui.addColor(obj, key).onChange(v => rule.style.setProperty(key, v));
-    } else {
+    } else if (!value.startsWith('var')){
       obj[key] = value;
       gui.add(obj, key).onChange(v => rule.style.setProperty(key, v));
     }
   }
-}
+
+  return function() {
+    const map = new Map();
+    for (const rule of getCSSRulesBySelector('.muigui')) {
+      const varNames = Object.values(rule.style).filter(s => s.startsWith('--'));
+      for (const key of varNames) {
+        const value = rule.style.getPropertyValue(key).trim();
+        map.set(key, value);
+      }
+    }
+    gui.controllers.forEach(c => {
+      const key = c.property;
+      const value = map.get(key);
+      c.setValue(value);
+    });
+  };
+}();
 </script>
 </html>

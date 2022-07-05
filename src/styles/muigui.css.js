@@ -1,3 +1,4 @@
+const css = `
 .muigui {
   --width: 250px;
 
@@ -31,6 +32,9 @@
   font-size: var(--font-size);
   box-sizing: border-box;
 }
+.muigui * {
+  box-sizing: inherit;
+}
 
 .muigui-show { /* */ }
 .muigui-hide { display: none !important; }
@@ -63,6 +67,9 @@
   margin: 0;
   padding-bottom: 0.1em;
 }
+.muigui-menu {
+  border-bottom: 1px solid var(--menu-sep-color);
+}
 
 .muigui-root>div:nth-child(1),
 .muigui-menu>div:nth-child(1) {
@@ -71,13 +78,16 @@
   position: relative;
   background-color: var(--menu-bg-color);
   min-height: var(--line-height);
+  padding-top: 0.2em;
+  padding-bottom: 0.2em;
   cursor: pointer;
 }
-.muigui-controller>* {
+.muigui-controller {
   margin-left: 0.2em;
   margin-right: 0.2em;
 }
-.muigui-menu .muigui-controller>* {
+.muigui-root.muigui-controller,
+.muigui-menu.muigui-controller {
   margin-left: 0;
   margin-right: 0;
 }
@@ -97,6 +107,7 @@
 .muigui-controller>*:nth-child(3) {
   flex: 0 0 20%;
   min-width: 0;
+  margin-left: 0.2em;
 }
 
 /* fix! */
@@ -276,3 +287,6 @@
   box-shadow: -1000px 0 0 1000px var(--slider-left-color);
   box-sizing: border-box;
 }
+`;
+export default css;
+

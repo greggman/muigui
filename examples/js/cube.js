@@ -16,6 +16,8 @@ export function cube(canvas) {
   scene.add(camera);
 
   const controls = new TrackballControls(camera, canvas);
+  controls.noZoom = true;
+  controls.noPan = true;
 
   const light = (() => {
     const color = 0xFFFFFF;
@@ -27,7 +29,7 @@ export function cube(canvas) {
   })();
 
   const geometry = new THREE.BoxGeometry(1, 1, 1);
-  const material = new THREE.MeshPhongMaterial({color: 'red'});
+  const material = new THREE.MeshPhongMaterial({color: 'red', shininess: 150});
   const mesh = new THREE.Mesh(geometry, material);
   scene.add(mesh);
 

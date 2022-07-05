@@ -100,7 +100,6 @@ export default class Color extends ValueController {
     const id = this.id;
 
     format = format || guessFormat(this.getValue());
-console.log(format);
     this._converters = formatConverters[format];
     const {fromHex} = this._converters;
 
@@ -131,7 +130,6 @@ console.log(format);
   }
   updateDisplay() {
     const newV = this._converters.toHex(super.getValue());
-console.log(newV);
     this._textElem.value = newV.substring(1);
     this._colorElem.value = newV;
   }

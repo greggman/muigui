@@ -58,7 +58,10 @@ export default class Folder extends Controller {
   remove(controller) {
     const ndx = this._controllers.indexOf(controller);
     if (ndx >= 0) {
-      this._controllers.splice(ndx, 1)[0].elem.remove();
+      const c = this._controllers.splice(ndx, 1);
+      const c0 = c[0];
+      const elem = c0.domElement;
+      elem.remove();
     }    
   }
   add(object, property, ...args) {
