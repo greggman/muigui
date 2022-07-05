@@ -21,8 +21,13 @@
 - [x] disable
 - [x] remove
 - [x] hide
+- [ ] scrollwheel?
+- [ ] Label (not interactive)
+- [ ] Label multi line (use as log) 
+- [ ] ask for file? (nah, drag and drop is better)
 - [ ] styles (form)
-- [ ] deg to rad 
+- [x] deg to rad 
+- [ ] fix step with conversions
 - [ ] format slider number?
 - [ ] TextArea (edit larger text)
 - [ ] submenus
