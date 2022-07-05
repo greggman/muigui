@@ -87,6 +87,7 @@ const s = {
   show: () => { document.querySelector('#result').textContent = JSON.stringify(s, null, 2)},
   background: '#123456',
   name: 'gman',
+  hobby: 'coding',
   propertyWithLongName: 0,
 };
 
@@ -111,9 +112,20 @@ for (let i = 0; i < 5; ++i) {
   });
   gui.add(s, 'show').name('Show Current Values');
 
+  if (i === 3) {
+    gui.disable();
+    if (false) {
+      const g = gui;
+      setTimeout(() => {
+        g.enable();
+      }, 3000);
+    }
+  }
+
   const f = gui.addFolder('Submenu');
   const c = f.addCanvas('sine wave');
   f.add(s, 'name').listen();
+  f.add(s, 'hobby').onFinishChange(e => console.log(new Date, e.value));
   f.add(s, 'propertyWithLongName', ['longNamedEnumThatWillPushSizeTooFar']);
 
   function resizeCanvasToDisplaySize(canvas) {
@@ -143,6 +155,39 @@ for (let i = 0; i < 5; ++i) {
     requestAnimationFrame(draw);
   }
   requestAnimationFrame(draw);
+}
+
+{
+  const div = document.createElement('div');
+  uiElem.appendChild(div);
+  const gui = new GUI(div);
+
+  const tallies = { onChange: 0, onFinishChange: 0 };
+  function change() {
+    console.log( this.property + ' onChange' );
+    tallies.onChange++;
+  }
+  function finishChange() {
+    console.log( this.property + ' onFinishChange' );
+    tallies.onFinishChange++;
+  }
+
+  const folder = gui.addFolder( 'Tallies' );
+  folder.add( tallies, 'onChange' ).disable().listen();
+  folder.add( tallies, 'onFinishChange' ).disable().listen();
+
+  gui.add( { Number: 0 }, 'Number' ).onChange( change ).onFinishChange( finishChange );
+  gui.add( { Slider: 0 }, 'Slider', 0, 1 ).onChange( change ).onFinishChange( finishChange );
+  gui.add( { String: 'foo' }, 'String' ).onChange( change ).onFinishChange( finishChange );
+  gui.add( { Boolean: true }, 'Boolean' ).onChange( change ).onFinishChange( finishChange );
+  gui.add( { Options: 'a' }, 'Options', [ 'a', 'b', 'c' ] ).onChange( change ).onFinishChange( finishChange );
+  gui.add( { func() { console.log( 'hi' ); } }, 'func' ).onChange( change ).onFinishChange( finishChange );
+  gui.addColor( { Color: '#aa00ff' }, 'Color' ).onChange( change ).onFinishChange( finishChange );
+
+//  gui.onFinishChange( e => {
+//    console.log( 'gui.onFinishChange', e );
+//  } );
+
 }
 
 {

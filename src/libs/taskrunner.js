@@ -1,4 +1,4 @@
-import { removeElem } from './utils.js';
+import { removeArrayElem } from './utils.js';
 
 const tasks = [];
 const tasksToRemove = new Set();
@@ -17,7 +17,7 @@ function removeTasks() {
   }
 
   tasksToRemove.forEach(task => {
-    removeElem(tasks, task);
+    removeArrayElem(tasks, task);
   });
   tasksToRemove.clear();
 }

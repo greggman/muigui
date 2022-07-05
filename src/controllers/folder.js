@@ -1,7 +1,7 @@
 import { createElem } from '../libs/elem.js';
 import Canvas from './canvas.js';
 import Color from './color.js';
-import { createWidget } from './createWidget.js';
+import { createController } from './create-controller.js';
 import Controller from './controller.js';
 
 
@@ -13,9 +13,9 @@ export default class Folder extends Controller {
     this.domElement.appendChild(createElem('div', {
       onClick: () => { this.toggleOpen() },
     }, [this._labelElem]));
-    this._widgetsElem = createElem('div');
+    this._controllerElem = createElem('div');
     this._controllers = [];
-    this.domElement.appendChild(this._widgetsElem);
+    this.domElement.appendChild(this._controllerElem);
     this.name(name);
     this.open();
   }
@@ -62,24 +62,24 @@ export default class Folder extends Controller {
     }    
   }
   add(object, property, ...args) {
-    const widget = createWidget(object, property, ...args);
-    this._widgetsElem.appendChild(widget.domElement);
-    this._controllers.push(widget);
-    return widget;
+    const controller = createController(object, property, ...args);
+    this._controllerElem.appendChild(controller.domElement);
+    this._controllers.push(controller);
+    return controller;
   }
   addColor(object, property, ...args) {
-    const widget = new Color(object, property, ...args);
-    this._widgetsElem.appendChild(widget.domElement);
-    return widget;
+    const controller = new Color(object, property, ...args);
+    this._controllerElem.appendChild(controller.domElement);
+    return controller;
   }
   addFolder(name) {
-    const widget = new Folder(name);
-    this._widgetsElem.appendChild(widget.domElement);
-    return widget;
+    const controller = new Folder(name);
+    this._controllerElem.appendChild(controller.domElement);
+    return controller;
   }
   addCanvas(name) {
-    const widget = new Canvas(name);
-    this._widgetsElem.appendChild(widget.domElement);
-    return widget;
+    const controller = new Canvas(name);
+    this._controllerElem.appendChild(controller.domElement);
+    return controller;
   }
 }

@@ -1,30 +1,47 @@
 import {addTask, removeTask} from '../libs/taskrunner.js';
 import { removeArrayElem } from '../libs/utils.js';
-import LabelWidget from './labelwidget.js';
+import LabelController from './label-controller.js';
 
-export default class ValueWidget extends LabelWidget {
+export default class ValueController extends LabelController {
   constructor(object, property, className = '') {
     super(className, property);
     this._object = object;
     this._property = property;
     this._initialValue = this.getValue();
     this._changeFns = [];
+    this._finishChangeFns = [];
     this._listening = false;
+  }
+  get initialValue() {
+    return this._initialValue;
+  }
+  get object() {
+    return this._object;
+  }
+  get property() {
+    return this._property;
   }
   setJustValue(v) {
     this._object[this._property] = v;
   }
-  setValue(v) {
-    this._object[this._property] = v;
-    const newV = this.getValue(v);
-    for (const fn of this._changeFns) {
-      fn({
+  _callListeners(fns) {
+    const newV = this.getValue();
+    for (const fn of fns) {
+      fn.call(this, {
         object: this._object,
         property: this._property,
         value: newV,
         controller: this,
       });
     }
+  }
+  setValue(v) {
+    this._object[this._property] = v;
+    this._callListeners(this._changeFns);
+  }
+  setFinalValue(v) {
+    this.setValue(v);
+    this._callListeners(this._finishChangeFns);
   }
   getValue(v) {
     return this._object[this._property];
@@ -44,6 +61,15 @@ export default class ValueWidget extends LabelWidget {
   }
   removeChange(fn) {
     removeArrayElem(this._changeFns, fn);
+    return this;
+  }
+  onFinishChange(fn) {
+    this.removeFinishChange(fn);
+    this._finishChangeFns.push(fn);
+    return this;
+  }
+  removeFinishChange(fn) {
+    removeArrayElem(this._finishChangeFns, fn);
     return this;
   }
   listen(listen = true) {

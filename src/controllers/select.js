@@ -1,7 +1,7 @@
 import {
   createElem,
 } from '../libs/elem.js';
-import ValueWidget from './valuewidget.js';
+import ValueController from './value-controller.js';
 
 // 4 cases
 //   (a) keyValues is array of arrays, each sub array is key value
@@ -28,7 +28,7 @@ function convertToKeyValues(keyValues, valueIsNumber) {
   }
 }
 
-export default class Select extends ValueWidget {
+export default class Select extends ValueController {
   constructor(object, property, keyValuesInput) {
     super(object, property, 'muigui-select');
     const root = this.domElement;
@@ -39,7 +39,7 @@ export default class Select extends ValueWidget {
     this._values = [];
     this._selectElem = createElem('select', {
       onChange: (e) => {
-        this.setValue(this._values[this._selectElem.selectedIndex])
+        this.setFinalValue(this._values[this._selectElem.selectedIndex]);
       },
     }, keyValues.map(([key, value]) => {
       this._values.push(value);

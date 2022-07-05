@@ -25,7 +25,6 @@ export default class Button extends Controller {
   }
   updateDisplay() {
   }
-  setValue(v) {
-    super.setValue(v);
-  }
+  onChange() { return this; } // what
+  onFinishChange() { return this; } // what?
 }

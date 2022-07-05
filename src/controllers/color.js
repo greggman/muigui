@@ -1,9 +1,9 @@
 import {
   createElem,
 } from '../libs/elem.js';
-import ValueWidget from './valuewidget.js';
+import ValueController from './value-controller.js';
 
-export default class Color extends ValueWidget {
+export default class Color extends ValueController {
   constructor(object, property) {
     super(object, property, 'muigui-color');
     const root = this.domElement;
@@ -14,7 +14,10 @@ export default class Color extends ValueWidget {
       id,
       onInput: (e) => {
         this.setValue(this._colorElem.value);
-      } 
+      },
+      onChange: (e) => {
+        this.setFinalValue(this._colorElem.value);
+      },
     });
     root.appendChild(createElem('div', {}, [this._colorElem]));
 
@@ -23,6 +26,9 @@ export default class Color extends ValueWidget {
       pattern: /[a-f0-9]{6}/i,
       onInput: (e) => {
         this.setValue(`#${this._textElem.value}`);
+      },
+      onChange: (e) => {
+        this.setFinalValue(this._textElem.value);
       },
     });
     root.appendChild(this._textElem);

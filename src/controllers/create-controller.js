@@ -17,7 +17,7 @@ import Text from './text.js';
  * @param  {...any} args 
  * @returns 
  */
-export function createWidget(object, property, ...args) {
+export function createController(object, property, ...args) {
   const [arg1] = args;
   const arg1IsObject = typeof arg1 === 'object';
   if (arg1IsObject) {

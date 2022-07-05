@@ -1,9 +1,9 @@
 import {
   createElem,
 } from '../libs/elem.js';
-import ValueWidget from './valuewidget.js';
+import ValueController from './value-controller.js';
 
-export default class Slider extends ValueWidget {
+export default class Slider extends ValueController {
   constructor(object, property, min = 0, max = 1, step = 0.01) {
     super(object, property, 'muigui-slider');
     const root = this.domElement;
@@ -17,7 +17,10 @@ export default class Slider extends ValueWidget {
       id,
       onInput: (e) => {
         this.setValue(this._rangeElem.value);
-      }
+      },
+      onChange: (e) => {
+        this.setFinalValue(this._rangeElem.value);
+      },
     });
     root.appendChild(this._rangeElem);
 
@@ -26,6 +29,9 @@ export default class Slider extends ValueWidget {
       onInput: (e) => {
         this.setValue(parseFloat(this._textElem.value));
       },
+      onChange: (e) => {
+        this.setFinalValue(parseFloat(this._textElem.value));
+      }
     });
     root.appendChild(this._textElem);
     this.updateDisplay();

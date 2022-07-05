@@ -4,6 +4,7 @@
   --color: #ddd;
   --value-color: #43e5f7;
   --value-bg-color: #444;
+  --disabled-color: #666;
 
   --menu-bg-color: #000;
   --menu-sep-color: #444;
@@ -15,7 +16,6 @@
   --font-size: 11px;
   --font-family-mono:  Menlo, Monaco, Consolas, "Droid Sans Mono", monospace;
   --font-size-mono: 11px;
-
 
   --slider-width: 30px;
 
@@ -34,13 +34,19 @@
 
 .muigui-show { /* */ }
 .muigui-hide { display: none !important; }
+.muigui-disabled {
+  pointer-events: none;
+  --color: var(--disabled-color);
+  --value-color: var(--disabled-color);
+  --slider-left-color: var(--disabled-color);
+}
 
 .muigui canvas {
   display: block;
   background-color: var(--value-bg-color);
 }
 
-.muigui-widget {
+.muigui-controller {
   word-wrap: initial;
   display: flex;
   align-items: stretch;
@@ -67,28 +73,28 @@
   min-height: var(--line-height);
   cursor: pointer;
 }
-.muigui-widget>* {
+.muigui-controller>* {
   margin-left: 0.2em;
   margin-right: 0.2em;
 }
-.muigui-menu .muigui-widget>* {
+.muigui-menu .muigui-controller>* {
   margin-left: 0;
   margin-right: 0;
 }
-.muigui-widget>*:nth-child(1) {
+.muigui-controller>*:nth-child(1) {
   flex: 1 0 45%;
   min-width: 0;
   white-space: pre;
 }
-.muigui-widget>label:nth-child(1) {
+.muigui-controller>label:nth-child(1) {
   place-content: center start;
   display: inline-grid;
 }
-.muigui-widget>*:nth-child(2) {
+.muigui-controller>*:nth-child(2) {
   flex: 1 1 55%;
   min-width: 0;
 }
-.muigui-widget>*:nth-child(3) {
+.muigui-controller>*:nth-child(3) {
   flex: 0 0 20%;
   min-width: 0;
 }

@@ -1,9 +1,9 @@
 import {
   createElem,
 } from '../libs/elem.js';
-import LabelWidget from './labelwidget.js';
+import LabelController from './label-controller.js';
 
-export default class Canvas extends LabelWidget {
+export default class Canvas extends LabelController {
   constructor(name) {
     super('muigui-canvas', name);
     const root = this.domElement;

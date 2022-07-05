@@ -1,4 +1,4 @@
-export function removeElem(array, value) {
+export function removeArrayElem(array, value) {
   const ndx = array.indexOf(value);
   if (ndx) {
     array.splice(ndx, 1);

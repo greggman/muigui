@@ -1,5 +1,5 @@
 import { createElem } from './libs/elem.js';
-import Folder from './widgets/folder.js';
+import Folder from './controllers/folder.js';
 
 export class GUI extends Folder {
   constructor(parent) {
