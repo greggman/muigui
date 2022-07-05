@@ -54,11 +54,12 @@
   position: relative;
   user-select: none;
   height: fit-content;
-  margin: 0 0 0 0;
+  margin: 0;
+  padding-bottom: 0.1em;
 }
 
-.muigui-root>label,
-.muigui-menu>label {
+.muigui-root>div:nth-child(1),
+.muigui-menu>div:nth-child(1) {
   border-top: 1px solid var(--menu-sep-color);
   border-bottom: 1px solid var(--menu-sep-color);
   position: relative;
@@ -78,10 +79,10 @@
   flex: 1 0 45%;
   min-width: 0;
   white-space: pre;
-  display: inline-grid;
 }
 .muigui-widget>label:nth-child(1) {
   place-content: center start;
+  display: inline-grid;
 }
 .muigui-widget>*:nth-child(2) {
   flex: 1 1 55%;
@@ -93,18 +94,18 @@
 }
 
 /* fix! */
-.muigui-open::before,
-.muigui-closed::before {
+.muigui-open>div>label::before,
+.muigui-closed>div>label::before {
   width: 1.5em;
   height: var(--line-height);
   display: inline-grid;
   place-content: center;
   pointer-events: none;
 }
-.muigui-open::before {
+.muigui-open>div>label::before {
   content: "▼";
 }
-.muigui-closed::before {
+.muigui-closed>div>label::before {
   content: "▶";
 }
 .muigui-open>*:nth-child(2) {

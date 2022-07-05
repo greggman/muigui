@@ -2,19 +2,20 @@ import { createElem } from '../libs/elem.js';
 import Canvas from './canvas.js';
 import Color from './color.js';
 import { createWidget } from './createWidget.js';
-import LabelWidget from './labelwidget.js';
+import Widget from './widget.js';
 
 
 // Clicking should only be first child
-export default class Menu extends LabelWidget {
+export default class Menu extends Widget {
   constructor(name = 'Controls', className = 'muigui-menu') {
-    super(className, name);
-    this._labelElem = this.elem.querySelector('label');
-    this._labelElem.addEventListener('click', () => {
-      this.toggleOpen();
-    });
+    super(className);
+    this._labelElem = createElem('label');
+    this.elem.appendChild(createElem('div', {
+      onClick: () => { this.toggleOpen() },
+    }, [this._labelElem]));
     this._widgetsElem = createElem('div');
     this.elem.appendChild(this._widgetsElem);
+    this.name(name);
     this.open();
   }
   open(open = true) {
@@ -24,6 +25,10 @@ export default class Menu extends LabelWidget {
   }
   close() {
     return this.open(false);
+  }
+  name(name) {
+    this._labelElem.textContent = name;
+    return this;
   }
   title(title) {
     return this.name(title);
