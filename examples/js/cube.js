@@ -8,8 +8,8 @@ export function cube(canvas) {
 
   const fov = 45;
   const aspect = 2;  // the canvas default
-  const near = 0.1;
-  const far = 5;
+  const near = 0.01;
+  const far = 15;
   const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
   camera.position.set(0, 1, 2);
   camera.lookAt(0, 0, 0);
@@ -28,13 +28,41 @@ export function cube(canvas) {
     return light;
   })();
 
-  const geometry = new THREE.BoxGeometry(1, 1, 1);
-  const material = new THREE.MeshPhongMaterial({color: 'red', shininess: 150});
-  const mesh = new THREE.Mesh(geometry, material);
-  scene.add(mesh);
+  const meshes = [];
+  const material = new THREE.MeshPhongMaterial({
+    color: 'red', 
+    shininess: 150,
+    flatShading: true,
+  });
+
+  {
+    const geometry = new THREE.TorusGeometry(0.4, 0.3, 9, 12);
+    //const geometry = new THREE.BoxGeometry(1, 1, 1);
+    const mesh = new THREE.Mesh(geometry, material);
+    scene.add(mesh);
+    meshes.push(mesh);
+  }
+
+  if(0){
+    const geometry = new THREE.SphereGeometry(0.8, 12, 6);
+    const mesh = new THREE.Mesh(geometry, material);
+    mesh.position.x = -1.5;
+    scene.add(mesh);
+    meshes.push(mesh);
+  }
+
+  if(0){
+    const geometry = new THREE.TorusGeometry(0.4, 0.3, 6, 12);
+    const mesh = new THREE.Mesh(geometry, material);
+    mesh.position.x = 1.5;
+    scene.add(mesh);
+    meshes.push(mesh);
+  }
 
   function update(time, rect) {
-    mesh.rotation.y = time * .1;
+    meshes.forEach((mesh, i) => {
+      mesh.rotation.y = time * .1 * (i + 1);
+    });
     camera.aspect = rect.width / rect.height;
     camera.updateProjectionMatrix();
     controls.handleResize();

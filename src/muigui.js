@@ -10,7 +10,7 @@ export class GUI extends Folder {
     if (options instanceof HTMLElement) {
       options = {parent: options};
     }
-    const {
+    let {
       parent,
       autoPlace = true,
       width,

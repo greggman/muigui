@@ -2,18 +2,22 @@
 
 - [ ] Tests
 - [ ] Color RGB, HSL, LAB, Alpha? (just input=color for now?)
-  - [X] #RRGGBB
+  - [x] #RGB
+  - [ ] RGB
+  - [x] #RRGGBB
+  - [x] RRGGBB
   - [ ] #RRGGBBAA
-  - [X] [255, 255, 255],
+  - [ ] 0xRRGGBB;
+  - [x] [255, 255, 255],
   - [ ] [255, 255, 255, 255],
-  - [X] [1, 1, 1],
+  - [x] [1, 1, 1],
   - [ ] [1, 1, 1, 1],
 - [ ] wrapping slider? (0-360)
 - [ ] Direction? (an arrow, low-pri)
-- [X] onChange
-- [X] name
-- [X] listen
-- [X] update
+- [x] onChange
+- [x] name
+- [x] listen
+- [x] update
 - [x] disable
 - [x] remove
 - [x] hide
@@ -31,9 +35,22 @@
 - [ ] popout text (or expand in place?)
 - [ ] functions to query colors
 - [ ] add all
+  - [ ] add with filter? (pass in filter so you can make positive or negative)
+  - [ ] add with list of fields?
+  - [ ] list of options by field name
+  - [ ] recursive (max depth?)
+  - [ ] match by instanceof ?
+  - [ ] let user provide matcher?
 - [ ] look into add without object. eg
-- [ ] add hover for long name
+- [x] add hover for long name
 - [ ] try making custom controllers. In particular a list editor like unity
+- [ ] fix "RGB"
+- [ ] fix first column when changing width
+- [ ] do autoplace test
+- [ ] auto step
+- [ ] fix can't enter trailing '.' on input number (FF only?) (maybe don't set text when value from text)
+- [ ] consider more explicit layout
+  - [ ] (1 part, 2 parts, 3 parts) or (1 part, 2 parts where 3 is [[1][2[1][2]]])
   
   ```
   gui.addButton(title, fn);

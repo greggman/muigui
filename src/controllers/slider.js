@@ -27,10 +27,16 @@ export default class Slider extends ValueController {
     this._textElem = createElem('input', {
       type: 'number',
       onInput: (e) => {
-        this.setValue(parseFloat(this._textElem.value));
+        const v = parseFloat(this._textElem.value);
+        if (!Number.isNaN(v)) {
+          this.setValue(v);
+        }
       },
       onChange: (e) => {
-        this.setFinalValue(parseFloat(this._textElem.value));
+        const v = parseFloat(this._textElem.value);
+        if (!Number.isNaN(v)) {
+          this.setFinalValue(parseFloat(this._textElem.value));
+        }
       }
     });
     root.appendChild(this._textElem);

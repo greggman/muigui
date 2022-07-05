@@ -1,6 +1,7 @@
 const css = `
 .muigui {
   --width: 250px;
+  --label-width: 45%;
 
   --bg-color: #222222;
   --color: #dddddd;
@@ -92,7 +93,7 @@ const css = `
   margin-right: 0;
 }
 .muigui-controller>*:nth-child(1) {
-  flex: 1 0 45%;
+  flex: 1 0 var(--label-width);
   min-width: 0;
   white-space: pre;
 }

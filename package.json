@@ -5,7 +5,9 @@
   "main": "muigui.js",
   "module": "src/muigui.js",
   "scripts": {
-    "build": "rollup -c",
+    "build": "npm run build-min",
+    "build-normal": "rollup -c",
+    "build-min": "rollup -c && google-closure-compiler --warning_level=VERBOSE --jscomp_off=globalThis --jscomp_off=checkTypes --externs build/externs.js --language_in=ECMASCRIPT_2019 --language_out=ECMASCRIPT_2019 --js dist/0.x/muigui.js --js_output_file dist/0.x/muigui.min.js && node ./build/append-banner.js dist/0.x/muigui.min.js",
     "eslint": "eslint \"**/*.js\"",
     "pre-push": "npm run eslint",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -34,6 +36,7 @@
     "eslint-plugin-html": "^6.0.2",
     "eslint-plugin-optional-comma-spacing": "0.0.4",
     "eslint-plugin-require-trailing-comma": "0.0.1",
+    "google-closure-compiler": "^20220601.0.0",
     "rollup": "^2.23.0",
     "rollup-plugin-node-resolve": "^5.2.0"
   }

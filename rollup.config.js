@@ -20,6 +20,12 @@ export default [
         banner,
         name: 'GUI',
       },
+      {
+        format: 'es',
+        file: 'dist/0.x/muigui.module.js',
+        indent: '  ',
+        banner,
+      },
     ],
   },
 ];

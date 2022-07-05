@@ -59,6 +59,7 @@
 </div>
 <pre id="result"></pre>
 </body>
+<script async src="https://unpkg.com/es-module-shims@1.3.6/dist/es-module-shims.js"></script>
 <script type="importmap">
 {
   "imports": {
@@ -97,6 +98,8 @@ const uiElem = document.querySelector('#ui');
     shoes: 1,
     show: () => { document.querySelector('#result').textContent = JSON.stringify(s, null, 2)},
     background: '#123456',
+    period1: 1,
+    period2: 1.37,
     name: 'gman',
     hobby: 'coding',
     propertyWithLongName: 0,
@@ -130,7 +133,9 @@ const uiElem = document.querySelector('#ui');
     }
 
     const f = gui.addFolder('Submenu');
-    const c = f.addCanvas('sine wave');
+    const c = f.addCanvas('single');
+    f.add(s, 'period1', 0.1, 4);
+    f.add(s, 'period2', 0.1, 4);
     f.add(s, 'name').listen();  
     f.add(s, 'hobby').onFinishChange(e => console.log(new Date, e.value));
     f.add(s, 'propertyWithLongName', ['longNamedEnumThatWillPushSizeTooFar']);
@@ -147,7 +152,15 @@ const uiElem = document.querySelector('#ui');
     }
 
     const ctx = c.canvas.getContext('2d');
-    function draw(time) {
+    let lastY = 0;
+    let lTime1 = 0;
+    let lTime2 = 0;
+    let then = 0;
+    function draw(now) {
+      const elapsedTime = now - then;
+      then = now;
+      lTime1 += elapsedTime * s.period1;
+      lTime2 += elapsedTime * s.period2;
       resizeCanvasToDisplaySize(ctx.canvas);
       const {width, height} = ctx.canvas;
       ctx.globalCompositeOperation = 'copy';
@@ -158,7 +171,12 @@ const uiElem = document.querySelector('#ui');
       ctx.clearRect(width - 1, 0, 1, height);
       ctx.globalCompositeOperation = 'source-over';
       ctx.fillStyle = '#0F0';
-      ctx.fillRect(width - 1, height / 2 + Math.sin(time * 0.01) * (height - 1) / 2, 1, 1);
+      const s1 = Math.sin(lTime1 * 0.01);
+      const s2 = Math.sin(lTime2 * 0.01);
+      const newY = height / 2 + (s1 + s2) * (height - 1) / 4;
+
+      ctx.fillRect(width - 1, Math.min(lastY, newY), 1, Math.abs(lastY - newY) + 1);
+      lastY = newY;
       requestAnimationFrame(draw);
     }
     requestAnimationFrame(draw);
@@ -330,7 +348,14 @@ const updateAppearance = function() {
     mediaQueryElem.textContent = lines.reverse().join('\n');
     //uiElem.style.columns = `${width}px`;
   };
-  
+
+  const fns = {
+    '--width': (v) => {
+      uiElem.style.columnWidth = v;
+      uiElem.parentElement.style.gridTemplateColumns = `repeat(auto-fit, ${v})`;
+    },
+  }
+
   const rule = getCSSRulesBySelector('.muigui')[0];  // assuming the first one
   const varNames = Object.values(rule.style).filter(s => s.startsWith('--'));
   const obj = {};
@@ -341,7 +366,13 @@ const updateAppearance = function() {
       gui.addColor(obj, key).onChange(v => rule.style.setProperty(key, v));
     } else if (!value.startsWith('var')){
       obj[key] = value;
-      gui.add(obj, key).onChange(v => rule.style.setProperty(key, v));
+      gui.add(obj, key).onChange(v => {
+        rule.style.setProperty(key, v);
+        const fn = fns[key];
+        if (fn) {
+          fn(v);
+        }
+      });
     }
   }
 
