@@ -43,7 +43,7 @@
         break-inside: avoid-column;
         margin-bottom: 1em;
         display: inline-block;
-      }      
+      }
     </style>
     <style id="media-query">
     </style>
@@ -61,8 +61,16 @@
 </div>
 <pre id="result"></pre>
 </body>
+<script type="importmap">
+{
+  "imports": {
+    "three": "./examples/3rdParty/threejs/build/three.module.js"
+  }
+}
+</script>
 <script type="module">
 import {GUI} from './src/muigui.js';
+import {cube} from './examples/js/cube.js';
 
 function getCSSRuleBySelector(selector) {
   for (let s = 0; s < document.styleSheets.length; ++s) {
@@ -91,12 +99,9 @@ const s = {
   propertyWithLongName: 0,
 };
 
-
-
-
 const uiElem = document.querySelector('#ui');
 
-for (let i = 0; i < 5; ++i) {
+for (let i = 0; i < 0; ++i) {
   const div = document.createElement('div');
   uiElem.appendChild(div);
   const gui = new GUI(div);
@@ -124,7 +129,7 @@ for (let i = 0; i < 5; ++i) {
 
   const f = gui.addFolder('Submenu');
   const c = f.addCanvas('sine wave');
-  f.add(s, 'name').listen();
+  f.add(s, 'name').listen();  
   f.add(s, 'hobby').onFinishChange(e => console.log(new Date, e.value));
   f.add(s, 'propertyWithLongName', ['longNamedEnumThatWillPushSizeTooFar']);
 
@@ -157,40 +162,118 @@ for (let i = 0; i < 5; ++i) {
   requestAnimationFrame(draw);
 }
 
-{
+if (false) {
   const div = document.createElement('div');
   uiElem.appendChild(div);
   const gui = new GUI(div);
 
-  const tallies = { onChange: 0, onFinishChange: 0 };
-  function change() {
-    console.log( this.property + ' onChange' );
-    tallies.onChange++;
-  }
-  function finishChange() {
-    console.log( this.property + ' onFinishChange' );
-    tallies.onFinishChange++;
-  }
+  const changes = { onChange: 0, onFinishChange: 0 };
+  const change = _ => changes.onChange++;
+  const finishChange = _ => changes.onFinishChange++;
+  
+  const folder = gui.addFolder('Counts');
+  folder.add(changes, 'onChange').disable().listen();
+  folder.add(changes, 'onFinishChange').disable().listen();
 
-  const folder = gui.addFolder( 'Tallies' );
-  folder.add( tallies, 'onChange' ).disable().listen();
-  folder.add( tallies, 'onFinishChange' ).disable().listen();
-
-  gui.add( { Number: 0 }, 'Number' ).onChange( change ).onFinishChange( finishChange );
-  gui.add( { Slider: 0 }, 'Slider', 0, 1 ).onChange( change ).onFinishChange( finishChange );
-  gui.add( { String: 'foo' }, 'String' ).onChange( change ).onFinishChange( finishChange );
-  gui.add( { Boolean: true }, 'Boolean' ).onChange( change ).onFinishChange( finishChange );
-  gui.add( { Options: 'a' }, 'Options', [ 'a', 'b', 'c' ] ).onChange( change ).onFinishChange( finishChange );
-  gui.add( { func() { console.log( 'hi' ); } }, 'func' ).onChange( change ).onFinishChange( finishChange );
-  gui.addColor( { Color: '#aa00ff' }, 'Color' ).onChange( change ).onFinishChange( finishChange );
-
-//  gui.onFinishChange( e => {
-//    console.log( 'gui.onFinishChange', e );
-//  } );
+  gui.add({Number: 0 }, 'Number' ).onChange(change).onFinishChange(finishChange);
+  gui.add({String: 'foo' }, 'String' ).onChange(change).onFinishChange(finishChange);
+  gui.add({Boolean: true }, 'Boolean' ).onChange(change).onFinishChange(finishChange);
+  gui.add({Slider: 0 }, 'Slider', 0, 1 ).onChange(change).onFinishChange(finishChange);
+  gui.add({Select: 'a' }, 'Select', ['apple', 'banana', 'pear'] ).onChange(change).onFinishChange(finishChange);
+  gui.add({func() {}}, 'func' ).onChange(change).onFinishChange(finishChange);
+  gui.addColor({Color: '#aa00ff' }, 'Color').onChange(change).onFinishChange(finishChange);
 
 }
 
 {
+  const div = document.createElement('div');
+  uiElem.appendChild(div);
+  const gui = new GUI(div).name('Colors');
+
+  const c = {
+ //   '"#RRGGBB"': '#569AEF',
+ //   '"RRGGBB"': '#569AEF',
+    '"#RGB"': '#F88',
+ //   '"RGB"': '8F8',
+//    '"rgb(r, g, b)"': 'rgb(170,68,240)',
+//    '0xRRGGBB': 0xFEA956,
+//    '[u8, u8, u8]': [255, 192, 255],
+//    '[r, g, b]': [0, 1, 0],
+//    '{r, g, b}': {r:0, g:0, b:1},
+  };
+  for (const k of Object.keys(c)) {
+    gui.addColor(c, k);
+  }
+}
+
+/*
+{
+  const div = document.createElement('div');
+  uiElem.appendChild(div);
+  const gui = new GUI(div).name('Material');
+
+  const s = cube(gui.addCanvas('three.js').canvas);
+  gui.addColor(s.material, 'diffuse');
+  gui.addColor(s.light, 'color');
+  gui.add(s.light, 'intensity', 0, 5, 0.01);
+  gui.add(s.camera, fov, 1, 179);
+}
+*/
+
+if (false) {
+  const themeElem = document.createElement('style');
+  document.head.appendChild(themeElem);
+
+  const themes = {
+    default: ``,
+    light: `
+        .muigui {
+          --bg-color: #f6f6f6;
+          --color: #3d3d3d;
+          --value-bg-color: #e8e8e8;
+          --value-color: #2b95a1;
+          --hover-bg-color: #f0f0f0;
+          --menu-bg-color: #eeeeee;
+          --menu-sep-color: #bbbbbb;
+          --disabled-color: #cccccc;
+        }
+    `,
+    'solarized-light': `
+        .muigui {
+          --bg-color: #fdf6e3;
+          --color: #657b83;
+          --value-bg-color: #e8e8e8;
+          --value-color: #2aa0f3;
+          --hover-bg-color: #e7e1cf;
+          --menu-bg-color: #f5efdc;
+          --menu-sep-color: #bbbbbb;
+          --disabled-color: #cccccc;
+        }
+    `,
+    'solarized-dark': `
+        .muigui {
+          --bg-color: #002b36;
+          --color: #b2c2c2;
+          --value-bg-color: #094e5f;
+          --value-color: #5abaff;
+          --hover-bg-color: #0a6277;
+          --menu-bg-color: #001f27;
+          --menu-sep-color: #004e62;
+          --disabled-color: #3876a1;
+        }
+    `,
+  };
+
+  const div = document.createElement('div');
+  uiElem.appendChild(div);
+
+  const gui = new GUI(div).name('Theme');
+  gui.add({theme: 'default'}, 'theme', [...Object.keys(themes)]).onChange(v => {
+    themeElem.innerText = themes[v];
+  });
+}
+
+if (false) {
 
   const div = document.createElement('div');
   uiElem.appendChild(div);
@@ -228,7 +311,7 @@ for (let i = 0; i < 5; ++i) {
       gui.addColor(obj, key).onChange(v => rule.style.setProperty(key, v));
     } else {
       obj[key] = value;
-      gui.add(obj, key).onChange(e => rule.style.setProperty(key, e.value));
+      gui.add(obj, key).onChange(v => rule.style.setProperty(key, v));
     }
   }
 }

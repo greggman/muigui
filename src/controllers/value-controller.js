@@ -27,12 +27,7 @@ export default class ValueController extends LabelController {
   _callListeners(fns) {
     const newV = this.getValue();
     for (const fn of fns) {
-      fn.call(this, {
-        object: this._object,
-        property: this._property,
-        value: newV,
-        controller: this,
-      });
+      fn.call(this, newV);
     }
   }
   setValue(v) {

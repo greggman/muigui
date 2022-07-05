@@ -2,11 +2,11 @@
 
 - [ ] Tests
 - [ ] Color RGB, HSL, LAB, Alpha? (just input=color for now?)
-  - [ ] #RRGGBB
+  - [X] #RRGGBB
   - [ ] #RRGGBBAA
-  - [ ] [255, 255, 255],
+  - [X] [255, 255, 255],
   - [ ] [255, 255, 255, 255],
-  - [ ] [1, 1, 1],
+  - [X] [1, 1, 1],
   - [ ] [1, 1, 1, 1],
 - [ ] wrapping slider? (0-360)
 - [ ] Direction? (an arrow, low-pri)
@@ -14,17 +14,19 @@
 - [X] name
 - [X] listen
 - [X] update
-- [ ] disable
-- [ ] remove
-- [X] hide
+- [x] disable
+- [x] remove
+- [x] hide
 - [ ] styles (form)
 - [ ] deg to rad 
 - [ ] format slider number?
 - [ ] TextArea (edit larger text)
 - [ ] submenus
-- [ ] menu open/close
+- [x] menu open/close
 - [ ] scroll on long (css)
 - [ ] x, y, z
 - [ ] copy paste all (???)
 - [ ] single line text
+- [ ] splitter
 - [ ] popout text (or expand in place?)
+- [ ] functions to query colors

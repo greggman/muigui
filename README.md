@@ -7,7 +7,7 @@
 A simple Web UI library.
 
 muigui is a simple UI library in the spirit of
-[dat.gui](https://github.com/dataarts/dat.gui).
+[dat.gui](https://github.com/dataarts/dat.gui) and/or [lil-gui](https://github.com/georgealways/).
 
 It is not a general purpose library for every type of GUI.
 Rather, it is a small, easy to use library for small apps.

@@ -1,16 +1,16 @@
 .muigui {
   --width: 250px;
-  --bg-color: #222;
-  --color: #ddd;
-  --value-color: #43e5f7;
-  --value-bg-color: #444;
-  --disabled-color: #666;
 
-  --menu-bg-color: #000;
-  --menu-sep-color: #444;
+  --bg-color: #222222;
+  --color: #dddddd;
+  --value-color: #43e5f7;
+  --value-bg-color: #444444;
+  --disabled-color: #666666;
+  --menu-bg-color: #000000;
+  --menu-sep-color: #444444;
+  --hover-bg-color: #666666;
 
   --button-bg-color: var(--value-bg-color);
-  --button-hover-bg-color: #666;
 
   --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
   --font-size: 11px;
@@ -19,9 +19,9 @@
 
   --slider-width: 30px;
 
-  --slider-left-color: #43e5f7;
-  --slider-right-color: #444;
-  --slider-right-hover-color: var(--button-hover-bg-color);
+  --slider-left-color: var(--value-color);
+  --slider-right-color: var(--value-bg-color);
+  --slider-right-hover-color: var(--hover-bg-color);
   --line-height: 1.7em;
 
   width: var(--width);
@@ -36,9 +36,9 @@
 .muigui-hide { display: none !important; }
 .muigui-disabled {
   pointer-events: none;
-  --color: var(--disabled-color);
-  --value-color: var(--disabled-color);
-  --slider-left-color: var(--disabled-color);
+  --color: var(--disabled-color) !important;
+  --value-color: var(--disabled-color) !important;
+  --slider-left-color: var(--disabled-color) !important;
 }
 
 .muigui canvas {
@@ -147,7 +147,7 @@
 .muigui option:hover,
 .muigui input:hover,
 .muigui button:hover {
-  background-color: var(--button-hover-bg-color);  
+  background-color: var(--hover-bg-color);  
 }
 
 
@@ -180,6 +180,10 @@
   left: -10px;
   top: -10px;
   height: 200%;
+}
+.muigui-disabled canvas,
+.muigui-disabled .muigui-color input[type=color] {
+  opacity: 0.3;
 }
 
 /* ------ [ checkbox ] ------ */
