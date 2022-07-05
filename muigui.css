@@ -6,7 +6,7 @@
   --value-bg-color: #444;
 
   --menu-bg-color: #000;
-  --menu-sep-color: #888;
+  --menu-sep-color: #444;
 
   --button-bg-color: var(--value-bg-color);
   --button-hover-bg-color: #666;
@@ -54,28 +54,33 @@
   position: relative;
   user-select: none;
   height: fit-content;
-  margin-top: 2px;
+  margin: 0 0 0 0;
 }
-.muigui-menu {
-}
+
+.muigui-root>label,
 .muigui-menu>label {
   border-top: 1px solid var(--menu-sep-color);
   border-bottom: 1px solid var(--menu-sep-color);
-  display: block;
   position: relative;
-  padding-left: 1.25em;
   background-color: var(--menu-bg-color);
   min-height: var(--line-height);
+  cursor: pointer;
 }
 .muigui-widget>* {
   margin-left: 0.2em;
   margin-right: 0.2em;
 }
+.muigui-menu .muigui-widget>* {
+  margin-left: 0;
+  margin-right: 0;
+}
 .muigui-widget>*:nth-child(1) {
   flex: 1 0 45%;
   min-width: 0;
   white-space: pre;
-  display: grid;
+  display: inline-grid;
+}
+.muigui-widget>label:nth-child(1) {
   place-content: center start;
 }
 .muigui-widget>*:nth-child(2) {
@@ -91,11 +96,9 @@
 .muigui-open::before,
 .muigui-closed::before {
   width: 1.5em;
-  display: grid;
-  position: absolute;
+  height: var(--line-height);
+  display: inline-grid;
   place-content: center;
-  top: 0;
-  z-index: 2;
   pointer-events: none;
 }
 .muigui-open::before {
@@ -130,7 +133,7 @@
   border: none;
 }
 .muigui select {
-  margin: 0;
+  margin-left: 0; /*?*/
 }
 
 .muigui select:hover,
@@ -148,6 +151,7 @@
   color: var(--value-color);
   background-color: var(--button-bg-color);
   cursor: pointer;
+  place-content: center center;
 }
 
 /* ------ [ color ] ------ */
@@ -163,6 +167,7 @@
   border: none;
   padding: 0;
   background: inherit;
+  cursor: pointer;
   position: absolute;
   width: 200%;
   left: -10px;
@@ -183,6 +188,7 @@
   width: auto;
   color: var(--value-color);
   background-color: var(--value-bg-color);
+  cursor: pointer;
 
   display: grid;
   place-content: center;
