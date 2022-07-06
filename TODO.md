@@ -38,7 +38,7 @@
 - [x] single line text
 - [x] splitter
 - [ ] popout text (or expand in place?)
-- [ ] functions to query colors? (TBD, for now user can do their own?)
+- [x] functions to query colors?
 - [x] (doesn't work) maybe just add color-scheme to CSS
 - [ ] add all
   - [ ] add with filter? (pass in filter so you can make positive or negative)
