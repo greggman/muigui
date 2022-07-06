@@ -6,7 +6,7 @@ const banner = `/* muigui@${pkg.version}, license MIT */`;
 
 export default [
   {
-    input: 'src/muigui.js',
+    input: 'src/umd.js',
     plugins: [
       resolve({
         modulesOnly: true,

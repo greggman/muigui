@@ -1,9 +1,9 @@
 /* muigui@0.0.1, license MIT */
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
-  typeof define === 'function' && define.amd ? define(['exports'], factory) :
-  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.GUI = {}));
-}(this, (function (exports) { 'use strict';
+  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+  typeof define === 'function' && define.amd ? define(factory) :
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.GUI = factory());
+}(this, (function () { 'use strict';
 
   function createElem(tag, attrs = {}, children = []) { 
     const elem = document.createElement(tag);
@@ -1228,8 +1228,6 @@
     }
   }
 
-  exports.GUI = GUI;
-
-  Object.defineProperty(exports, '__esModule', { value: true });
+  return GUI;
 
 })));

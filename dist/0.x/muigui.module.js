@@ -1222,4 +1222,4 @@ class GUI extends Folder {
   }
 }
 
-export { GUI };
+export { GUI as default };

@@ -39,3 +39,5 @@ export class GUI extends Folder {
     this.domElement.classList.add('muigui');
   }
 }
+
+export default GUI;
