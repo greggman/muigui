@@ -38,7 +38,9 @@ const css = `
 }
 
 .muigui-show { /* */ }
-.muigui-hide { display: none !important; }
+.muigui-hide { 
+  display: none !important;
+}
 .muigui-disabled {
   pointer-events: none;
   --color: var(--disabled-color) !important;
@@ -137,14 +139,15 @@ const css = `
   content: "▶";
 }
 .muigui-open>*:nth-child(2) {
-  transition: max-height 1s,
-              opacity 1s;
-  max-height: initial;
+  transition: max-height 1s ease-out,
+              opacity 0.5s ease-out 0s;
+  max-height: 100vh;
+  overflow: hidden;
   opacity: 1;
 }
 
 .muigui-closed>*:nth-child(2) {
-  transition: max-height 0.2s linear 0.2s,
+  transition: max-height 0.2s ease-out,
               opacity 1s;
   max-height: 0;
   opacity: 0;
