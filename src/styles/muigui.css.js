@@ -16,7 +16,7 @@ const css = `
 
   --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
   --font-size: 11px;
-  --font-family-mono:  Menlo, Monaco, Consolas, "Droid Sans Mono", monospace;
+  --font-family-mono: Menlo, Monaco, Consolas, "Droid Sans Mono", monospace;
   --font-size-mono: 11px;
 
   --slider-width: 30px;
@@ -175,6 +175,13 @@ const css = `
   background-color: var(--hover-bg-color);  
 }
 
+/* ------ [ divider] ------ */
+
+.muigui-divider {
+    min-height: 6px;
+    border-top: 2px solid var(--menu-sep-color);
+    margin-top: 6px;
+}
 
 /* ------ [ button ] ------ */
 

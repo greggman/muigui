@@ -3,19 +3,13 @@ import {
 } from '../libs/elem.js';
 import LabelController from './label-controller.js';
 
+// TODO: remove this? Should just be user side
 export default class Canvas extends LabelController {
   constructor(name) {
     super('muigui-canvas', name);
     const root = this.contentElement;
 
-    this._canvasElem =  createElem('canvas', {
-      onMouseDown: (e) => {
-      },
-      onMouseMove: (e) => {
-      },
-      onMouseUp: (e) => {
-      },
-    });
+    this._canvasElem =  createElem('canvas');
     root.appendChild(this._canvasElem);
   }
   get canvas() {

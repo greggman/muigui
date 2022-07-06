@@ -12,8 +12,8 @@
   - [ ] [255, 255, 255, 255],
   - [x] [1, 1, 1],
   - [ ] [1, 1, 1, 1],
-- [ ] wrapping slider? (0-360)
-- [ ] Direction? (an arrow, low-pri)
+- [x] (no for now) wrapping slider? (0-360) 
+- [x] (no for now) Direction? (an arrow, low-pri)
 - [x] onChange
 - [x] name
 - [x] listen

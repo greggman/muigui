@@ -3,6 +3,7 @@ import Canvas from './canvas.js';
 import Color from './color.js';
 import { createController } from './create-controller.js';
 import Controller from './controller.js';
+import Divider from './divider.js';
 
 
 // Clicking should only be first child
@@ -64,25 +65,24 @@ export default class Folder extends Controller {
       elem.remove();
     }    
   }
-  add(object, property, ...args) {
-    const controller = createController(object, property, ...args);
+  _addController(controller) {
     this._controllerElem.appendChild(controller.domElement);
     this._controllers.push(controller);
     return controller;
   }
+  add(object, property, ...args) {
+    return this._addController(createController(object, property, ...args));
+  }
   addColor(object, property, ...args) {
-    const controller = new Color(object, property, ...args);
-    this._controllerElem.appendChild(controller.domElement);
-    return controller;
+    return this._addController(new Color(object, property, ...args));
+  }
+  addDivider() {
+    return this._addController(new Divider());
   }
   addFolder(name) {
-    const controller = new Folder(name);
-    this._controllerElem.appendChild(controller.domElement);
-    return controller;
+    return this._addController(new Folder(name));
   }
   addCanvas(name) {
-    const controller = new Canvas(name);
-    this._controllerElem.appendChild(controller.domElement);
-    return controller;
+    return this._addController(new Canvas(name));
   }
 }
