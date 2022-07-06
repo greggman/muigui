@@ -22,8 +22,8 @@
 - [x] remove
 - [x] hide
 - [ ] scrollwheel?
-- [ ] Label (not interactive)
-- [ ] Label multi line (use as log) 
+- [x] Label (not interactive)
+- [x] Label multi line (use as log) 
 - [ ] ask for file? (nah, drag and drop is better)
 - [ ] styles (form)
 - [x] deg to rad 
@@ -35,8 +35,8 @@
 - [ ] scroll on long (css)
 - [ ] x, y, z
 - [ ] copy paste all (???)
-- [ ] single line text
-- [ ] splitter
+- [x] single line text
+- [x] splitter
 - [ ] popout text (or expand in place?)
 - [ ] functions to query colors
 - [ ] maybe just add color-scheme to CSS
@@ -53,8 +53,8 @@
     ```
 - [x] add hover for long name
 - [ ] try making custom controllers. In particular a list editor like unity
-- [ ] fix "RGB"
-- [ ] fix first column when changing width
+- [x] fix "RGB"
+- [x] fix first column when changing width
 - [ ] do autoplace test
 - [x] auto step (not going to do this for now)
 - [x] fix can't enter trailing '.' on input number (FF only?) (maybe don't set text when value from text)

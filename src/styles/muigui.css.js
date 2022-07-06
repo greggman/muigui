@@ -175,6 +175,18 @@ const css = `
   background-color: var(--hover-bg-color);  
 }
 
+/* ------ [ label ] ------ */
+
+.muigui-label {
+  border-top: 1px solid var(--menu-sep-color);
+  border-bottom: 1px solid var(--menu-sep-color);
+  padding-top: 0.4em;
+  padding-bottom: 0.3em;
+  place-content: center start;
+  background-color: var(--menu-bg-color);
+  white-space: pre;
+}
+
 /* ------ [ divider] ------ */
 
 .muigui-divider {

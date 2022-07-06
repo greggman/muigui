@@ -5,7 +5,7 @@ import ValueController from './value-controller.js';
 
 const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
 
-const hexToUint32RGB = v => (parseInt(v.substring(1, 3), 16) << 24) |
+const hexToUint32RGB = v => (parseInt(v.substring(1, 3), 16) << 16) |
                             (parseInt(v.substring(3, 5), 16) << 8 ) |
                             (parseInt(v.substring(5, 7), 16)      ) ;
 const uint32RGBToHex = v => `#${(v | 0).toString(16).padStart(6, '0')}`;
@@ -63,11 +63,7 @@ function guessFormat(v) {
       break;
     case 'object':
       if (v.length === 3) {
-        if (Math.max(...v) > 1) {
-          return 'uint8-rgb';
-        } else {
-          return 'float-rgb';
-        }
+        return 'float-rgb';
       } else {
         if ('r' in v && 'g' in v && 'b' in v) {
           return 'object-rgb';
@@ -90,7 +86,7 @@ const formatConverters = {
   'float-rgb':  { fromHex: hexToFloatRGB,  toHex: floatRGBToHex },
   'object-rgb': { fromHex: hexToObjectRGB, toHex: objectRGBToHex },
   'css-rgb':    { fromHex: hexToCssRGB,    toHex: cssRGBToHex },
-  'hex-no-hash':{ fromHex: v => v.substring(1), toHex: v => `#${v}` },
+  'hex-no-hash':{ fromHex: v => v.substring(1), toHex: v => `#${fixHex(v)}` },
 };
 
 export default class Color extends ValueController {
@@ -132,5 +128,11 @@ export default class Color extends ValueController {
     const newV = this._converters.toHex(super.getValue());
     this._textElem.value = newV.substring(1);
     this._colorElem.value = newV;
+    return this;
+  }
+  setValue(v) {
+    super.setValue(v);
+    this.updateDisplay();
+    return this;
   }
 }

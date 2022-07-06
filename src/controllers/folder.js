@@ -4,7 +4,7 @@ import Color from './color.js';
 import { createController } from './create-controller.js';
 import Controller from './controller.js';
 import Divider from './divider.js';
-
+import Label from './label.js';
 
 // Clicking should only be first child
 export default class Folder extends Controller {
@@ -65,24 +65,27 @@ export default class Folder extends Controller {
       elem.remove();
     }    
   }
-  _addController(controller) {
+  addController(controller) {
     this._controllerElem.appendChild(controller.domElement);
     this._controllers.push(controller);
     return controller;
   }
   add(object, property, ...args) {
-    return this._addController(createController(object, property, ...args));
-  }
-  addColor(object, property, ...args) {
-    return this._addController(new Color(object, property, ...args));
-  }
-  addDivider() {
-    return this._addController(new Divider());
-  }
-  addFolder(name) {
-    return this._addController(new Folder(name));
+    return this.addController(createController(object, property, ...args));
   }
   addCanvas(name) {
-    return this._addController(new Canvas(name));
+    return this.addController(new Canvas(name));
+  }
+  addColor(object, property, ...args) {
+    return this.addController(new Color(object, property, ...args));
+  }
+  addDivider() {
+    return this.addController(new Divider());
+  }
+  addFolder(name) {
+    return this.addController(new Folder(name));
+  }
+  addLabel(text) {
+    return this.addController(new Label(text));
   }
 }

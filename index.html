@@ -30,8 +30,20 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/languages/javascript.min.js"></script>
     <style>
+      :root {
+        color-scheme: light dark;
+        --log-bg-color: #eee;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --log-bg-color: #222;
+        }
+        body {
+          background: #444;
+        }
+      }
       body {
-        font-size: sans-serif;
+        font-family: sans-serif;
       }
       #ui-helper {
         display: grid;
@@ -53,7 +65,7 @@
       #log {
         height: 50px;
         overflow: auto;
-        background: #EEE;
+        background: var(--log-bg-color);
         margin-bottom: 10px;
       }
       #log pre {
@@ -94,6 +106,25 @@ function logImpl(color, ...args) {
   }
 }
 const log = (...args) => logImpl('inherit', ...args);
+
+class Logger {
+  constructor(maxLines) {
+    let logController;
+
+    const lines = [];
+    this.log = (...args) => {
+      lines.push(args.join(' '));
+      if (lines.length > 3) {
+        lines.shift();
+      }
+      logController.text(lines.join('\n'));
+    };
+
+    this.setController = (controller) => {
+      logController = controller;
+    };
+  }
+}
 
 function getCSSRulesBySelector(selector) {
   const rules = [];
@@ -149,8 +180,9 @@ const uiElem = document.querySelector('#ui');
     gui.add(s, 'speed', 0, 100, 1); 
     gui.add(s, 'direction', 0, 360, 1).listen();
     gui.add(s, 'friction');
-    gui.add(s, 'run');
     gui.addDivider();
+    gui.add(s, 'run');
+    gui.addLabel('P\ne\nt');
     gui.add(s, 'animal', ['Cat', 'Bird', 'Dog']).listen();
     gui.add(s, 'viscosity', [['Slow', 0.1], ['Medium', 0.5], ['Fast', 1.0]]);
     gui.add(s, 'shoes', {"Loafers": 0, "Sandals": 1, "Sneakers": 2});
@@ -221,6 +253,9 @@ const uiElem = document.querySelector('#ui');
     tempC: 20,
     tempF: 72,
   };
+  const logger = new Logger(3);
+  const log = logger.log;
+
   gui.add([1], '0', 0, 1).name('0 ↔ 1');
   gui.add([100], '0', 0, 200).name('0 ↔ 200');
   gui.add([100000], '0', 0, 1000000).name('0 ↔ 1000000');
@@ -241,6 +276,7 @@ const uiElem = document.querySelector('#ui');
   gui.add(s, 'tempF', 0, 100, 0.1, {from: fToC, to: cToF})
       .name('F° ↔ C°')
       .onChange(v => log(`${v}F°`));
+  logger.setController(gui.addLabel(''));
 }
 
 {
@@ -270,20 +306,27 @@ const uiElem = document.querySelector('#ui');
   uiElem.appendChild(div);
   const gui = new GUI(div).name('Colors');
 
-  const c = {
-    '"#RRGGBB"': '#569AEF',
-    '"RRGGBB"': '#569AEF',
-    '"#RGB"': '#F88',
-    '"RGB"': '8F8',
-    '"rgb(r, g, b)"': 'rgb(170,68,240)',
-    '0xRRGGBB': 0xFEA956,
-    '[r(u8), b(u8), c(u8)]': [255, 192, 255],
-    '[r(f), g(f), b(f)]': [0, 1, 0],
-    '{r, g, b}': {r:0, g:0, b:1},
+  const logger = new Logger(3);
+  const log = logger.log;
+  const f2 = v => v.toFixed(2);
+
+  const addColor = (label, color, format, formatter = JSON.stringify) => {
+    const c = {color};
+    gui.addColor(c, 'color', format)
+        .name(label)
+        .onChange(v => log(formatter(v)));
   };
-  for (const k of Object.keys(c)) {
-    gui.addColor(c, k);
-  }
+
+  addColor('"#RRGGBB"', '#569AEF');
+  addColor('"RRGGBB"', '#569AEF');
+  addColor('"#RGB"', '#F88');
+  addColor('"RGB"', '8F8');
+  addColor('"rgb(r, g, b)"', 'rgb(170,68,240)');
+  addColor('0xRRGGBB', 0xFEA956, undefined, v => `0x${v.toString(16).padStart(6, '0')}`);
+  addColor('[r(u8), b(u8), c(u8)]', [255, 192, 255], 'uint8-rgb');
+  addColor('[r(f), g(f), b(f)]', [0, 1, 0], undefined, v => `[${v.map(v => v.toFixed(2))}]`);
+  addColor('{r, g, b}',  {r: 0, g: 0, b: 1}, undefined, v => `{r: ${f2(v.r)}, g: ${f2(v.g)}, b: ${f2(v.b)}}`);
+  logger.setController(gui.addLabel(''));
 }
 
 {
