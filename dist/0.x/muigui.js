@@ -1011,9 +1011,15 @@
   font-family: var(--font-family);
   font-size: var(--font-size);
   border: none;
+  margin: 0;
+  border-radius: 0;
 }
 .muigui select {
+  appearance: none;
+  border-radius: 0;
+  margin: 0;
   margin-left: 0; /*?*/
+  overflow: hidden; /* Safari */
 }
 
 .muigui select:hover,
@@ -1087,6 +1093,7 @@
 }
 
 .muigui-checkbox input[type=checkbox] {
+  -webkit-appearance: none;
   appearance: none;
   width: auto;
   color: var(--value-color);
@@ -1116,7 +1123,8 @@
 
 .muigui input[type=number]::-webkit-inner-spin-button, 
 .muigui input[type=number]::-webkit-outer-spin-button { 
-  appearance: none; 
+  -webkit-appearance: none;
+  appearance: none;
   margin: 0; 
 }
 .muigui input[type=number] {
@@ -1132,6 +1140,7 @@
 }
 
 .muigui-slider input[type=range] {
+  -webkit-appearance: none;
   appearance: none;
   background-color: var(--slider-right-color);
   margin: 0;
@@ -1141,6 +1150,7 @@
 }
 
 .muigui-slider input[type=range]::-webkit-slider-runnable-track {
+  -webkit-appearance: none;
   appearance: none;
   height: max-content;
   color: var(--slider-left-color);
@@ -1151,6 +1161,7 @@
 }
 
 .muigui-slider input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
   appearance: none;
   width: 0px;
   height: max-content;
