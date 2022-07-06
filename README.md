@@ -7,13 +7,47 @@ A simple Web UI library.
 muigui is a simple UI library in the spirit of
 [dat.gui](https://github.com/dataarts/dat.gui) and/or [lil-gui](https://github.com/georgealways/).
 
+## Usage
+
+```js
+import GUI from 'https://muigui.org/dist/0.x/muigui.module.js';
+```
+
+or
+
+```html
+<script src="https://muigui.org/dist/0.x/muigui.min.js"></script>
+```
+
+Then
+
+```
+const s = {
+  someNumber: 123,
+  someString: "hello",
+  someOption: "dog",
+  someColor: '#ED3281',
+  someFunction: () => console.log('called')
+};
+
+const gui = new GUI();
+gui.add(s, 'someNumber', 0, 200);  // range 0 to 200
+gui.add(s, 'someString);
+gui.add(s, 'someOption, ['cat', 'bird', 'dog']);
+gui.addColor(s, 'someColor');
+gui.add(s, 'someFunction');
+```
+
+produces
+
+<img src="./images/muigui-screenshot" style="max-width: 275px">
+
+## What
+
 It is not a general purpose library for every type of GUI.
 Rather, it is a small, easy to use library for small apps.
 Basically I liked how simple it was to use dat.gui to add
-a few sliders and options to a demo. What I didn't like is
-that dat.gui is very opinionated on style. For example I 
-wanted to be able to try to use it for forms and not always
-as a drop down menu.
+a few sliders and options to a demo.
 
 I thought I'd try to make a CSS/DOM based UI standard elements
 only and then require CSS to style it and see how far I got.
