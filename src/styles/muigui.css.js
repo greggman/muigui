@@ -63,7 +63,8 @@ const css = `
 }
 .muigui-root,
 .muigui-menu {
-  display: block;
+  display: flex;
+  flex-direction: column;
   position: relative;
   user-select: none;
   height: fit-content;
@@ -85,6 +86,11 @@ const css = `
   padding-bottom: 0.2em;
   cursor: pointer;
 }
+.muigui-root>div:nth-child(2),
+.muigui-menu>div:nth-child(2) {
+  flex: 1 1 auto;
+}
+
 .muigui-controller {
   margin-left: 0.2em;
   margin-right: 0.2em;
@@ -139,10 +145,10 @@ const css = `
   content: "▶";
 }
 .muigui-open>*:nth-child(2) {
-  transition: max-height 1s ease-out,
-              opacity 0.5s ease-out 0s;
+  transition: max-height 0.2s ease-out,
+              opacity 0.5s ease-out;
   max-height: 100vh;
-  overflow: hidden;
+  overflow: auto;
   opacity: 1;
 }
 
@@ -319,6 +325,15 @@ const css = `
   border: none;
   box-shadow: -1000px 0 0 1000px var(--slider-left-color);
   box-sizing: border-box;
+}
+
+/* needs to be at bottom to take precedence */
+.muigui-auto-place {
+  max-height: 100%;
+  position: fixed;
+  top: 0;
+  right: 15px;
+  z-index: 100001;
 }
 `;
 export default css;

@@ -28,6 +28,7 @@ export class GUI extends Folder {
     }
     if (parent === undefined && autoPlace) {
       parent = document.body;
+      this.domElement.classList.add('muigui-auto-place');
     }
     if (parent) {
       parent.appendChild(this.domElement);

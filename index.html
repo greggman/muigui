@@ -487,8 +487,37 @@ const hsl = (h, s, l) => `hsl(${h * 360},${s * 100}%,${l * 100}%)`;
 }
 
 {
+  function makeGUI(title, num) {
+    const gui = new GUI({title}).hide();
+    for (let i = 0; i < num; ++i) {
+      gui.add([Math.random()], '0', 0, 1).name(`value ${i}`);
+    }
+    return gui;
+  }
+
+  const guis = {
+    short: makeGUI('Short', 5),
+    long: makeGUI('Long', 100),
+  };
+
+  const div = document.createElement('div');
+  uiElem.appendChild(div);
+  const gui = new GUI({parent: div, title: 'AutoPlace'});
+  gui.add({option: 'none'}, 'option', ['none', 'short', 'long'])
+      .onChange(v => {
+        for (const [name, gui] of Object.entries(guis)) {
+          gui.show(name === v);
+        }
+      });
+}
+
+let depth = 0;
+const updateAppearance = function() {
+
   const themeElem = document.createElement('style');
   document.head.appendChild(themeElem);
+  const styleElem = document.createElement('style');
+  document.head.appendChild(styleElem);
 
   const themes = {
     default: ``,
@@ -532,41 +561,17 @@ const hsl = (h, s, l) => `hsl(${h * 360},${s * 100}%,${l * 100}%)`;
 
   const div = document.createElement('div');
   uiElem.appendChild(div);
-
-  const gui = new GUI(div).name('Theme');
+  const gui = new GUI(div).name('Appearance');
   gui.add({theme: 'default'}, 'theme', [...Object.keys(themes)]).onChange(v => {
-    themeElem.innerText = themes[v];
+    themeElem.textContent = themes[v];
+    styleElem.textContent = '';
     updateAppearance();
   });
-}
-
-const updateAppearance = function() {
-
-  const div = document.createElement('div');
-  uiElem.appendChild(div);
-
-  const gui = new GUI(div).name('Appearance');
 
   const temp = document.createElement('div');
   const cssStringToHexColor = s => s.length === 7
      ? s
      : `#${s[1]}${s[1]}${s[2]}${s[2]}${s[3]}${s[3]}`;
-
-  const mediaQueryElem = document.createElement('style');
-  document.head.appendChild(mediaQueryElem);
-  const fixColumnMediaQueries = (width) => {
-    width = parseInt(width); // should do other CSS?
-    if (Number.isNaN(width) || width <= 0) {
-      return;
-    }
-    const lines = [];
-    for (let w = 0; w < 6000; w += width) {
-//      lines.push(`@media (max-width: ${w + width * 2 - 1}px ) { #ui { width: ${w + width}px; }`);
-      lines.push(`@media (max-width: ${w + width * 2 - 1}px ) { #ui { column-count: ${w / width + 1}; }`);
-    }
-    mediaQueryElem.textContent = lines.reverse().join('\n');
-    //uiElem.style.columns = `${width}px`;
-  };
 
   const fns = {
     '--width': (v) => {
@@ -575,23 +580,32 @@ const updateAppearance = function() {
     },
   }
 
+  const folder = gui.addFolder('Style');
   const rule = getCSSRulesBySelector('.muigui')[0];  // assuming the first one
   const varNames = Object.values(rule.style).filter(s => s.startsWith('--'));
   const obj = {};
+
+  const updateStyles = () => {
+    styleElem.textContent = `.muigui {\n${
+      [...Object.entries(obj)].map(([key, value]) => {
+        return `${key}: ${value};`
+      }).join('\n')}\n}`;
+    updateUIColors();
+  };
+
   for (const key of varNames) {
     const value = rule.style.getPropertyValue(key).trim();
     if (value.startsWith('#')) {
       obj[key] = cssStringToHexColor(value);
-      gui.addColor(obj, key).onChange(v => rule.style.setProperty(key, v));
+      folder.addColor(obj, key).onChange(updateStyles);
     } else if (!value.startsWith('var')){
       obj[key] = value;
-      gui.add(obj, key).onChange(v => {
-        rule.style.setProperty(key, v);
+      folder.add(obj, key).onChange(v => {
         const fn = fns[key];
         if (fn) {
           fn(v);
         }
-        updateUIColors();
+        updateStyles();
       });
     }
   }
@@ -605,7 +619,7 @@ const updateAppearance = function() {
         map.set(key, value);
       }
     }
-    gui.controllers.forEach(c => {
+    folder.controllers.forEach(c => {
       const key = c.property;
       const value = map.get(key);
       c.setValue(value);
