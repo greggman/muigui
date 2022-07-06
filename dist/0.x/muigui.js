@@ -1194,7 +1194,7 @@
   const styleElem = createElem('style');
 
   class GUI extends Folder {
-    constructor(options) {
+    constructor(options = {}) {
       super('Controls', 'muigui-root');
       if (options instanceof HTMLElement) {
         options = {parent: options};
