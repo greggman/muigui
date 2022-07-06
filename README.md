@@ -40,7 +40,7 @@ gui.add(s, 'someFunction');
 
 produces
 
-<img src="./images/muigui-screenshot" style="max-width: 275px">
+<img src="./images/muigui-screenshot.png" style="max-width: 275px">
 
 ## What
 
