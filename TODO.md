@@ -74,6 +74,8 @@
 - [ ] Docs
 - [ ] API docs (jsdoc)
 - [ ] TypeScript 
+- [x] Fix Safari Style
+- [x] Fix Safari overflow on long names
 - [ ] look into add without object. eg
 
   ```

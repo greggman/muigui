@@ -177,6 +177,7 @@ const css = `
   border-radius: 0;
   margin: 0;
   margin-left: 0; /*?*/
+  overflow: hidden; /* Safari */
 }
 
 .muigui select:hover,
