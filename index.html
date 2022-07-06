@@ -39,7 +39,7 @@
           --log-bg-color: #222;
         }
         body {
-          background: #444;
+          background: #333;
         }
       }
       body {
@@ -178,7 +178,7 @@ const hsl = (h, s, l) => `hsl(${h * 360},${s * 100}%,${l * 100}%)`;
     animal: 'Bird',
     viscosity: 0.5,
     shoes: 1,
-    show: () => { log(JSON.stringify(s, null, 2)); },
+    show: () => { log(JSON.stringify(s)); },
     background: '#123456',
     period1: 1,
     period2: 1.37,
@@ -193,10 +193,10 @@ const hsl = (h, s, l) => `hsl(${h * 360},${s * 100}%,${l * 100}%)`;
     const gui = new GUI(div);
     gui.add(s, 'speed', 0, 100, 1); 
     gui.add(s, 'direction', 0, 360, 1).listen();
-    gui.add(s, 'friction');
+    gui.add(s, 'friction', 0, 1);
     gui.addDivider();
     gui.add(s, 'run');
-    gui.addLabel('P\ne\nt');
+    gui.addLabel('Pet');
     gui.add(s, 'animal', ['Cat', 'Bird', 'Dog']).listen();
     gui.add(s, 'viscosity', [['Slow', 0.1], ['Medium', 0.5], ['Fast', 1.0]]);
     gui.add(s, 'shoes', {"Loafers": 0, "Sandals": 1, "Sneakers": 2});
