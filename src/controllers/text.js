@@ -25,8 +25,6 @@ export default class Text extends ValueController {
   updateDisplay() {
     const newV = super.getValue();
     this._textElem.value = newV;
-  }
-  setValue(v) {
-    super.setValue(v);
+    return this;
   }
 }

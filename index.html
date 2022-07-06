@@ -95,6 +95,8 @@
 import {GUI} from './src/muigui.js';
 import {cube} from './examples/js/cube.js';
 
+const uiElem = document.querySelector('#ui');
+
 const logElem = document.querySelector('#log');
 function logImpl(color, ...args) {
   const elem = document.createElement('pre');
@@ -126,6 +128,20 @@ class Logger {
   }
 }
 
+// Using an invisible GUI to get the colors
+// In a real app we'd just use the GUI we created
+// but I don't want to clutter the other examples.
+let uiColors;
+const updateUIColors = (() => {
+  const div = document.createElement('div');
+  uiElem.appendChild(div);
+  const gui = new GUI(div).hide();
+  return function updateUIColors() {
+    uiColors = gui.getColors();
+  };
+})();
+updateUIColors();
+
 function getCSSRulesBySelector(selector) {
   const rules = [];
   for (let s = 0; s < document.styleSheets.length; ++s) {
@@ -152,8 +168,6 @@ function resizeCanvasToDisplaySize(canvas) {
 }
 
 const hsl = (h, s, l) => `hsl(${h * 360},${s * 100}%,${l * 100}%)`;
-
-const uiElem = document.querySelector('#ui');
 
 {
   const s = {
@@ -229,11 +243,10 @@ const uiElem = document.querySelector('#ui');
           0, 0, width - 1, height);
       ctx.clearRect(width - 1, 0, 1, height);
       ctx.globalCompositeOperation = 'source-over';
-      ctx.fillStyle = '#0F0';
+      ctx.fillStyle = uiColors.color;
       const s1 = Math.sin(lTime1 * 0.01);
       const s2 = Math.sin(lTime2 * 0.01);
       const newY = height / 2 + (s1 + s2) * (height - 1) / 4;
-
       ctx.fillRect(width - 1, Math.min(lastY, newY), 1, Math.abs(lastY - newY) + 1);
       lastY = newY;
       requestAnimationFrame(draw);
@@ -260,6 +273,7 @@ const uiElem = document.querySelector('#ui');
   gui.add([100], '0', 0, 200).name('0 ↔ 200');
   gui.add([100000], '0', 0, 1000000).name('0 ↔ 1000000');
   gui.add([1e+30], '0', -1e+50, 1e+50).name('-1e+50 ↔ 1e+50');
+
   const degToRad = d => d * Math.PI / 180;
   const radToDeg = r => r * 180 / Math.PI;
   gui.add(s, 'angleRad', -360, 360, 1, {from: radToDeg, to: degToRad})
@@ -268,6 +282,7 @@ const uiElem = document.querySelector('#ui');
   gui.add(s, 'angleDeg', -Math.PI * 2, Math.PI * 2, 0.001, {from: degToRad, to: radToDeg})
       .name('deg ↔ rad')
       .onChange(v => log('deg:', v));
+
   const cToF = c => (c * (212 - 32) / 100) + 32;
   const fToC = f => (f - 32) * 100 / (212 - 32);
   gui.add(s, 'tempC', 32, 212, 0.1, {from: cToF, to: fToC})
@@ -276,6 +291,49 @@ const uiElem = document.querySelector('#ui');
   gui.add(s, 'tempF', 0, 100, 0.1, {from: fToC, to: cToF})
       .name('F° ↔ C°')
       .onChange(v => log(`${v}F°`));
+
+  logger.setController(gui.addLabel(''));
+}
+
+{
+  const div = document.createElement('div');
+  uiElem.appendChild(div);
+  const gui = new GUI({parent: div, title: 'Numbers'});
+
+  const s = {
+    angleRad: Math.PI,
+    angleDeg: 180,
+    tempC: 20,
+    tempF: 72,
+  };
+  const logger = new Logger(3);
+  const log = logger.log;
+
+  gui.add([123], '0')
+     .name('xxx')
+     .onChange(v => log(v));
+  gui.add([456.78], '0')
+     .name('xxx.xx')
+     .onChange(v => log(v));
+
+  const degToRad = d => d * Math.PI / 180;
+  const radToDeg = r => r * 180 / Math.PI;
+  gui.add(s, 'angleRad', {from: radToDeg, to: degToRad}, 1)
+      .name('rad ↔ deg')
+      .onChange(v => log('rad:', v));
+  gui.add(s, 'angleDeg', {from: degToRad, to: radToDeg}, 0.001)
+      .name('deg ↔ rad')
+      .onChange(v => log('deg:', v));
+
+  const cToF = c => (c * (212 - 32) / 100) + 32;
+  const fToC = f => (f - 32) * 100 / (212 - 32);
+  gui.add(s, 'tempC', {from: cToF, to: fToC}, 0.1)
+      .name('C° ↔ F°')
+      .onChange(v => log(`${v}C°`));
+  gui.add(s, 'tempF', {from: fToC, to: cToF}, 0.1)
+      .name('F° ↔ C°')
+      .onChange(v => log(`${v}F°`));
+
   logger.setController(gui.addLabel(''));
 }
 
@@ -399,9 +457,9 @@ const uiElem = document.querySelector('#ui');
         0, 0, width - 1, height);
     ctx.globalCompositeOperation = 'source-over';
     const x = width - 1;
-    ctx.fillStyle = ticks % 16 === 0 ? '#444' : '#000';
+    ctx.fillStyle = ticks % 16 === 0 ? uiColors.menuSepColor : uiColors.menuBgColor;
     ctx.fillRect(x, 0, 1, height);
-    ctx.fillStyle = '#444';
+    ctx.fillStyle = uiColors.menuSepColor;
     for (let y = 8; y < height; y += 16) {
       ctx.fillRect(x, y, 1, 1);
     }
@@ -533,6 +591,7 @@ const updateAppearance = function() {
         if (fn) {
           fn(v);
         }
+        updateUIColors();
       });
     }
   }
@@ -551,6 +610,7 @@ const updateAppearance = function() {
       const value = map.get(key);
       c.setValue(value);
     });
+    updateUIColors();
   };
 }();
 </script>

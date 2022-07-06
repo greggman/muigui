@@ -26,5 +26,27 @@ export default class Controller {
   disable(disable = true) {
     return this.enable(!disable);
   }
+  getColors() {
+    const toCamelCase = s => s.replace(/-([a-z])/g, (m, m1) => m1.toUpperCase());
+    const keys = [
+      'color',
+      'bg-color',
+      'value-color',
+      'value-bg-color',
+      'hover-bg-color',
+      'menu-bg-color',
+      'menu-sep-color',
+      'disabled-color',
+    ];
+    const div = createElem('div');
+    this._root.appendChild(div);
+    const colors = Object.fromEntries(keys.map(key => {
+      div.style.color = `var(--${key})`;
+      const s = getComputedStyle(div);
+      return [toCamelCase(key), s.color];
+    }));
+    div.remove();
+    return colors;
+  }
 }
 

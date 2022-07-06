@@ -37,7 +37,7 @@ export default class Slider extends ValueController {
         const v = parseFloat(this._textElem.value);
         if (!Number.isNaN(v)) {
           this._skipUpdateTextElem = true;
-          this.setFinalValue(this._to(scale));
+          this.setFinalValue(this._to(v));
         }
       }
     });
@@ -73,7 +73,17 @@ export default class Slider extends ValueController {
   }
   updateDisplay() {
     const newV = super.getValue();
-    const steppedV = Math.round(this._from(newV) / this._step) * this._step;
+    // Yea, I know this should be `Math.round(v / step) * step
+    // but try step = 0.1, newV = 19.95
+    //
+    // I get
+    //     Math.round(19.95 / 0.1) * 0.1
+    //     19.900000000000002
+    // vs
+    //     Math.round(19.95 / 0.1) / (1 / 0.1)
+    //     19.9
+    //
+    const steppedV = Math.round(this._from(newV) / this._step) / (1 / this._step);
     if (!this._skipUpdateTextElem) {
       this._textElem.value = steppedV;
     }

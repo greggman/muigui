@@ -1,8 +1,9 @@
 import Folder from './controllers/folder.js';
 import css from './styles/muigui.css.js';
+import {createElem} from './libs/elem.js';
 
 let stylesInjected = false;
-const styleElem = document.createElement('style');
+const styleElem = createElem('style');
 
 export class GUI extends Folder {
   constructor(options) {
@@ -25,7 +26,7 @@ export class GUI extends Folder {
     if (width) {
       this.domElement.style.width = /^\d+$/.test(width) ? `${width}px` : width;
     }
-    if (!parent && autoPlace) {
+    if (parent === undefined && autoPlace) {
       parent = document.body;
     }
     if (parent) {

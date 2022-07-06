@@ -24,11 +24,11 @@
 - [ ] scrollwheel?
 - [x] Label (not interactive)
 - [x] Label multi line (use as log) 
-- [ ] ask for file? (nah, drag and drop is better)
+- [x] ask for file? (nah, drag and drop is better)
 - [ ] styles (form)
 - [x] deg to rad 
-- [ ] fix step with conversions
-- [ ] format slider number?
+- [x] fix step with conversions
+- [x] format slider number?
 - [ ] TextArea (edit larger text)
 - [ ] submenus
 - [x] menu open/close
@@ -38,8 +38,8 @@
 - [x] single line text
 - [x] splitter
 - [ ] popout text (or expand in place?)
-- [ ] functions to query colors
-- [ ] maybe just add color-scheme to CSS
+- [ ] functions to query colors? (TBD, for now user can do their own?)
+- [x] (doesn't work) maybe just add color-scheme to CSS
 - [ ] add all
   - [ ] add with filter? (pass in filter so you can make positive or negative)
   - [ ] add with list of fields?
@@ -58,8 +58,8 @@
 - [ ] do autoplace test
 - [x] auto step (not going to do this for now)
 - [x] fix can't enter trailing '.' on input number (FF only?) (maybe don't set text when value from text)
-- [ ] consider more explicit layout
-  - [ ] (1 part, 2 parts, 3 parts) or (1 part, 2 parts where 3 is [[1][2[1][2]]])
+- [x] consider more explicit layout
+  - [x] (1 part, 2 parts, 3 parts) or (1 part, 2 parts where 3 is [[1][2[1][2]]])
   
   ```
   gui.addButton(title, fn);
