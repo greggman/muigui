@@ -6,7 +6,6 @@ import Controller from './controller.js';
 import Divider from './divider.js';
 import Label from './label.js';
 
-// Clicking should only be first child
 export default class Folder extends Controller {
   constructor(name = 'Controls', className = 'muigui-menu') {
     super(className);
@@ -63,11 +62,13 @@ export default class Folder extends Controller {
       const c0 = c[0];
       const elem = c0.domElement;
       elem.remove();
+      c0.setParent(null);
     }    
   }
   addController(controller) {
     this._controllerElem.appendChild(controller.domElement);
     this._controllers.push(controller);
+    controller.setParent(this);
     return controller;
   }
   add(object, property, ...args) {

@@ -33,9 +33,19 @@
     return `muigui-${++id}`;
   }
 
+  function removeArrayElem(array, value) {
+    const ndx = array.indexOf(value);
+    if (ndx) {
+      array.splice(ndx, 1);
+    }
+    return array;
+  }
+
   class Controller {
     constructor(className) {
       this._root = createElem('div', {className: `muigui-controller`});
+      this._changeFns = [];
+      this._finishChangeFns = [];
       // we need the specialization to come last so it takes precedence.
       if (className) {
         this._root.classList.add(className);
@@ -43,6 +53,9 @@
     }
     get domElement() {
       return this._root;
+    }
+    setParent(parent) {
+      this._parent = parent;
     }
     show(show = true) {
       this._root.classList.toggle('muigui-hide', !show);
@@ -58,6 +71,51 @@
     }
     disable(disable = true) {
       return this.enable(!disable);
+    }
+    onChange(fn) {
+      this.removeChange(fn);
+      this._changeFns.push(fn);
+      return this;
+    }
+    removeChange(fn) {
+      removeArrayElem(this._changeFns, fn);
+      return this;
+    }
+    onFinishChange(fn) {
+      this.removeFinishChange(fn);
+      this._finishChangeFns.push(fn);
+      return this;
+    }
+    removeFinishChange(fn) {
+      removeArrayElem(this._finishChangeFns, fn);
+      return this;
+    }
+    _callListeners(fns, newV) {
+      for (const fn of fns) {
+        fn.call(this, newV);
+      }
+    }
+    emitChange(value, object, property) {
+      this._callListeners(this._changeFns, value);
+      if (this._parent) {
+        this._parent.emitChange({
+          object,
+          property,
+          value,
+          controller: this,
+        });
+      }
+    }
+    emitFinalChange(value, object, property) {
+      this._callListeners(this._finishChangeFns, value);
+      if (this._parent) {
+        this._parent.emitFinalChange({
+          object,
+          property,
+          value,
+          controller: this,
+        }, object, property);
+      }
     }
     getColors() {
       const toCamelCase = s => s.replace(/-([a-z])/g, (m, m1) => m1.toUpperCase());
@@ -121,14 +179,6 @@
     }
   }
 
-  function removeArrayElem(array, value) {
-    const ndx = array.indexOf(value);
-    if (ndx) {
-      array.splice(ndx, 1);
-    }
-    return array;
-  }
-
   const tasks = [];
   const tasksToRemove = new Set();
 
@@ -190,8 +240,6 @@
       this._object = object;
       this._property = property;
       this._initialValue = this.getValue();
-      this._changeFns = [];
-      this._finishChangeFns = [];
       this._listening = false;
     }
     get initialValue() {
@@ -206,19 +254,13 @@
     setJustValue(v) {
       this._object[this._property] = v;
     }
-    _callListeners(fns) {
-      const newV = this.getValue();
-      for (const fn of fns) {
-        fn.call(this, newV);
-      }
-    }
     setValue(v) {
       this._object[this._property] = v;
-      this._callListeners(this._changeFns);
+      this.emitChange(this.getValue(), this._object, this._property);
     }
     setFinalValue(v) {
       this.setValue(v);
-      this._callListeners(this._finishChangeFns);
+      this.emitFinalChange(this.getValue(), this._object, this._property);
     }
     getValue(v) {
       return this._object[this._property];
@@ -229,24 +271,6 @@
     }
     reset() {
       this.setValue(this._initialValue);
-      return this;
-    }
-    onChange(fn) {
-      this.removeChange(fn);
-      this._changeFns.push(fn);
-      return this;
-    }
-    removeChange(fn) {
-      removeArrayElem(this._changeFns, fn);
-      return this;
-    }
-    onFinishChange(fn) {
-      this.removeFinishChange(fn);
-      this._finishChangeFns.push(fn);
-      return this;
-    }
-    removeFinishChange(fn) {
-      removeArrayElem(this._finishChangeFns, fn);
       return this;
     }
     listen(listen = true) {
@@ -756,7 +780,6 @@
     }
   }
 
-  // Clicking should only be first child
   class Folder extends Controller {
     constructor(name = 'Controls', className = 'muigui-menu') {
       super(className);
@@ -813,11 +836,13 @@
         const c0 = c[0];
         const elem = c0.domElement;
         elem.remove();
+        c0.setParent(null);
       }    
     }
     addController(controller) {
       this._controllerElem.appendChild(controller.domElement);
       this._controllers.push(controller);
+      controller.setParent(this);
       return controller;
     }
     add(object, property, ...args) {

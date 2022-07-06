@@ -1,8 +1,11 @@
 import { createElem } from '../libs/elem.js';
+import { removeArrayElem } from '../libs/utils.js';
 
 export default class Controller {
   constructor(className) {
     this._root = createElem('div', {className: `muigui-controller`});
+    this._changeFns = [];
+    this._finishChangeFns = [];
     // we need the specialization to come last so it takes precedence.
     if (className) {
       this._root.classList.add(className);
@@ -10,6 +13,9 @@ export default class Controller {
   }
   get domElement() {
     return this._root;
+  }
+  setParent(parent) {
+    this._parent = parent;
   }
   show(show = true) {
     this._root.classList.toggle('muigui-hide', !show);
@@ -25,6 +31,51 @@ export default class Controller {
   }
   disable(disable = true) {
     return this.enable(!disable);
+  }
+  onChange(fn) {
+    this.removeChange(fn);
+    this._changeFns.push(fn);
+    return this;
+  }
+  removeChange(fn) {
+    removeArrayElem(this._changeFns, fn);
+    return this;
+  }
+  onFinishChange(fn) {
+    this.removeFinishChange(fn);
+    this._finishChangeFns.push(fn);
+    return this;
+  }
+  removeFinishChange(fn) {
+    removeArrayElem(this._finishChangeFns, fn);
+    return this;
+  }
+  _callListeners(fns, newV) {
+    for (const fn of fns) {
+      fn.call(this, newV);
+    }
+  }
+  emitChange(value, object, property) {
+    this._callListeners(this._changeFns, value);
+    if (this._parent) {
+      this._parent.emitChange({
+        object,
+        property,
+        value,
+        controller: this,
+      });
+    }
+  }
+  emitFinalChange(value, object, property) {
+    this._callListeners(this._finishChangeFns, value);
+    if (this._parent) {
+      this._parent.emitFinalChange({
+        object,
+        property,
+        value,
+        controller: this,
+      }, object, property);
+    }
   }
   getColors() {
     const toCamelCase = s => s.replace(/-([a-z])/g, (m, m1) => m1.toUpperCase());

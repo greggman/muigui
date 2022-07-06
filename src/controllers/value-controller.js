@@ -1,5 +1,4 @@
 import {addTask, removeTask} from '../libs/taskrunner.js';
-import { removeArrayElem } from '../libs/utils.js';
 import LabelController from './label-controller.js';
 
 export default class ValueController extends LabelController {
@@ -8,8 +7,6 @@ export default class ValueController extends LabelController {
     this._object = object;
     this._property = property;
     this._initialValue = this.getValue();
-    this._changeFns = [];
-    this._finishChangeFns = [];
     this._listening = false;
   }
   get initialValue() {
@@ -24,19 +21,13 @@ export default class ValueController extends LabelController {
   setJustValue(v) {
     this._object[this._property] = v;
   }
-  _callListeners(fns) {
-    const newV = this.getValue();
-    for (const fn of fns) {
-      fn.call(this, newV);
-    }
-  }
   setValue(v) {
     this._object[this._property] = v;
-    this._callListeners(this._changeFns);
+    this.emitChange(this.getValue(), this._object, this._property);
   }
   setFinalValue(v) {
     this.setValue(v);
-    this._callListeners(this._finishChangeFns);
+    this.emitFinalChange(this.getValue(), this._object, this._property);
   }
   getValue(v) {
     return this._object[this._property];
@@ -47,24 +38,6 @@ export default class ValueController extends LabelController {
   }
   reset() {
     this.setValue(this._initialValue);
-    return this;
-  }
-  onChange(fn) {
-    this.removeChange(fn);
-    this._changeFns.push(fn);
-    return this;
-  }
-  removeChange(fn) {
-    removeArrayElem(this._changeFns, fn);
-    return this;
-  }
-  onFinishChange(fn) {
-    this.removeFinishChange(fn);
-    this._finishChangeFns.push(fn);
-    return this;
-  }
-  removeFinishChange(fn) {
-    removeArrayElem(this._finishChangeFns, fn);
     return this;
   }
   listen(listen = true) {
