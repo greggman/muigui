@@ -65,6 +65,7 @@
 - [ ] Create layout units? Instead of using CSS directly on types maybe make
       components that do nothing but layout?
       `Column`, `Row`, etc. Then for layout it becomes
+
       ```
       Column[
         title,
@@ -103,8 +104,11 @@
 - [x] Fix Safari Style
 - [x] Fix Safari overflow on long names
 - [x] Change menu to button or at least make it so you can focus
-- [ ] add focus to color
+- [x] add focus to color
 - [x] fix disabled so it disables all inputs (otherwise focus goes there)
+
+---
+
 - [ ] look into add without object. eg
 
   ```
