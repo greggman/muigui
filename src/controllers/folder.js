@@ -10,7 +10,8 @@ export default class Folder extends Controller {
   constructor(name = 'Controls', className = 'muigui-menu') {
     super(className);
     this._labelElem = createElem('label');
-    this.domElement.appendChild(createElem('div', {
+    this.domElement.appendChild(createElem('button', {
+      type: 'button',
       onClick: () => { this.toggleOpen() },
     }, [this._labelElem]));
     this._controllerElem = createElem('div');

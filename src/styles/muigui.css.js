@@ -11,6 +11,7 @@ const css = `
   --menu-bg-color: #000000;
   --menu-sep-color: #444444;
   --hover-bg-color: #666666;
+  --focus-color: #8AF;
 
   --button-bg-color: var(--value-bg-color);
 
@@ -78,11 +79,14 @@ const css = `
   border-bottom: 1px solid var(--menu-sep-color);
 }
 
-.muigui-root>div:nth-child(1),
-.muigui-menu>div:nth-child(1) {
+
+.muigui-root>button:nth-child(1),
+.muigui-menu>button:nth-child(1) {
   border-top: 1px solid var(--menu-sep-color);
   border-bottom: 1px solid var(--menu-sep-color);
   position: relative;
+  text-align: left;
+  color: var(--color);
   background-color: var(--menu-bg-color);
   min-height: var(--line-height);
   padding-top: 0.2em;
@@ -134,18 +138,18 @@ const css = `
 }
 
 /* fix! */
-.muigui-open>div>label::before,
-.muigui-closed>div>label::before {
+.muigui-open>button>label::before,
+.muigui-closed>button>label::before {
   width: 1.5em;
   height: var(--line-height);
   display: inline-grid;
   place-content: center;
   pointer-events: none;
 }
-.muigui-open>div>label::before {
+.muigui-open>button>label::before {
   content: "▼";
 }
-.muigui-closed>div>label::before {
+.muigui-closed>button>label::before {
   content: "▶";
 }
 .muigui-open>*:nth-child(2) {
@@ -181,6 +185,12 @@ const css = `
   margin: 0;
   margin-left: 0; /*?*/
   overflow: hidden; /* Safari */
+}
+
+.muigui select:focus,
+.muigui input:focus,
+.muigui button:focus {
+  outline: 1px solid var(--focus-color);
 }
 
 .muigui select:hover,
@@ -230,6 +240,10 @@ const css = `
   margin-right: 0; /* why? */
   max-width: var(--line-height);
   border-radius: var(--border-radius);
+}
+
+.muigui-color>div:focus-within {
+  outline: 1px solid var(--focus-color);
 }
 
 .muigui-color input[type=color] {

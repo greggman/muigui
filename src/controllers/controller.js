@@ -16,6 +16,7 @@ export default class Controller {
   }
   setParent(parent) {
     this._parent = parent;
+    this.enable(!this.disabled());
   }
   show(show = true) {
     this._root.classList.toggle('muigui-hide', !show);
@@ -25,8 +26,15 @@ export default class Controller {
   hide() {
     return this.show(false);
   }
+  disabled() {
+    return !!this._root.closest('.muigui-disabled');
+  }
   enable(enable = true) {
     this._root.classList.toggle('muigui-disabled', !enable);
+    const disabled = this.disabled();
+    ['input', 'button', 'select'].forEach(tag => {
+      this._root.querySelectorAll(tag).forEach(e => e.disabled = disabled);
+    });
     return this;
   }
   disable(disable = true) {

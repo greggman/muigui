@@ -62,6 +62,28 @@
 - [x] fix "RGB"
 - [x] fix first column when changing width
 - [x] do autoplace test
+- [ ] Create layout units? Instead of using CSS directly on types maybe make
+      components that do nothing but layout?
+      `Column`, `Row`, etc. Then for layout it becomes
+      ```
+      Column[
+        title,
+        Column[
+          Row[
+            Column[label, Color, Text],
+          ],
+          Row[
+            Column[label, Slider, Number],
+          ]
+          Row[
+            Button,
+          ]
+        ],
+      ]
+      ```
+
+      No idea if that makes sense
+
 - [ ] try to refactor Text, Number, Slider, Color, Checkbox, etc, into more reusable components
       so you can combine them into a new component. Like ideally an X,Y,Z might be
       3 sliders. So maybe instead of Checkbox extends ValueComponent it should just
@@ -74,9 +96,12 @@
 - [ ] Docs
 - [ ] API docs (jsdoc)
 - [ ] TypeScript 
-- [ ] add folder.onChange/onFinishChange
+- [x] add folder.onChange/onFinishChange
 - [x] Fix Safari Style
 - [x] Fix Safari overflow on long names
+- [x] Change menu to button or at least make it so you can focus
+- [ ] add focus to color
+- [x] fix disabled so it disables all inputs (otherwise focus goes there)
 - [ ] look into add without object. eg
 
   ```
