@@ -1,6 +1,7 @@
-/* global console */
-
 export const config = {};
+
+const isArrayLike = v => Array.isArray(v) || 
+    (v.buffer instanceof ArrayBuffer && typeof v.length === 'number' && v.byteLength === 'number');
 
 export function setConfig(options) {
   Object.assign(config, options);
@@ -11,32 +12,89 @@ function formatMsg(msg) {
 }
 
 export function assertTruthy(actual, msg = '') {
-  if (!config.noLint && !actual) {
+  if (!actual) {
     throw new Error(`${formatMsg(msg)}expected: truthy, actual: ${actual}`);
   }
 }
 
 export function assertFalsy(actual, msg = '') {
-  if (!config.noLint && actual) {
+  if (actual) {
     throw new Error(`${formatMsg(msg)}expected: falsy, actual: ${actual}`);
   }
 }
 
 export function assertStringMatchesRegEx(actual, regex, msg = '') {
-  if (!config.noLint && !regex.test(actual)) {
+  if (!regex.test(actual)) {
     throw new Error(`${formatMsg(msg)}expected: ${regex}, actual: ${actual}`);
   }
 }
 
+export function assertLessThan(actual, expected, msg = '') {
+  if (actual >= expected) {
+    throw new Error(`${formatMsg(msg)}expected: ${actual} to be less than: ${expected}`);
+  }
+}
+
+export function assertEqualApproximately(actual, expected, range, msg = '') {
+  const diff = Math.abs(actual - expected);
+  if (diff > range) {
+    throw new Error(`${formatMsg(msg)}expected: ${actual} to be less ${range} different than: ${expected}`);
+  }
+}
+
+export function assertInstanceOf(actual, expectedType, msg = '') {
+  if (!(actual instanceof expectedType)) {
+    throw new Error(`${formatMsg(msg)}expected: ${actual} to be of type: ${expectedType.constructor.name}`);
+  }
+}
+
+export function assertIsArray(actual, msg = '') {
+  if (!Array.isArray(actual)) {
+    throw new Error(`${formatMsg(msg)}expected: ${actual} to be an Array`);
+  }
+}
+
 export function assertEqual(actual, expected, msg = '') {
-  if (!config.noLint && actual !== expected) {
+  // I'm sure this is not sufficient
+  if (actual.length && expected.length && isArrayLike(actual) && isArrayLike(expected)) {
+    assertArrayEqual(actual, expected);
+  } else if (actual !== expected) {
+    throw new Error(`${formatMsg(msg)}expected: ${expected} to equal actual: ${actual}`);
+  }
+}
+
+export function assertStrictEqual(actual, expected, msg = '') {
+  if (actual !== expected) {
     throw new Error(`${formatMsg(msg)}expected: ${expected} to equal actual: ${actual}`);
   }
 }
 
 export function assertNotEqual(actual, expected, msg = '') {
-  if (!config.noLint && actual === expected) {
+  if (actual === expected) {
     throw new Error(`${formatMsg(msg)}expected: ${expected} to not equal actual: ${actual}`);
+  }
+}
+
+export function assertStrictNotEqual(actual, expected, msg = '') {
+  if (actual === expected) {
+    throw new Error(`${formatMsg(msg)}expected: ${expected} to not equal actual: ${actual}`);
+  }
+}
+
+export function assertArrayEqual(actual, expected, msg = '') {
+  if (actual.length !== expected.length) {
+    throw new Error(`${formatMsg(msg)}expected: array.length ${expected.length} to equal actual.length: ${actual.length}`);
+  }
+  const errors = [];
+  for (let i = 0; i < actual.length && errors.length < 10; ++i) {
+    try {
+      assertEqual(actual[i], expected[i]);
+    } catch (e) {
+      errors.push(`${formatMsg(msg)}expected: expected[${i}] ${expected[i]} to equal actual[${i}]: ${actual[i]}`);
+    }
+  }
+  if (errors.length > 0) {
+    throw new Error(errors.join('\n'));
   }
 }
 

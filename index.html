@@ -366,7 +366,7 @@ const hsl = (h, s, l) => `hsl(${h * 360},${s * 100}%,${l * 100}%)`;
 
   const logger = new Logger(3);
   const log = logger.log;
-  const f2 = v => v.toFixed(2);
+  const f3 = v => +v.toFixed(3);
 
   const addColor = (label, color, format, formatter = JSON.stringify) => {
     const c = {color};
@@ -376,14 +376,16 @@ const hsl = (h, s, l) => `hsl(${h * 360},${s * 100}%,${l * 100}%)`;
   };
 
   addColor('"#RRGGBB"', '#569AEF');
-  addColor('"RRGGBB"', '#569AEF');
+  addColor('"RRGGBB"', 'EF569A');
   addColor('"#RGB"', '#F88');
   addColor('"RGB"', '8F8');
   addColor('"rgb(r, g, b)"', 'rgb(170,68,240)');
   addColor('0xRRGGBB', 0xFEA956, undefined, v => `0x${v.toString(16).padStart(6, '0')}`);
   addColor('[r(u8), b(u8), c(u8)]', [255, 192, 255], 'uint8-rgb');
-  addColor('[r(f), g(f), b(f)]', [0, 1, 0], undefined, v => `[${v.map(v => v.toFixed(2))}]`);
-  addColor('{r, g, b}',  {r: 0, g: 0, b: 1}, undefined, v => `{r: ${f2(v.r)}, g: ${f2(v.g)}, b: ${f2(v.b)}}`);
+  addColor('Uint8Array(3)', new Uint8Array([75, 150, 225]), undefined, v => `[${v.join(', ')}]`);
+  addColor('Float32Array(3)', new Float32Array([0.9, 0.7, 0.5]), undefined, v => `[${v.join(', ')}]`);
+  addColor('[r(f), g(f), b(f)]', [0.2, 0.9, 0.5], undefined, v => `[${v.map(v => f3(v))}]`);
+  addColor('{r, g, b}',  {r: 0, g: 0, b: 1}, undefined, v => `{r: ${f3(v.r)}, g: ${f3(v.g)}, b: ${f3(v.b)}}`);
   logger.setController(gui.addLabel(''));
 }
 

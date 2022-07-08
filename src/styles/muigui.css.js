@@ -224,6 +224,7 @@ const css = `
   position: relative;
   margin-left: 0;
   margin-right: 0; /* why? */
+  max-width: var(--line-height);
 }
 
 .muigui-color input[type=color] {

@@ -1,5 +1,9 @@
 # muigui
 
+# NOT READY for USE
+
+<!---
+
 <img src="./images/muigui.png" style="max-width: 640px">
 
 A simple Web UI library.
@@ -21,7 +25,7 @@ or
 
 Then
 
-```
+```js
 const s = {
   someNumber: 123,
   someString: "hello",
@@ -41,6 +45,26 @@ gui.add(s, 'someFunction');
 produces
 
 <img src="./images/muigui-screenshot.png" style="max-width: 275px">
+
+or a shorter version
+
+```js
+const s = {
+  someNumber: 123,
+  someString: "hello",
+  someOption: "dog",
+  someColor: '#ED3281',
+  someFunction: () => console.log('called')
+};
+
+const options = {
+  someNumber: [1, 200],   // range 0 to 200
+  someOption: ['cat', 'bird', 'dog'],
+}
+
+const gui = new GUI();
+gui.add(s, options);
+```
 
 ## What
 
@@ -63,6 +87,7 @@ easily add to any example with 1 file (or 2 if you add CSS).
 
 https://user-images.githubusercontent.com/234804/177000460-3449c2dd-da94-4119-903f-cc7460b46e7b.mp4
 
+-->
 
 ## License
 

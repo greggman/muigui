@@ -1,4 +1,5 @@
 import {addTask, removeTask} from '../libs/taskrunner.js';
+import { isTypedArray } from '../libs/utils.js';
 import LabelController from './label-controller.js';
 
 export default class ValueController extends LabelController {
@@ -22,14 +23,28 @@ export default class ValueController extends LabelController {
     this._object[this._property] = v;
   }
   setValue(v) {
-    this._object[this._property] = v;
+    if (typeof v === 'object') {
+      const dst = this._object[this._property];
+      // don't replace objects, just their values.
+      if (Array.isArray(v)) {
+        for (let i = 0; i < v.length; ++i) {
+          dst[i] = v[i];
+        }
+      } else if (isTypedArray(v)) {
+        dst.set(v);
+      } else {
+        Object.assign(dst, v);
+      }
+    } else {
+      this._object[this._property] = v;
+    }
     this.emitChange(this.getValue(), this._object, this._property);
   }
   setFinalValue(v) {
     this.setValue(v);
     this.emitFinalChange(this.getValue(), this._object, this._property);
   }
-  getValue(v) {
+  getValue() {
     return this._object[this._property];
   }
   value(v) {

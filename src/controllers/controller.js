@@ -58,23 +58,31 @@ export default class Controller {
   emitChange(value, object, property) {
     this._callListeners(this._changeFns, value);
     if (this._parent) {
-      this._parent.emitChange({
-        object,
-        property,
-        value,
-        controller: this,
-      });
+      if (object === undefined) {
+        this._parent.emitChange(value);
+      } else {
+        this._parent.emitChange({
+          object,
+          property,
+          value,
+          controller: this,
+        });
+      }
     }
   }
   emitFinalChange(value, object, property) {
     this._callListeners(this._finishChangeFns, value);
     if (this._parent) {
-      this._parent.emitFinalChange({
-        object,
-        property,
-        value,
-        controller: this,
-      }, object, property);
+      if (object === undefined) {
+        this._parent.emitChange(value);
+      } else {
+        this._parent.emitFinalChange({
+          object,
+          property,
+          value,
+          controller: this,
+        });
+      }
     }
   }
   getColors() {

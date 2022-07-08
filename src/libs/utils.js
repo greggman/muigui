@@ -17,3 +17,13 @@ export function idToLabel(id) {
            .replace(upperLowerRE, (m, m1, m2) => `${m1.toLowerCase()} ${m2}`);
 }
 
+
+export const isTypedArray = typeof SharedArrayBuffer !== 'undefined'
+  ? function isArrayBufferOrSharedArrayBuffer(a) {
+    return a && a.buffer && (a.buffer instanceof ArrayBuffer || a.buffer instanceof SharedArrayBuffer);
+  }
+  : function isArrayBuffer(a) {
+    return a && a.buffer && a.buffer instanceof ArrayBuffer;
+  };
+
+export const isArrayOrTypedArray = v => Array.isArray(v) || isTypedArray(v);
