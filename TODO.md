@@ -66,7 +66,6 @@
       components that do nothing but layout?
       `Column`, `Row`, etc. Then for layout it becomes
 
-      ```
       Column[
         title,
         Column[
@@ -81,9 +80,8 @@
           ]
         ],
       ]
-      ```
 
-      No idea if that makes sense
+    No idea if that makes sense
 
 - [ ] try to refactor Text, Number, Slider, Color, Checkbox, etc, into more reusable components
       so you can combine them into a new component. Like ideally an X,Y,Z might be
