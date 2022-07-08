@@ -14,7 +14,7 @@
 
     note: the default color editor doesn't have alpha so this is a big ask.
     I think this is best as an extra add on since it requires a non-small
-    amount of code to build a color editor.
+    amount of code to build a color editor? (actually, maybe I don't care about size)
 
     - [ ] 0xRRGGBBAA
     - [ ] #RRGGBBAA
@@ -89,6 +89,9 @@
       3 sliders. So maybe instead of Checkbox extends ValueComponent it should just
       `ValueComponent.add(new Checkbox())` or something to that effect. Same with ValueComponent
       vs Component. Maybe it's `Component.add(new ValueComponent())`
+
+      Can we separate text and number and reuse them?
+
 - [x] auto step (not going to do this for now)
 - [x] fix can't enter trailing '.' on input number (FF only?) (maybe don't set text when value from text)
 - [x] consider more explicit layout

@@ -29,12 +29,27 @@ export default class Controller {
   disabled() {
     return !!this._root.closest('.muigui-disabled');
   }
+
   enable(enable = true) {
     this._root.classList.toggle('muigui-disabled', !enable);
-    const disabled = this.disabled();
-    ['input', 'button', 'select'].forEach(tag => {
-      this._root.querySelectorAll(tag).forEach(e => e.disabled = disabled);
+
+    // If disabled we need to set the attribute 'disabled=true' to all
+    // input/select/button/textarea's below
+    //
+    // If enabled we need to set the attribute 'disabled=false' to all below
+    // until we hit a disabled controller.
+    //
+    // ATM the problem is we can find the input/select/button/textarea elements
+    // but we can't easily find which controller they belong do.
+    // But we don't need to? We can just check up if it or parent has
+    // '.muigui-disabled'
+    ['input', 'button', 'select', 'textarea'].forEach(tag => {
+      this._root.querySelectorAll(tag).forEach(elem => {
+        const disabled = !!elem.closest('.muigui-disabled');
+        elem.disabled = disabled;
+      });
     });
+
     return this;
   }
   disable(disable = true) {
