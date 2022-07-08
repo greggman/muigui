@@ -25,6 +25,7 @@ const css = `
   --slider-right-color: var(--value-bg-color);
   --slider-right-hover-color: var(--hover-bg-color);
   --line-height: 1.7em;
+  --border-radius: 0px;
 
   width: var(--width);
   color: var(--color);
@@ -51,6 +52,7 @@ const css = `
 .muigui canvas {
   display: block;
   background-color: var(--value-bg-color);
+  border-radius: var(--border-radius);
 }
 
 .muigui-controller {
@@ -70,6 +72,7 @@ const css = `
   height: fit-content;
   margin: 0;
   padding-bottom: 0.1em;
+  border-radius: var(--border-radius);
 }
 .muigui-menu {
   border-bottom: 1px solid var(--menu-sep-color);
@@ -85,6 +88,7 @@ const css = `
   padding-top: 0.2em;
   padding-bottom: 0.2em;
   cursor: pointer;
+  border-radius: var(--border-radius);
 }
 .muigui-root>div:nth-child(2),
 .muigui-menu>div:nth-child(2) {
@@ -170,11 +174,10 @@ const css = `
   font-size: var(--font-size);
   border: none;
   margin: 0;
-  border-radius: 0;
+  border-radius: var(--border-radius);
 }
 .muigui select {
   appearance: none;
-  border-radius: 0;
   margin: 0;
   margin-left: 0; /*?*/
   overflow: hidden; /* Safari */
@@ -197,6 +200,7 @@ const css = `
   place-content: center start;
   background-color: var(--menu-bg-color);
   white-space: pre;
+  border-radius: var(--border-radius);
 }
 
 /* ------ [ divider] ------ */
@@ -225,6 +229,7 @@ const css = `
   margin-left: 0;
   margin-right: 0; /* why? */
   max-width: var(--line-height);
+  border-radius: var(--border-radius);
 }
 
 .muigui-color input[type=color] {
