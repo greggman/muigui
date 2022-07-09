@@ -70,10 +70,10 @@ export function cube(canvas) {
     renderer.render(scene, camera);
   };
 
-  function resizeRendererToDisplaySize(renderer) {
+  function resizeRendererToDisplaySize(renderer, mult = 1) {
     const canvas = renderer.domElement;
-    const width = canvas.clientWidth;
-    const height = canvas.clientHeight;
+    const width = canvas.clientWidth * mult;
+    const height = canvas.clientHeight * mult;
     const needResize = canvas.width !== width || canvas.height !== height;
     if (needResize) {
       renderer.setSize(width, height, false);
@@ -84,7 +84,7 @@ export function cube(canvas) {
   function render(time) {
     time *= 0.001;
 
-    resizeRendererToDisplaySize(renderer);
+    resizeRendererToDisplaySize(renderer, 2);
 
     const {width, height} = canvas;
     update(time, {width, height});
