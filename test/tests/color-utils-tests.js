@@ -10,11 +10,12 @@ import {
 describe('color-utils tests', () => {
 
   it('guesses the correct color format', () => {
-    assertEqual(guessFormat('#569AEF'), 'hex');
-    assertEqual(guessFormat('EF569A'), 'hex-no-hash');
-    assertEqual(guessFormat('#F88'), 'hex');
-    assertEqual(guessFormat('8F8'), 'hex-no-hash');
+    assertEqual(guessFormat('#569AEF'), 'hex6');
+    assertEqual(guessFormat('EF569A'), 'hex6-no-hash');
+    assertEqual(guessFormat('#F88'), 'hex3');
+    assertEqual(guessFormat('8F8'), 'hex3-no-hash');
     assertEqual(guessFormat('rgb(170,68,240)'), 'css-rgb');
+    assertEqual(guessFormat('hsl(170,68%,80%)'), 'css-hsl');
     assertEqual(guessFormat(0xFEA956), 'uint32-rgb');
     assertEqual(guessFormat([255, 192, 255]), 'float-rgb'); // we can't really distinguish between [u8, u8, u8] and [float, float, float]
     assertEqual(guessFormat([0.2, 0.9, 0.5]), 'float-rgb');
@@ -31,14 +32,32 @@ describe('color-utils tests', () => {
     assertEqual(toStr("rgb(111,22,33)"), "rgb(111, 22, 33)");
   });
 
-  it('converts to/from hex-no-hash', () => {
-    const {fromHex, toHex, fromStr, toStr} = colorFormatConverters['hex-no-hash'];
+  it('converts to/from css-hsl', () => {
+    const {fromHex, toHex, fromStr, toStr} = colorFormatConverters['css-hsl'];
+    assertEqual(fromHex("#eed4c9"), "hsl(18, 52%, 86%)");
+    assertEqual(toHex("hsl(86, 52%, 18%)"), "#314616")
+    assertEqual(fromStr("hsl(1,22%,33%)"), [true, "hsl(1, 22%, 33%)"]);
+    assertEqual(toStr("hsl(111,22%,33%)"), "hsl(111, 22%, 33%)");
+    assertEqual(fromHex("#eeeeee"), "hsl(0, 0%, 93%)");
+  });
+
+  it('converts to/from hex6-no-hash', () => {
+    const {fromHex, toHex, fromStr, toStr} = colorFormatConverters['hex6-no-hash'];
     assertEqual(fromHex("#123456"), "123456");
     assertEqual(toHex("123456"), "#123456")
     assertEqual(fromStr(" 123456 "), [true, "123456"]);
     assertEqual(toStr("123456"), "123456");
   });
- 
+
+  it('converts to/from hex3', () => {
+    const {fromHex, toHex, fromStr, toStr} = colorFormatConverters['hex3'];
+    assertEqual(fromHex("#123456"), "#123456");
+    assertEqual(fromHex("#223355"), "#235");
+    assertEqual(toHex("#123"), "#112233")
+    assertEqual(fromStr(" #123 "), [true, "#123"]);
+    assertEqual(toStr("#456"), "#456");
+  });
+
   it('converts to/from float-rgb', () => {
     const {fromHex, toHex, fromStr, toStr} = colorFormatConverters['float-rgb'];
     assertEqual(fromHex("#123456"), [0.071, 0.204, 0.337]);

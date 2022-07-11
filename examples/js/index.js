@@ -8,10 +8,10 @@ import {
   hsl,
 } from './utils.js';
 
-import Pane from '../../src/layouts/pane.js';
-import Row from '../../src/layouts/row.js';
-import Tabs from '../../src/layouts/tab.js';
-import Column from '../../src/layouts/column.js';
+//import Pane from '../../src/layouts/pane.js';
+//import Row from '../../src/layouts/row.js';
+//import Tabs from '../../src/layouts/tab.js';
+//import Column from '../../src/layouts/column.js';
 
 const uiElem = document.querySelector('#ui');
 
@@ -42,26 +42,26 @@ const updateUIColors = (() => {
 updateUIColors();
 
 
-{
-  const div = document.createElement('div');
-  div.className = '.foobar';
-  uiElem.appendChild(div);
-
-  const outer = new Pane();
-  outer.domElement.style.width = '250px';
-
-  outer.add(new Row());
-  outer.add(new Row());
-  outer.add(new Row());
-  const row = outer.add(new Row());
-  const pane = row.add(new Pane());
-  const col1 = pane.add(new Column());
-  col1.domElement.style.flex = '0 0 auto';
-  const col2 = pane.add(new Column());
-  const col3 = pane.add(new Column());
-
-  div.appendChild(outer.domElement);
-}
+//{
+//  const div = document.createElement('div');
+//  div.className = '.foobar';
+//  uiElem.appendChild(div);
+//
+//  const outer = new Pane();
+//  outer.domElement.style.width = '250px';
+//
+//  outer.add(new Row());
+//  outer.add(new Row());
+//  outer.add(new Row());
+//  const row = outer.add(new Row());
+//  const pane = row.add(new Pane());
+//  const col1 = pane.add(new Column());
+//  col1.domElement.style.flex = '0 0 auto';
+//  const col2 = pane.add(new Column());
+//  const col3 = pane.add(new Column());
+//
+//  div.appendChild(outer.domElement);
+//}
 
 {
   const s = {
@@ -283,6 +283,7 @@ updateUIColors();
   addColor('"#RGB"', '#F88');
   addColor('"RGB"', '8F8');
   addColor('"rgb(r, g, b)"', 'rgb(170,68,240)');
+  addColor('"hsl(h, s, l)"', 'hsl(170,100%,50%)');
   addColor('0xRRGGBB', 0xFEA956, undefined, v => `0x${v.toString(16).padStart(6, '0')}`);
   addColor('[r(u8), b(u8), c(u8)]', [255, 192, 255], 'uint8-rgb');
   addColor('Uint8Array(3)', new Uint8Array([75, 150, 225]), undefined, v => `[${v.join(', ')}]`);
@@ -413,7 +414,7 @@ updateUIColors();
 
   const guis = {
     short: makeGUI('Short', 5),
-    long: makeGUI('Long', 100),
+    long: makeGUI('Long', 150),
   };
 
   const div = document.createElement('div');

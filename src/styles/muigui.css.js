@@ -39,6 +39,38 @@ const css = `
   box-sizing: inherit;
 }
 
+.muigui-rows {
+  display: flex;
+  flex-direction: column;
+
+  min-height: 20px;
+  border: 2px solid red;
+}
+.muigui-columns {
+  display: flex;
+  flex-direction: row;
+
+  height: 20px;
+  border: 2px solid green;
+}
+.muigui-rows>*,
+.muigui-columns>* {
+  flex: 1 1 auto;
+  align-items: stretch;
+  min-height: 0;
+  min-width: 0;
+}
+
+.muigui-row {
+  border: 2px solid yellow;
+  min-height: 10px
+}
+.muigui-column {
+  border: 2px solid lightgreen;
+}
+
+/* -------- */
+
 .muigui-show { /* */ }
 .muigui-hide { 
   display: none !important;
