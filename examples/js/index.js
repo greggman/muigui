@@ -8,10 +8,14 @@ import {
   hsl,
 } from './utils.js';
 
-//import Pane from '../../src/layouts/pane.js';
-//import Row from '../../src/layouts/row.js';
-//import Tabs from '../../src/layouts/tab.js';
-//import Column from '../../src/layouts/column.js';
+import Pane from '../../src/layouts/pane.js';
+import Row from '../../src/layouts/row.js';
+import Tabs from '../../src/layouts/tab.js';
+import Column from '../../src/layouts/column.js';
+import SVG from '../../src/controllers/svg.js';
+import Direction from '../../src/controllers/direction.js';
+import Vec2 from '../../src/controllers/vec2.js';
+import ColorChooser from '../../src/controllers/color-chooser.js';
 
 const uiElem = document.querySelector('#ui');
 
@@ -42,26 +46,26 @@ const updateUIColors = (() => {
 updateUIColors();
 
 
-//{
-//  const div = document.createElement('div');
-//  div.className = '.foobar';
-//  uiElem.appendChild(div);
-//
-//  const outer = new Pane();
-//  outer.domElement.style.width = '250px';
-//
-//  outer.add(new Row());
-//  outer.add(new Row());
-//  outer.add(new Row());
-//  const row = outer.add(new Row());
-//  const pane = row.add(new Pane());
-//  const col1 = pane.add(new Column());
-//  col1.domElement.style.flex = '0 0 auto';
-//  const col2 = pane.add(new Column());
-//  const col3 = pane.add(new Column());
-//
-//  div.appendChild(outer.domElement);
-//}
+{
+  const div = document.createElement('div');
+  div.className = '.foobar';
+  uiElem.appendChild(div);
+
+  const outer = new Pane();
+  outer.domElement.style.width = '250px';
+
+  outer.add(new Row());
+  outer.add(new Row());
+  outer.add(new Row());
+  const row = outer.add(new Row());
+  const pane = row.add(new Pane());
+  const col1 = pane.add(new Column());
+  col1.domElement.style.flex = '0 0 auto';
+  const col2 = pane.add(new Column());
+  const col3 = pane.add(new Column());
+
+  div.appendChild(outer.domElement);
+}
 
 {
   const s = {
@@ -79,6 +83,8 @@ updateUIColors();
     name: 'gman',
     hobby: 'coding',
     propertyWithLongName: 0,
+    vec: [10, 20],
+    c2: '#123456',
   };
 
   for (let i = 0; i < 3; ++i) {
@@ -117,6 +123,9 @@ updateUIColors();
     f.add(s, 'name').listen();  
     f.add(s, 'hobby').onFinishChange(e => log(new Date, e.value));
     f.add(s, 'propertyWithLongName', ['longNamedEnumThatWillPushSizeTooFar']);
+    f.addController(new Direction(s, 'direction'));
+    f.addController(new Vec2(s, 'vec'));
+    f.addController(new ColorChooser(s, 'c2'));
 
     const ctx = c.canvas.getContext('2d');
     let lastY = 0;
@@ -287,7 +296,10 @@ updateUIColors();
   addColor('0xRRGGBB', 0xFEA956, undefined, v => `0x${v.toString(16).padStart(6, '0')}`);
   addColor('[r(u8), b(u8), c(u8)]', [255, 192, 255], 'uint8-rgb');
   addColor('Uint8Array(3)', new Uint8Array([75, 150, 225]), undefined, v => `[${v.join(', ')}]`);
-  addColor('Float32Array(3)', new Float32Array([0.9, 0.7, 0.5]), undefined, v => `[${v.join(', ')}]`);
+  // note: Because it's Float32Array, if we just use  map  it won't work because
+  // map of a Float32Array creates a new Float32Array where as we want an array
+  // of strings so we can format them for the log.
+  addColor('Float32Array(3)', new Float32Array([0.9, 0.7, 0.5]), undefined, v => `[${Array.from(v).map(v => f3(v)).join(', ')}]`);
   addColor('[r(f), g(f), b(f)]', [0.2, 0.9, 0.5], undefined, v => `[${v.map(v => f3(v))}]`);
   addColor('{r, g, b}',  {r: 0, g: 0, b: 1}, undefined, v => `{r: ${f3(v.r)}, g: ${f3(v.g)}, b: ${f3(v.b)}}`);
   logger.setController(gui.addLabel(''));

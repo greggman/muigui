@@ -16,6 +16,10 @@
     I think this is best as an extra add on since it requires a non-small
     amount of code to build a color editor? (actually, maybe I don't care about size)
 
+    note: kind of leading toward not carrying about size and also
+    making own color editor as the default one, at least in Chrome,
+    kinda sucks.
+
     - [ ] 0xRRGGBBAA
     - [ ] #RRGGBBAA
     - [ ] [255, 255, 255, 255]
@@ -32,6 +36,8 @@
 - [x] remove
 - [x] hide
 - [ ] scroll wheel
+- [ ] angle (circle with arrow) - both display, and editor
+- [ ] circle input (circle with 2 arrows) - both display and editor
 - [x] Label (not interactive)
 - [x] Label multi line (use as log) 
 - [x] ask for file? (nah, drag and drop is better)

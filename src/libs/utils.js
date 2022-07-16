@@ -17,6 +17,9 @@ export function idToLabel(id) {
            .replace(upperLowerRE, (m, m1, m2) => `${m1.toLowerCase()} ${m2}`);
 }
 
+export function clamp(v, min, max) {
+  return Math.max(min, Math.min(max, v));
+}
 
 export const isTypedArray = typeof SharedArrayBuffer !== 'undefined'
   ? function isArrayBufferOrSharedArrayBuffer(a) {

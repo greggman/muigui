@@ -12,6 +12,7 @@ const css = `
   --menu-sep-color: #444444;
   --hover-bg-color: #666666;
   --focus-color: #8AF;
+  --slider-color: #888;
 
   --button-bg-color: var(--value-bg-color);
 
@@ -341,9 +342,89 @@ const css = `
   -moz-appearance: textfield;
 }
 
+/* ------ [ color-chooser ] ------ */
+
+.muigui-color-chooser-cursor {
+  stroke-width: 1px;
+  stroke: white;
+  fill: none;
+}
+.muigui-color-chooser-circle {
+  stroke-width: 1px;
+  stroke: white;
+  fill: none;
+}
+
+
+/* ------ [ vec2 ] ------ */
+
+.muigui-vec2 svg {
+  background-color: var(--value-bg-color);
+}
+
+.muigui-vec2-axis {
+  stroke: 1px;
+  stroke: var(--focus-color);
+}
+
+.muigui-vec2-line {
+  stroke-width: 1px;
+  stroke: var(--value-color);
+  fill: var(--value-color);
+}
+
+/* ------ [ direction ] ------ */
+
+.muigui-direction-circle {
+  stroke-width: 3px;
+  fill: var(--value-bg-color);
+}
+.muigui-direction:focus-within svg {
+  outline: none;
+}
+.muigui-direction svg:focus .muigui-direction-circle {
+  stroke-width: 1px;
+  stroke: var(--focus-color);
+}
+.muigui-direction-arrow {
+  fill: var(--value-color);
+}
+
 /* ------ [ slider ] ------ */
 
-/* fix below */
+
+.muigui-slider input[type=range] {
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: transparent;
+}
+
+
+.muigui-slider input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 2px;
+  border-left: 1px solid rgba(255,255,255,0.3);
+  border-top: 1px solid rgba(255,255,255,0.3);
+  border-bottom: 1px solid rgba(0,0,0,0.2);
+  border-right: 1px solid rgba(0,0,0,0.2);
+  background-color: var(--slider-color);
+  margin-top: calc((var(--line-height) - 2px) / -2);
+  width: calc(var(--line-height) - 2px);
+  height: calc(var(--line-height) - 2px);
+}
+
+.muigui-slider input[type=range]::-webkit-slider-runnable-track {
+  -webkit-appearance: none;
+  appearance: none;
+  border: 1px solid var(--menu-sep-color);
+  height: 2px;
+}
+
+
+/* dat.gui style - doesn't work on Safari iOS */
+
+/*
 .muigui-slider input[type=range] {
   cursor: ew-resize;
   overflow: hidden;
@@ -366,9 +447,6 @@ const css = `
   color: var(--slider-left-color);
   margin-top: -1px;
 }
-.muigui-slider input[type=range]::-webkit-slider-runnable-track {
-  color: red;
-}
 
 .muigui-slider input[type=range]::-webkit-slider-thumb {
   -webkit-appearance: none;
@@ -377,8 +455,10 @@ const css = `
   height: max-content;
   box-shadow: -1000px 0 0 1000px var(--slider-left-color);
 }
+*/
 
 /* FF */
+/*
 .muigui-slider input[type=range]::-moz-range-progress {
   background-color: var(--slider-left-color); 
 }
@@ -389,6 +469,9 @@ const css = `
   box-shadow: -1000px 0 0 1000px var(--slider-left-color);
   box-sizing: border-box;
 }
+*/
+
+/* ---------------------------------------------------------- */
 
 /* needs to be at bottom to take precedence */
 .muigui-auto-place {
@@ -398,6 +481,7 @@ const css = `
   right: 15px;
   z-index: 100001;
 }
+
 `;
 export default css;
 

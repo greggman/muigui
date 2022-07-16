@@ -1,4 +1,7 @@
 const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
+const lerp = (a, b, t) => a + (b - a) * t;
+const fract = v => v >= 0 ? v % 1 : 1 - (v % 1);
+
 const f0 = v => +v.toFixed(0);  // converts to string (eg 1.2 => "1"), then converts back to number (eg, "1.200" => 1.2)
 const f3 = v => +v.toFixed(3);  // converts to string (eg 1.2 => "1.200"), then converts back to number (eg, "1.200" => 1.2)
 
@@ -7,13 +10,13 @@ const hexToUint32RGB = v => (parseInt(v.substring(1, 3), 16) << 16) |
                             (parseInt(v.substring(5, 7), 16)      ) ;
 const uint32RGBToHex = v => `#${(Math.round(v)).toString(16).padStart(6, '0')}`;
 
-const hexToUint8RGB = v => [parseInt(v.substring(1, 3), 16),
+export const hexToUint8RGB = v => [parseInt(v.substring(1, 3), 16),
                             parseInt(v.substring(3, 5), 16),
                             parseInt(v.substring(5, 7), 16)];
-const uint8RGBToHex = v => `#${Array.from(v).map(v => v.toString(16).padStart(2, '0')).join('')}`;
+export const uint8RGBToHex = v => `#${Array.from(v).map(v => v.toString(16).padStart(2, '0')).join('')}`;
 
-const hexToFloatRGB = v => hexToUint8RGB(v).map(v => f3(v / 255));
-const floatRGBToHex = v => uint8RGBToHex(Array.from(v).map(v => Math.round(clamp(v * 255, 0, 255))));
+export const hexToFloatRGB = v => hexToUint8RGB(v).map(v => f3(v / 255));
+export const floatRGBToHex = v => uint8RGBToHex(Array.from(v).map(v => Math.round(clamp(v * 255, 0, 255))));
 
 const hexToObjectRGB = v => ({
   r: parseInt(v.substring(1, 3), 16) / 255,
@@ -31,7 +34,7 @@ const cssRGBToHex = v => {
 };
 
 const hexToCssHSL = v => {
-  const hsl = rgbToHsl(hexToUint8RGB(v)).map(v => f0(v));  
+  const hsl = rgbUint8ToHsl(hexToUint8RGB(v)).map(v => f0(v));
   return `hsl(${hsl[0]}, ${hsl[1]}%, ${hsl[2]}%)`;
 };
 const cssHSLRegex = /^\s*hsl\(\s*(\d+)(?:deg|)\s*,\s*(\d+)%\s*,\s*(\d+)%\s*\)\s*$/;
@@ -39,55 +42,83 @@ const cssHSLRegex = /^\s*hsl\(\s*(\d+)(?:deg|)\s*,\s*(\d+)%\s*,\s*(\d+)%\s*\)\s*
 const hex3DigitTo6Digit = v => `${v[0]}${v[0]}${v[1]}${v[1]}${v[2]}${v[2]}`;
 const cssHSLToHex = v => {
   const m = cssHSLRegex.exec(v);
-  const rgb = hslToRgb([m[1], m[2], m[3]].map(v => parseFloat(v)));
+  const rgb = hslToRgbUint8([m[1], m[2], m[3]].map(v => parseFloat(v)));
   return uint8RGBToHex(rgb);
 };
 
-function hslToRgb([hue, sat, light]) {
-  hue = hue % 360;
+const euclideanModulo = (v, n) => ((v % n) + n) % n;
 
-  if (hue < 0) {
-    hue += 360;
-  }
+export function hslToRgbUint8([h, s, l]) {
+  h = euclideanModulo(h, 360);
+  s = clamp(s / 100, 0, 1);
+  l = clamp(l / 100, 0, 1);
 
-  sat /= 100;
-  light /= 100;
+  const a = s * Math.min(l, 1 - l);
 
   function f(n) {
-    const k = (n + hue/30) % 12;
-    const a = sat * Math.min(light, 1 - light);
-    return light - a * Math.max(-1, Math.min(k - 3, 9 - k, 1));
+    const k = (n + h / 30) % 12;
+    return l - a * Math.max(-1, Math.min(k - 3, 9 - k, 1));
   }
 
   return [f(0), f(8), f(4)].map(v => Math.round(v * 255));
 }
 
-function rgbToHsl(rgb) {
-  const [red, green, blue] = rgb.map(v => v / 255);
-  const max = Math.max(red, green, blue);
-  const min = Math.min(red, green, blue);
-  let [hue, sat, light] = [NaN, 0, (min + max)/2];
+export function rgbFloatToHsl01([r, g, b]) {
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  let [h, s, l] = [NaN, 0, (min + max) * 0.5];
   const d = max - min;
 
   if (d !== 0) {
-    sat = (light === 0 || light === 1)
+    s = (l === 0 || l === 1)
         ? 0
-        : (max - light) / Math.min(light, 1 - light);
+        : (max - l) / Math.min(l, 1 - l);
 
     switch (max) {
-      case red:   hue = (green - blue) / d + (green < blue ? 6 : 0); break;
-      case green: hue = (blue - red) / d + 2; break;
-      case blue:  hue = (red - green) / d + 4;
+      case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+      case g: h = (b - r) / d + 2; break;
+      case b: h = (r - g) / d + 4;
     }
-
-    hue = hue * 60;
   } else {
-    hue = 0;
-    sat = 0;
+    h = 0;
+    s = 0;
   }
 
-  return [hue, sat * 100, light * 100];
+  return [h / 6, s, l];
 }
+
+export const rgbUint8ToHsl = (rgb) => {
+  const [h, s, l] = rgbFloatToHsl01(rgb.map(v => v / 255));
+  return [h * 360, s * 100, l * 100];
+};
+
+export function hsv01ToRGBFloat([hue, sat, val]) {
+  sat = clamp(sat, 0, 1);
+  val = clamp(val, 0, 1);
+  return [hue, hue + 2 / 3, hue + 1 / 3].map(
+      v => lerp(1, clamp(Math.abs(fract(v) * 6 - 3.0) - 1, 0, 1), sat) * val
+  );
+}
+
+const round3 = v => Math.round(v * 1000) / 1000;
+
+export function rgbFloatToHSV01([r, g, b]) {
+  const p = b > g
+      ? [b, g, -1, 2 / 3]
+      : [g, b, 0, -1 / 3];
+  const q = p[0] > r
+      ? [p[0], p[1], p[3], r]
+      : [r, p[1], p[2], p[0]];
+  const d = q[0] - Math.min(q[3], q[1]);
+  return [
+    Math.abs(q[2] + (q[3] - q[1]) / (6 * d + Number.EPSILON)),
+    d / (q[0] + Number.EPSILON),
+    q[0],
+  ].map(round3);
+}
+
+window.hsv01ToRGBFloat = hsv01ToRGBFloat;
+window.rgbFloatToHSV01 = rgbFloatToHSV01;
 
 const cssStringFormats = [
   { re: /^#(?:[0-9a-f]){6}$/i, format: 'hex6' },
