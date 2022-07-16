@@ -21,7 +21,7 @@ export default class InputView extends View {
           this.emit('setFinal', newV);
         }
       },
-    });
+    }));
     this._toInput = toInput;
   }
   updateDisplay(v) {

@@ -26,7 +26,7 @@ class Label extends View {
   }
 };
 
-export default class Color extends Emitter {
+export default class Color extends View {
   constructor(editor, format) {
     format = format || guessFormat(this.getValue());
     this._converters = colorFormatConverters[format];

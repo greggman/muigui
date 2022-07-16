@@ -16,6 +16,8 @@ import SVG from '../../src/controllers/svg.js';
 import Direction from '../../src/controllers/direction.js';
 import Vec2 from '../../src/controllers/vec2.js';
 import ColorChooser from '../../src/controllers/color-chooser.js';
+import Color from '../../src/components/color-picker.js';
+import PropertySetter from '../../src/base-components/property-setter.js';
 
 const uiElem = document.querySelector('#ui');
 
@@ -58,6 +60,8 @@ updateUIColors();
   outer.add(new Row());
   outer.add(new Row());
   const row = outer.add(new Row());
+  const setter = new PropertySetter(s, 'color');
+  row.add(new Color(setter))
   const pane = row.add(new Pane());
   const col1 = pane.add(new Column());
   col1.domElement.style.flex = '0 0 auto';

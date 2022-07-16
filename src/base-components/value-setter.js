@@ -9,25 +9,25 @@ export default class ValueSetter extends Emitter {
   constructor(get, set) {
     this._get = get;
     this._set = set;
-    this._editors = [];
+    this._views = [];
   }
-  add(editor) {
-    this._editors.push(editor);
-    editor.on('set', this._setValue);
-    editor.on('setFinal', this._setFinalValue);
-    editor.updateDisplay(this.getValue());
-    return editor;
+  add(view) {
+    this._views.push(view);
+    view.on('set', this._setValue);
+    view.on('setFinal', this._setFinalValue);
+    view.updateDisplay(this.getValue());
+    return view;
   }
   setValue = (newV) => {
     this._set(newV);
     const v = this._get();
-    this._editors.forEach(editor => editor.updateDisplay(v));
+    this._views.forEach(editor => editor.updateDisplay(v));
     this.emit('set', newV)
   }
   setFinalValue = (newV) => {
     this._set(newV);
     const v = this._get();
-    this._editors.forEach(editor => editor.updateDisplay(v));
+    this._views.forEach(editor => editor.updateDisplay(v));
     this.emit('setFinal', newV);
   }
 }
