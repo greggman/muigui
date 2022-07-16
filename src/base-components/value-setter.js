@@ -1,4 +1,4 @@
-import { Emitter } from '../libs/emitter.js';
+import Emitter from '../libs/emitter.js';
 
 /**
  * Represents the ability get a value, display it in 1 or more
@@ -7,6 +7,7 @@ import { Emitter } from '../libs/emitter.js';
  */
 export default class ValueSetter extends Emitter {
   constructor(get, set) {
+    super();
     this._get = get;
     this._set = set;
     this._views = [];
@@ -18,13 +19,16 @@ export default class ValueSetter extends Emitter {
     view.updateDisplay(this.getValue());
     return view;
   }
-  setValue = (newV) => {
+  getValue() {
+    return this._get();
+  }
+  _setValue = (newV) => {
     this._set(newV);
     const v = this._get();
     this._views.forEach(editor => editor.updateDisplay(v));
     this.emit('set', newV)
   }
-  setFinalValue = (newV) => {
+  _setFinalValue = (newV) => {
     this._set(newV);
     const v = this._get();
     this._views.forEach(editor => editor.updateDisplay(v));

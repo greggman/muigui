@@ -1,6 +1,9 @@
 import Row from '../layouts/row.js';
 import PropertySetter from '../base-components/property-setter.js';
 import InputView from '../base-components/input-view.js';
+import View from '../base-components/view.js';
+import { createElem } from '../libs/elem.js';
+import { colorFormatConverters, guessFormat } from '../libs/color-utils.js';
 
 class ColorView extends InputView {
   constructor(toHex, fromHex) {
@@ -16,7 +19,7 @@ class TextView extends InputView {
 
 class Label extends View {
   constructor(label) {
-    super(createElement('div', {
+    super(createElem('div', {
       className: 'muigui-label',
     }));
     this.label(label);
@@ -27,16 +30,16 @@ class Label extends View {
 };
 
 export default class Color extends View {
-  constructor(editor, format) {
-    format = format || guessFormat(this.getValue());
+  constructor(setter, format) {
+    const row = new Row();
+    super(row.domElement);
+    format = format || guessFormat(setter.getValue());
     this._converters = colorFormatConverters[format];
     const {toHex, fromHex, toStr, fromStr} = this._converters;
-    const editor = new PropertySetter(object, property);
-    editor.propagate(this);
-    const row = new Row();
-    row.add(new Label(property));
-    row.add(editor.add(new ColorView(toHex, fromHex)));
-    row.add(editor.add(new TextView(toStr, fromStr)));
+    setter.propagate(this);
+    row.add(new Label('property'));
+    row.add(setter.add(new ColorView(toHex, fromHex)));
+    row.add(setter.add(new TextView(toStr, fromStr)));
   }
 }
 

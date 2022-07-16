@@ -49,6 +49,10 @@ updateUIColors();
 
 
 {
+  const s = {
+    color: '#ABCDEF',
+  };
+
   const div = document.createElement('div');
   div.className = '.foobar';
   uiElem.appendChild(div);

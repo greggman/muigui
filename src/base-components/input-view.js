@@ -1,4 +1,5 @@
 import View from './view.js';
+import { createElem } from '../libs/elem.js';
 
 export default class InputView extends View {
   constructor(type, toInput, fromInput) {
@@ -26,7 +27,7 @@ export default class InputView extends View {
   }
   updateDisplay(v) {
     if (!this.skipUpdate) {
-      this._domElement = this._toInput(v);
+      this._domElement.value = this._toInput(v);
     }
     this._skipUpdate = false;
   }
