@@ -48,7 +48,7 @@ export function addTask(fn) {
 
 export function removeTask(fn) {
   tasksToRemove.set(fn);
-  
+
   const ndx = tasks.indexOf(fn);
   if (ndx >= 0) {
     tasks.splice(ndx, 1);

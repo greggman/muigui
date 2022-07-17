@@ -6,11 +6,18 @@ import Emitter from '../libs/emitter.js';
  * is used. And be able to update the editor when the value is set.
  */
 export default class ValueSetter extends Emitter {
-  constructor(get, set) {
+  constructor(get, set, name = '*no-name*') {
     super();
     this._get = get;
     this._set = set;
     this._views = [];
+    this.setName(name);
+  }
+  get name() {
+    return this._name;
+  }
+  setName(name) {
+    this._name = name;
   }
   add(view) {
     this._views.push(view);
@@ -26,12 +33,12 @@ export default class ValueSetter extends Emitter {
     this._set(newV);
     const v = this._get();
     this._views.forEach(editor => editor.updateDisplay(v));
-    this.emit('set', newV)
-  }
+    this.emit('set', newV);
+  };
   _setFinalValue = (newV) => {
     this._set(newV);
     const v = this._get();
     this._views.forEach(editor => editor.updateDisplay(v));
     this.emit('setFinal', newV);
-  }
+  };
 }

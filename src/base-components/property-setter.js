@@ -1,4 +1,5 @@
 import ValueSetter from './value-setter.js';
+import {isTypedArray} from '../libs/utils.js';
 
 function createObjectPropertySetter(object, property) {
   const v = object[property];
@@ -13,10 +14,12 @@ function createObjectPropertySetter(object, property) {
       };
     } else if (isTypedArray(v)) {
       return function setTypedArray(newV) {
+        const dst = object[property];
         dst.set(newV);
       };
     } else {
       return function setObjectProperties(newV) {
+        const dst = object[property];
         Object.assign(dst, newV);
       };
     }
@@ -32,6 +35,7 @@ export default class PropertySetter extends ValueSetter {
     super(
         () => object[property],
         createObjectPropertySetter(object, property),
+        property,
     );
   }
 }

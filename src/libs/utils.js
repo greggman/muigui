@@ -8,7 +8,7 @@ export function removeArrayElem(array, value) {
 
 /**
  * Converts an camelCase or snake_case id to "camel case" or "snake case"
- * @param {string} id 
+ * @param {string} id
  */
 const underscoreRE = /_/g;
 const upperLowerRE = /([A-Z])([a-z])/g;

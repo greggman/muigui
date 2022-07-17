@@ -13,17 +13,17 @@ export default class View extends Emitter {
     return this;
   }
   setParent(parent) {
-    this._parent = parent; 
+    this._parent = parent;
   }
-  remove() {
-    const ndx = this._children.indexOf(controller);
+  remove(view) {
+    const ndx = this._children.indexOf(view);
     if (ndx >= 0) {
       const c = this._children.splice(ndx, 1);
       const c0 = c[0];
       const elem = c0.domElement;
       elem.remove();
       c0.setParent(null);
-    }    
+    }
   }
   add(layout) {
     this.domElement.appendChild(layout.domElement);

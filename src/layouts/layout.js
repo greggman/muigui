@@ -1,30 +1,9 @@
 import { createElem } from '../libs/elem.js';
+import View from '../base-components/view.js';
+import { classNamesToStr } from '../libs/css-utils.js';
 
-export default class Layout {
+export default class Layout extends View {
   constructor(className, tag = 'div') {
-    this._domElement = createElem(tag, {className});
-    this._children = [];
-  }
-  get domElement() {
-    return this._domElement;
-  }
-  setParent(parent) {
-    this._parent = parent; 
-  }
-  remove() {
-    const ndx = this._children.indexOf(controller);
-    if (ndx >= 0) {
-      const c = this._children.splice(ndx, 1);
-      const c0 = c[0];
-      const elem = c0.domElement;
-      elem.remove();
-      c0.setParent(null);
-    }    
-  }
-  add(layout) {
-    this.domElement.appendChild(layout.domElement);
-    this._children.push(layout);
-    layout.setParent(this);
-    return layout;
+    super(createElem(tag, {className: classNamesToStr(className)}));
   }
 }

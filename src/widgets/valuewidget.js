@@ -26,7 +26,7 @@ export default class ValueWidget extends LabelWidget {
       });
     }
   }
-  getValue(v) {
+  getValue() {
     return this._object[this._property];
   }
   value(v) {

@@ -14,11 +14,11 @@ const isConversion = o => typeof o.to === 'function' && typeof o.from === 'funct
  *    add(o, p, obj: key-value)
  *    add(o, p, array: [value])
  *    add(o, p, array: [[key, value]])
- * 
- * @param {*} object 
- * @param {string} property 
- * @param  {...any} args 
- * @returns 
+ *
+ * @param {*} object
+ * @param {string} property
+ * @param  {...any} args
+ * @returns {Controller}
  */
 export function createController(object, property, ...args) {
   const [arg1] = args;
@@ -39,5 +39,7 @@ export function createController(object, property, ...args) {
       return new Button(object, property, ...args);
     case 'string':
       return new Text(object, property, ...args);
+    default:
+      throw new Error('unhandled type');
   }
 }

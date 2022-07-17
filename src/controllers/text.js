@@ -12,10 +12,10 @@ export default class Text extends ValueController {
     this._textElem =  createElem('input', {
       type: 'text',
       id,
-      onInput: (e) => {
+      onInput: () => {
         this.setValue(this._textElem.value);
       },
-      onChange: (e) => {
+      onChange: () => {
         this.setFinalValue(this._textElem.value);
       },
     });

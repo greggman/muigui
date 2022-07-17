@@ -12,7 +12,7 @@ export default class Folder extends Controller {
     this._labelElem = createElem('label');
     this.domElement.appendChild(createElem('button', {
       type: 'button',
-      onClick: () => { this.toggleOpen() },
+      onClick: () => this.toggleOpen(),
     }, [this._labelElem]));
     this._controllerElem = createElem('div');
     this._controllers = [];
@@ -64,7 +64,7 @@ export default class Folder extends Controller {
       const elem = c0.domElement;
       elem.remove();
       c0.setParent(null);
-    }    
+    }
   }
   addController(controller) {
     this._controllerElem.appendChild(controller.domElement);

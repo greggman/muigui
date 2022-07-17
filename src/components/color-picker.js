@@ -1,5 +1,4 @@
 import Row from '../layouts/row.js';
-import PropertySetter from '../base-components/property-setter.js';
 import InputView from '../base-components/input-view.js';
 import View from '../base-components/view.js';
 import { createElem } from '../libs/elem.js';
@@ -27,19 +26,20 @@ class Label extends View {
   label(label) {
     this.domElement.textContent = label;
   }
-};
+}
 
 export default class Color extends View {
   constructor(setter, format) {
-    const row = new Row();
+    const row = new Row('muigui-color');
     super(row.domElement);
     format = format || guessFormat(setter.getValue());
     this._converters = colorFormatConverters[format];
     const {toHex, fromHex, toStr, fromStr} = this._converters;
     setter.propagate(this);
-    row.add(new Label('property'));
-    row.add(setter.add(new ColorView(toHex, fromHex)));
-    row.add(setter.add(new TextView(toStr, fromStr)));
+    row.add(new Label(setter.name));
+    const subRow = row.add(new Row());
+    subRow.add(setter.add(new ColorView(toHex, fromHex)));
+    subRow.add(setter.add(new TextView(toStr, fromStr)));
   }
 }
 

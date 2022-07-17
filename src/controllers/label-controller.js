@@ -4,7 +4,7 @@ import Controller from './controller.js';
 
 export default class LabelController extends Controller {
   constructor(className = '', name = '') {
-    super()
+    super();
     this._id = makeId();
     this._nameElem = createElem('label', {for: this._id});
     this._contentElem = createElem('div', {className: 'muigui-value'});

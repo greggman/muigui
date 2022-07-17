@@ -20,11 +20,11 @@ export default class Color extends ValueController {
     this._colorElem = createElem('input', {
       type: 'color',
       id,
-      onInput: (e) => {
+      onInput: () => {
         this._skipUpdateColorElem = true;
         this.setValue(fromHex(this._colorElem.value));
       },
-      onChange: (e) => {
+      onChange: () => {
         this._skipUpdateColorElem = true;
         this.setFinalValue(fromHex(this._colorElem.value));
       },
@@ -33,14 +33,14 @@ export default class Color extends ValueController {
 
     this._textElem = createElem('input', {
       type: 'text',
-      onInput: (e) => {
+      onInput: () => {
         const [valid, newV] = fromStr(this._textElem.value);
         if (valid) {
           this._skipUpdateTextElem = true;
           this.setValue(newV);
         }
       },
-      onChange: (e) => {
+      onChange: () => {
         const [valid, newV] = fromStr(this._textElem.value);
         if (valid) {
          this._skipUpdateTextElem = true;

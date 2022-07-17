@@ -12,10 +12,10 @@ export default class Checkbox extends ValueController {
     this._checkboxElem =  createElem('input', {
       type: 'checkbox',
       id,
-      onInput: (e) => {
+      onInput: () => {
         this.setValue(this._checkboxElem.checked);
       },
-      onChange: (e) => {
+      onChange: () => {
         this.setFinalValue(this._checkboxElem.checked);
       },
     });

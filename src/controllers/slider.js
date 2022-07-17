@@ -14,11 +14,11 @@ export default class Slider extends ValueController {
     this._rangeElem = createElem('input', {
       type: 'range',
       id,
-      onInput: (e) => {
+      onInput: () => {
         this._skipUpdateRangeElem = true;
         this.setValue(this._to(this._rangeElem.value));
       },
-      onChange: (e) => {
+      onChange: () => {
         this._skipUpdateRangeElem = true;
         this.setFinalValue(this._to(this._rangeElem.value));
       },
@@ -26,20 +26,20 @@ export default class Slider extends ValueController {
 
     this._textElem = createElem('input', {
       type: 'number',
-      onInput: (e) => {
+      onInput: () => {
         const v = parseFloat(this._textElem.value);
         if (!Number.isNaN(v)) {
           this._skipUpdateTextElem = true;
           this.setValue(this._to(v));
         }
       },
-      onChange: (e) => {
+      onChange: () => {
         const v = parseFloat(this._textElem.value);
         if (!Number.isNaN(v)) {
           this._skipUpdateTextElem = true;
           this.setFinalValue(this._to(v));
         }
-      }
+      },
     });
 
     this.conversion(conversion);

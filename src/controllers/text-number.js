@@ -18,13 +18,13 @@ export default class TextNumber extends ValueController {
     this._textElem =  createElem('input', {
       type: 'number',
       id,
-      onInput: (e) => {
+      onInput: () => {
         const v = parseFloat(this._textElem.value);
         if (!Number.isNaN(v)) {
           this.setValue(this._to(v));
         }
       },
-      onChange: (e) => {
+      onChange: () => {
         const v = parseFloat(this._textElem.value);
         if (!Number.isNaN(v)) {
           this.setFinalValue(this._to(v));

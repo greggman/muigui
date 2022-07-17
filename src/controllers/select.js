@@ -38,7 +38,7 @@ export default class Select extends ValueController {
 
     this._values = [];
     this._selectElem = createElem('select', {
-      onChange: (e) => {
+      onChange: () => {
         this.setFinalValue(this._values[this._selectElem.selectedIndex]);
       },
     }, keyValues.map(([key, value]) => {

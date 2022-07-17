@@ -13,9 +13,9 @@ export default class Button extends Controller {
     this._buttonElem =  createElem('button', {
       type: 'button',
       textContent: property,
-      onClick: (e) => {
+      onClick: () => {
         this._object[this._property](this);
-      } 
+      },
     });
     root.appendChild(this._buttonElem);
   }

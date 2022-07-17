@@ -5,7 +5,7 @@ export default class InputView extends View {
   constructor(type, toInput, fromInput) {
     super(createElem('input', {
       type,
-      onInput: (e) => {
+      onInput: () => {
         this._skipUpdate = true;
         const result = fromInput(this._domElement.value);
         const [valid, newV] = Array.isArray(result) ? result : [true, result];
@@ -14,7 +14,7 @@ export default class InputView extends View {
           this.emit('set', newV);
         }
       },
-      onChange: (e) => {
+      onChange: () => {
         this._skipUpdate = true;
         const result = fromInput(this._domElement.value);
         const [valid, newV] = Array.isArray(result) ? result : [true, result];

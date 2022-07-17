@@ -1,10 +1,9 @@
-import Row from '../layouts/row.js';
 import { createElem } from '../libs/elem.js';
 import { removeArrayElem } from '../libs/utils.js';
 
 export default class Controller {
   constructor(className) {
-    this._root = createElem('div', {className: `muigui-controller`});
+    this._root = createElem('div', {className: 'muigui-controller'});
     this._changeFns = [];
     this._finishChangeFns = [];
     // we need the specialization to come last so it takes precedence.

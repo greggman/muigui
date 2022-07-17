@@ -26,45 +26,45 @@ describe('color-utils tests', () => {
 
   it('converts to/from css-rgb', () => {
     const {fromHex, toHex, fromStr, toStr} = colorFormatConverters['css-rgb'];
-    assertEqual(fromHex("#123456"), "rgb(18, 52, 86)");
-    assertEqual(toHex("rgb(86, 52, 18)"), "#563412")
-    assertEqual(fromStr("rgb(1,22,33)"), [true, "rgb(1, 22, 33)"]);
-    assertEqual(toStr("rgb(111,22,33)"), "rgb(111, 22, 33)");
+    assertEqual(fromHex('#123456'), 'rgb(18, 52, 86)');
+    assertEqual(toHex('rgb(86, 52, 18)'), '#563412');
+    assertEqual(fromStr('rgb(1,22,33)'), [true, 'rgb(1, 22, 33)']);
+    assertEqual(toStr('rgb(111,22,33)'), 'rgb(111, 22, 33)');
   });
 
   it('converts to/from css-hsl', () => {
     const {fromHex, toHex, fromStr, toStr} = colorFormatConverters['css-hsl'];
-    assertEqual(fromHex("#eed4c9"), "hsl(18, 52%, 86%)");
-    assertEqual(toHex("hsl(86, 52%, 18%)"), "#314616")
-    assertEqual(fromStr("hsl(1,22%,33%)"), [true, "hsl(1, 22%, 33%)"]);
-    assertEqual(toStr("hsl(111,22%,33%)"), "hsl(111, 22%, 33%)");
-    assertEqual(fromHex("#eeeeee"), "hsl(0, 0%, 93%)");
+    assertEqual(fromHex('#eed4c9'), 'hsl(18, 52%, 86%)');
+    assertEqual(toHex('hsl(86, 52%, 18%)'), '#314616');
+    assertEqual(fromStr('hsl(1,22%,33%)'), [true, 'hsl(1, 22%, 33%)']);
+    assertEqual(toStr('hsl(111,22%,33%)'), 'hsl(111, 22%, 33%)');
+    assertEqual(fromHex('#eeeeee'), 'hsl(0, 0%, 93%)');
   });
 
   it('converts to/from hex6-no-hash', () => {
     const {fromHex, toHex, fromStr, toStr} = colorFormatConverters['hex6-no-hash'];
-    assertEqual(fromHex("#123456"), "123456");
-    assertEqual(toHex("123456"), "#123456")
-    assertEqual(fromStr(" 123456 "), [true, "123456"]);
-    assertEqual(toStr("123456"), "123456");
+    assertEqual(fromHex('#123456'), '123456');
+    assertEqual(toHex('123456'), '#123456');
+    assertEqual(fromStr(' 123456 '), [true, '123456']);
+    assertEqual(toStr('123456'), '123456');
   });
 
   it('converts to/from hex3', () => {
     const {fromHex, toHex, fromStr, toStr} = colorFormatConverters['hex3'];
-    assertEqual(fromHex("#123456"), "#123456");
-    assertEqual(fromHex("#223355"), "#235");
-    assertEqual(toHex("#123"), "#112233")
-    assertEqual(fromStr(" #123 "), [true, "#123"]);
-    assertEqual(toStr("#456"), "#456");
+    assertEqual(fromHex('#123456'), '#123456');
+    assertEqual(fromHex('#223355'), '#235');
+    assertEqual(toHex('#123'), '#112233');
+    assertEqual(fromStr(' #123 '), [true, '#123']);
+    assertEqual(toStr('#456'), '#456');
   });
 
   it('converts to/from float-rgb', () => {
     const {fromHex, toHex, fromStr, toStr} = colorFormatConverters['float-rgb'];
-    assertEqual(fromHex("#123456"), [0.071, 0.204, 0.337]);
-    assertEqual(toHex([0.337, 0.204, 0.071]), "#563412")
-    assertEqual(fromStr("0.10 , 12.2301, 1.00"), [true, [0.1, 12.23, 1]]);
-    assertEqual(toStr([0.12, 0.34, 5.67]), "0.12, 0.34, 5.67");
-    assertEqual(toStr(new Float32Array([0.2, 0.9, 0.5])), "0.2, 0.9, 0.5");
+    assertEqual(fromHex('#123456'), [0.071, 0.204, 0.337]);
+    assertEqual(toHex([0.337, 0.204, 0.071]), '#563412');
+    assertEqual(fromStr('0.10 , 12.2301, 1.00'), [true, [0.1, 12.23, 1]]);
+    assertEqual(toStr([0.12, 0.34, 5.67]), '0.12, 0.34, 5.67');
+    assertEqual(toStr(new Float32Array([0.2, 0.9, 0.5])), '0.2, 0.9, 0.5');
   });
 
 });
