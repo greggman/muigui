@@ -14,11 +14,11 @@ const svg = `
 `;
 
 
-
 export default class Direction extends ValueController {
-  constructor(object, property) {
+  constructor(object, property, options) {
     super(object, property, 'muigui-direction');
     const root = this.contentElement;
+this._options = options;
     this._svgContainerElem = createElem('div', {
       innerHTML: svg,
     });
@@ -26,7 +26,7 @@ export default class Direction extends ValueController {
       onMove: (e) => {
         const nx = e.nx * 2 - 1;
         const ny = e.ny * 2 - 1;
-        this._arrowElem.style.transform = `rotate(${Math.atan2(ny, nx)}rad)`;
+this.setValue(Math.atan2(ny, nx) * 180 / Math.PI);
       },
     });
     this._arrowElem = this._svgContainerElem.querySelector('#arrow');
@@ -35,5 +35,10 @@ export default class Direction extends ValueController {
       type: 'number',
     });
     root.appendChild(this._textElem);
+  }
+  updateDisplay() {
+const angle = this.getValue() * Math.PI / 180;
+    this._arrowElem.style.transform = `rotate(${angle}rad)`;
+
   }
 }

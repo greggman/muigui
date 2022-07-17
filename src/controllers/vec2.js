@@ -13,7 +13,17 @@ const svg = `
 </svg>
 `;
 
+
+
 // TODO: zoom with wheel and pinch?
+// TODO: grid?
+// // options
+//   scale:
+//   range: number (both x and y + /)
+//   range: array (min, max)
+//   xRange:
+// deg/rad/turn
+
 export default class Vec2 extends ValueController {
   constructor(object, property) {
     super(object, property, 'muigui-vec2');

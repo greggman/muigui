@@ -1,7 +1,7 @@
 
 import {GUI} from '../../src/muigui.js';
 import {cube} from './cube.js';
-import Logger from './logger.js'
+import Logger from './logger.js';
 import {
   getCSSRulesBySelector,
   resizeCanvasToDisplaySize,
@@ -67,7 +67,7 @@ updateUIColors();
   outer.add(new Row());
   const row = outer.add(new Row());
   const setter = new PropertySetter(s, 'color');
-  row.add(new Color(setter))
+  row.add(new Color(setter));
   const pane = row.add(new Pane());
   const col1 = pane.add(new Column());
   col1.domElement.style.flex = '0 0 auto';
@@ -77,8 +77,8 @@ updateUIColors();
   div.appendChild(outer.domElement);
 
 
-  row.add(new Color(new PropertySetter(s, 'color')));
-  row.add(new Color)
+  //row.add(new Color(new PropertySetter(s, 'color')));
+  //row.add(new Color)
 }
 
 if (false) {
@@ -90,7 +90,9 @@ if (false) {
     animal: 'Bird',
     viscosity: 0.5,
     shoes: 1,
-    show: () => { log(JSON.stringify(s)); },
+    show: () => {
+ log(JSON.stringify(s));
+},
     background: '#123456',
     period1: 1,
     period2: 1.37,
@@ -106,7 +108,7 @@ if (false) {
     uiElem.appendChild(div);
 
     const pane = new Pane(div);
-    pane.add(s, 'speed', new Range(0, 100, 1)); 
+    pane.add(s, 'speed', new Range(0, 100, 1));
     pane.add(s, 'direction', new Range(0, 360, 1)).listen();
     pane.add(s, 'friction', new Range(0, 1));
     pane.add(new Divider());
@@ -114,7 +116,7 @@ if (false) {
     pane.add(new Label('Pet'));
     pane.add(s, 'animal', new Select(['Cat', 'Bird', 'Dog'])).listen();
     pane.add(s, 'viscosity', new Select([['Slow', 0.1], ['Medium', 0.5], ['Fast', 1.0]]));
-    pane.add(s, 'shoes', new Select({"Loafers": 0, "Sandals": 1, "Sneakers": 2}));
+    pane.add(s, 'shoes', new Select({'Loafers': 0, 'Sandals': 1, 'Sneakers': 2}));
     pane.add(s, 'background', new Color()).listen().onChange((e) => {
       document.body.style.backgroundColor = e.value;
     });
@@ -135,8 +137,8 @@ if (false) {
     const c = f.addCanvas('signal');
     f.add(s, 'period1', 0.1, 4);
     f.add(s, 'period2', 0.1, 4);
-    f.add(s, 'name').listen();  
-    f.add(s, 'hobby').onFinishChange(e => log(new Date, e.value));
+    f.add(s, 'name').listen();
+    f.add(s, 'hobby').onFinishChange(e => log(new Date(), e.value));
     f.add(s, 'propertyWithLongName', ['longNamedEnumThatWillPushSizeTooFar']);
     f.addController(new Direction(s, 'direction'));
     f.addController(new Vec2(s, 'vec'));
@@ -192,7 +194,9 @@ if (false) {
     animal: 'Bird',
     viscosity: 0.5,
     shoes: 1,
-    show: () => { log(JSON.stringify(s)); },
+    show: () => {
+ log(JSON.stringify(s));
+},
     background: '#123456',
     period1: 1,
     period2: 1.37,
@@ -207,7 +211,7 @@ if (false) {
     const div = document.createElement('div');
     uiElem.appendChild(div);
     const gui = new GUI(div);
-    gui.add(s, 'speed', 0, 100, 1); 
+    gui.add(s, 'speed', 0, 100, 1);
     gui.add(s, 'direction', 0, 360, 1).listen();
     gui.add(s, 'friction', 0, 1);
     gui.addDivider();
@@ -215,7 +219,7 @@ if (false) {
     gui.addLabel('Pet');
     gui.add(s, 'animal', ['Cat', 'Bird', 'Dog']).listen();
     gui.add(s, 'viscosity', [['Slow', 0.1], ['Medium', 0.5], ['Fast', 1.0]]);
-    gui.add(s, 'shoes', {"Loafers": 0, "Sandals": 1, "Sneakers": 2});
+    gui.add(s, 'shoes', {'Loafers': 0, 'Sandals': 1, 'Sneakers': 2});
     gui.addColor(s, 'background').listen().onChange((e) => {
       document.body.style.backgroundColor = e.value;
     });
@@ -236,12 +240,12 @@ if (false) {
     const c = f.addCanvas('signal');
     f.add(s, 'period1', 0.1, 4);
     f.add(s, 'period2', 0.1, 4);
-    f.add(s, 'name').listen();  
-    f.add(s, 'hobby').onFinishChange(e => log(new Date, e.value));
+    f.add(s, 'name').listen();
+    f.add(s, 'hobby').onFinishChange(e => log(new Date(), e.value));
     f.add(s, 'propertyWithLongName', ['longNamedEnumThatWillPushSizeTooFar']);
-    f.addController(new Direction(s, 'direction'));
-    f.addController(new Vec2(s, 'vec'));
-    f.addController(new ColorChooser(s, 'c2'));
+    f.addController(new Direction(s, 'direction')).listen();
+    f.addController(new Vec2(s, 'vec', {range: 100})).listen();
+    f.addController(new ColorChooser(s, 'c2')).listen();
 
     const ctx = c.canvas.getContext('2d');
     let lastY = 0;
@@ -371,9 +375,9 @@ if (false) {
   const gui = new GUI({parent: div, title: 'Callbacks'});
 
   const changes = { onChange: 0, onFinishChange: 0 };
-  const change = _ => changes.onChange++;
-  const finishChange = _ => changes.onFinishChange++;
-  
+  const change = () => changes.onChange++;
+  const finishChange = () => changes.onFinishChange++;
+
   const folder = gui.addFolder('Counts');
   folder.add(changes, 'onChange').disable().listen();
   folder.add(changes, 'onFinishChange').disable().listen();
@@ -445,9 +449,9 @@ if (false) {
   function addRow() {
     const id = controllers.length;
     periods.push(Math.random() * 2.5 + 0.5);
-    controllers.push(gui.add(periods, id, 0, 3).name(`input ${id +1}`));
+    controllers.push(gui.add(periods, id, 0, 3).name(`input ${id + 1}`));
   }
-  
+
   function delRow() {
     const row = controllers.pop();
     if (row) {
@@ -501,7 +505,6 @@ if (false) {
     for (let y = 8; y < height; y += 16) {
       ctx.fillRect(x, y, 1, 1);
     }
-    let sum = 0;
     for (let i = 0; i < controllers.length; ++i) {
       const l = i / controllers.length;
       const scale = s.separate ? 1 / controllers.length : 1;
@@ -511,10 +514,10 @@ if (false) {
         ctx.scale(1, scale);
       }
       times[i] += elapsedTime * periods[i];
-      const sine = Math.sin(times[i] * 0.01)
+      const sine = Math.sin(times[i] * 0.01);
       const lastY = lastYs[i];
       const newY = height / 2 + sine * (height - 2) / 2;
-      
+
       ctx.strokeStyle = hsl(l, 1, 0.7);
       ctx.beginPath();
       ctx.lineWidth = 2;
@@ -556,7 +559,6 @@ if (false) {
       });
 }
 
-let depth = 0;
 const updateAppearance = function() {
 
   const themeElem = document.createElement('style');
@@ -565,7 +567,7 @@ const updateAppearance = function() {
   document.head.appendChild(styleElem);
 
   const themes = {
-    default: ``,
+    default: '',
     light: `
         .muigui {
           --bg-color: #f6f6f6;
@@ -613,7 +615,6 @@ const updateAppearance = function() {
     updateAppearance();
   });
 
-  const temp = document.createElement('div');
   const cssStringToHexColor = s => s.length === 7
      ? s
      : `#${s[1]}${s[1]}${s[2]}${s[2]}${s[3]}${s[3]}`;
@@ -623,7 +624,7 @@ const updateAppearance = function() {
       uiElem.style.columnWidth = v;
       uiElem.parentElement.style.gridTemplateColumns = `repeat(auto-fit, ${v})`;
     },
-  }
+  };
 
   const folder = gui.addFolder('Style');
   const rule = getCSSRulesBySelector('.muigui')[0];  // assuming the first one
@@ -633,7 +634,7 @@ const updateAppearance = function() {
   const updateStyles = () => {
     styleElem.textContent = `.muigui {\n${
       [...Object.entries(obj)].map(([key, value]) => {
-        return `${key}: ${value};`
+        return `${key}: ${value};`;
       }).join('\n')}\n}`;
     updateUIColors();
   };
