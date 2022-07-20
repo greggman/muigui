@@ -19,6 +19,10 @@ export default class LabelController extends Controller {
   get contentElement() {
     return this._contentElem;
   }
+  add(view) {
+    this._contentElem.appendChild(view.domElement);
+    return view;
+  }
   name(name) {
     this._nameElem.textContent = name;
     this._nameElem.title = name;

@@ -1,5 +1,8 @@
 import { removeArrayElem } from '../libs/utils.js';
 
+/**
+ * Similar to EventSource
+ */
 export default class Emitter {
   constructor() {
     this._listeners = {};

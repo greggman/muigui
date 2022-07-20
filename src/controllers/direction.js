@@ -13,6 +13,9 @@ const svg = `
 </svg>
 `;
 
+// deg2rad
+// where is 0
+// range (0, 360), (-180, +180), (0,0)   Really this is a slider
 
 export default class Direction extends ValueController {
   constructor(object, property, options) {

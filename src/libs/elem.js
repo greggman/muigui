@@ -1,5 +1,4 @@
-export function createElem(tag, attrs = {}, children = []) {
-  const elem = document.createElement(tag);
+export function setElemProps(elem, attrs, children) {
   for (const [key, value] of Object.entries(attrs)) {
     if (typeof value === 'function' && key.startsWith('on')) {
       const eventName = key.substring(2).toLowerCase();
@@ -17,6 +16,12 @@ export function createElem(tag, attrs = {}, children = []) {
   for (const child of children) {
     elem.appendChild(child);
   }
+  return elem;
+}
+
+export function createElem(tag, attrs = {}, children = []) {
+  const elem = document.createElement(tag);
+  setElemProps(elem, attrs, children);
   return elem;
 }
 

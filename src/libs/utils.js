@@ -30,3 +30,15 @@ export const isTypedArray = typeof SharedArrayBuffer !== 'undefined'
   };
 
 export const isArrayOrTypedArray = v => Array.isArray(v) || isTypedArray(v);
+
+// Yea, I know this should be `Math.round(v / step) * step
+// but try step = 0.1, newV = 19.95
+//
+// I get
+//     Math.round(19.95 / 0.1) * 0.1
+//     19.900000000000002
+// vs
+//     Math.round(19.95 / 0.1) / (1 / 0.1)
+//     19.9
+//
+export const stepify = (v, from, step) => Math.round(from(v) / step) / (1 / step);

@@ -2,66 +2,26 @@ import {
   colorFormatConverters,
   guessFormat,
 } from '../libs/color-utils.js';
-import {
-  createElem,
-} from '../libs/elem.js';
 import ValueController from './value-controller.js';
+import TextView from '../views/TextView.js';
+import ColorView from '../views/ColorView.js';
 
 export default class Color extends ValueController {
   constructor(object, property, format) {
     super(object, property, 'muigui-color');
-    const root = this.contentElement;
-    const id = this.id;
 
     format = format || guessFormat(this.getValue());
     this._converters = colorFormatConverters[format];
-    const {fromHex, fromStr} = this._converters;
+    const {fromHex, toHex, fromStr, toStr} = this._converters;
 
-    this._colorElem = createElem('input', {
-      type: 'color',
-      id,
-      onInput: () => {
-        this._skipUpdateColorElem = true;
-        this.setValue(fromHex(this._colorElem.value));
-      },
-      onChange: () => {
-        this._skipUpdateColorElem = true;
-        this.setFinalValue(fromHex(this._colorElem.value));
-      },
-    });
-    root.appendChild(createElem('div', {}, [this._colorElem]));
-
-    this._textElem = createElem('input', {
-      type: 'text',
-      onInput: () => {
-        const [valid, newV] = fromStr(this._textElem.value);
-        if (valid) {
-          this._skipUpdateTextElem = true;
-          this.setValue(newV);
-        }
-      },
-      onChange: () => {
-        const [valid, newV] = fromStr(this._textElem.value);
-        if (valid) {
-         this._skipUpdateTextElem = true;
-         this.setFinalValue(newV);
-        }
-      },
-    });
-    root.appendChild(this._textElem);
+    this._colorView = this.add(new ColorView(this, {from: toHex, to: fromHex}));
+    this._textView = this.add(new TextView(this, {from: toStr, to: fromStr}));
     this.updateDisplay();
   }
   updateDisplay() {
-    const {toHex, toStr} = this._converters;
     const newV = super.getValue();
-    if (!this._skipUpdateTextElem) {
-      this._textElem.value = toStr(newV);
-    }
-    if (!this._skipUpdateColorElem) {
-      this._colorElem.value = toHex(newV);
-    }
-    this._skipUpdateTextElem = false;
-    this._skipUpdateColorElem = false;
+    this._textView.updateDisplay(newV);
+    this._colorView.updateDisplay(newV);
     return this;
   }
   setValue(v) {

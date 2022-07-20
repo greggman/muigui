@@ -117,7 +117,7 @@ if (false) {
     pane.add(s, 'animal', new Select(['Cat', 'Bird', 'Dog'])).listen();
     pane.add(s, 'viscosity', new Select([['Slow', 0.1], ['Medium', 0.5], ['Fast', 1.0]]));
     pane.add(s, 'shoes', new Select({'Loafers': 0, 'Sandals': 1, 'Sneakers': 2}));
-    pane.add(s, 'background', new Color()).listen().onChange((e) => {
+    pane.add(s, 'background', new Color()).onChange((e) => {
       document.body.style.backgroundColor = e.value;
     });
     pane.add(s, 'show').name('Show Current Values');
@@ -220,7 +220,7 @@ if (false) {
     gui.add(s, 'animal', ['Cat', 'Bird', 'Dog']).listen();
     gui.add(s, 'viscosity', [['Slow', 0.1], ['Medium', 0.5], ['Fast', 1.0]]);
     gui.add(s, 'shoes', {'Loafers': 0, 'Sandals': 1, 'Sneakers': 2});
-    gui.addColor(s, 'background').listen().onChange((e) => {
+    gui.addColor(s, 'background').onChange((e) => {
       document.body.style.backgroundColor = e.value;
     });
     gui.add(s, 'show').name('Show Current Values');
@@ -245,7 +245,7 @@ if (false) {
     f.add(s, 'propertyWithLongName', ['longNamedEnumThatWillPushSizeTooFar']);
     f.addController(new Direction(s, 'direction')).listen();
     f.addController(new Vec2(s, 'vec', {range: 100})).listen();
-    f.addController(new ColorChooser(s, 'c2')).listen();
+//    f.addController(new ColorChooser(s, 'c2')).listen();
 
     const ctx = c.canvas.getContext('2d');
     let lastY = 0;
@@ -308,19 +308,19 @@ if (false) {
 
   const degToRad = d => d * Math.PI / 180;
   const radToDeg = r => r * 180 / Math.PI;
-  gui.add(s, 'angleRad', -360, 360, 1, {from: radToDeg, to: degToRad})
+  gui.add(s, 'angleRad', -360, 360, 1, {from: radToDeg, to: v => [true, degToRad(v)]})
       .name('rad ↔ deg')
       .onChange(v => log('rad:', v));
-  gui.add(s, 'angleDeg', -Math.PI * 2, Math.PI * 2, 0.001, {from: degToRad, to: radToDeg})
+  gui.add(s, 'angleDeg', -Math.PI * 2, Math.PI * 2, 0.001, {from: degToRad, to: v => [true, radToDeg(v)]})
       .name('deg ↔ rad')
       .onChange(v => log('deg:', v));
 
   const cToF = c => (c * (212 - 32) / 100) + 32;
   const fToC = f => (f - 32) * 100 / (212 - 32);
-  gui.add(s, 'tempC', 32, 212, 0.1, {from: cToF, to: fToC})
+  gui.add(s, 'tempC', 32, 212, 0.1, {from: cToF, to: v => [true, fToC(v)]})
       .name('C° ↔ F°')
       .onChange(v => log(`${v}C°`));
-  gui.add(s, 'tempF', 0, 100, 0.1, {from: fToC, to: cToF})
+  gui.add(s, 'tempF', 0, 100, 0.1, {from: fToC, to: v => [true, cToF(v)]})
       .name('F° ↔ C°')
       .onChange(v => log(`${v}F°`));
 

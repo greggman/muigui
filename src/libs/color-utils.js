@@ -301,62 +301,62 @@ const hexNoHashRE = /^\s*[a-f0-9]{6}\s*$/i;
 //    )
 export const colorFormatConverters = {
   'hex6': {
-    fromHex: v => v,
+    fromHex: v => [true, v],
     toHex: fixHex6,
     fromStr: v => [hexRE.test(v), v.trim()],
     toStr: v => v,
   },
   'hex3': {
-    fromHex: fixHex3,
+    fromHex: v => [true, fixHex3(v)],
     toHex: hex3ToHex6,
     fromStr: v => [hexRE.test(v), hex6ToHex3(v.trim())],
     toStr: v => v,
   },
   'hex6-no-hash': {
-    fromHex: v => v.substring(1),
+    fromHex: v => [true, v.substring(1)],
     toHex: v => `#${fixHex6(v)}`,
     fromStr: v => [hexNoHashRE.test(v), v.trim()],
     toStr: v => v,
   },
   'hex3-no-hash': {
-    fromHex: v => fixHex3(v).substring(1),
+    fromHex: v => [true, fixHex3(v).substring(1)],
     toHex: hex3ToHex6,
     fromStr: v => [hexNoHashRE.test(v), hex6ToHex3(v.trim())],
     toStr: v => v,
   },
   'uint32-rgb': {
-    fromHex: hexToUint32RGB,
+    fromHex: v => [true, hexToUint32RGB(v)],
     toHex: uint32RGBToHex,
     fromStr: v => strToUint32RGB(v),
     toStr: v => `0x${v.toString(16).padStart(6, '0')}`,
   },
   'uint8-rgb': {
-    fromHex: hexToUint8RGB,
+    fromHex: v => [true, hexToUint8RGB(v)],
     toHex: uint8RGBToHex,
     fromStr: strTo3Ints,
     toStr: v => v.join(', '),
   },
   'float-rgb': {
-    fromHex: hexToFloatRGB,
+    fromHex: v => [true, hexToFloatRGB(v)],
     toHex: floatRGBToHex,
     fromStr: strTo3Floats,
     // We need Array.from because map of Float32Array makes a Float32Array
     toStr: v => Array.from(v).map(v => f3(v)).join(', '),
   },
   'object-rgb': {
-    fromHex: hexToObjectRGB,
+    fromHex: v => [true, hexToObjectRGB(v)],
     toHex: objectRGBToHex,
     fromStr: strToRGBObject,
     toStr: rgbObjectToStr,
   },
   'css-rgb': {
-    fromHex: hexToCssRGB,
+    fromHex: v => [true, hexToCssRGB(v)],
     toHex: cssRGBToHex,
     fromStr: strToCssRGB,
     toStr: v => strToCssRGB(v)[1],
   },
   'css-hsl': {
-    fromHex: hexToCssHSL,
+    fromHex: v => [true, hexToCssHSL(v)],
     toHex: cssHSLToHex,
     fromStr: strToCssHSL,
     toStr: v => strToCssHSL(v)[1],

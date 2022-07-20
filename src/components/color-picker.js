@@ -1,7 +1,7 @@
 import Row from '../layouts/row.js';
 import InputView from '../base-components/input-view.js';
 import View from '../base-components/view.js';
-import { createElem } from '../libs/elem.js';
+import Label from './Label.js';
 import { colorFormatConverters, guessFormat } from '../libs/color-utils.js';
 
 class ColorView extends InputView {
@@ -13,18 +13,6 @@ class ColorView extends InputView {
 class TextView extends InputView {
   constructor(toStr, fromStr) {
     super('text', toStr, fromStr);
-  }
-}
-
-class Label extends View {
-  constructor(label) {
-    super(createElem('div', {
-      className: 'muigui-label',
-    }));
-    this.label(label);
-  }
-  label(label) {
-    this.domElement.textContent = label;
   }
 }
 
