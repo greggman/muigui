@@ -7,14 +7,14 @@ export default class TextView extends View {
     super(createElem('input', {
       type: 'text',
       onInput: () => {
-        const [valid, newV] = this._to(this.domElement.value);
+        const [valid, newV] = this._from(this.domElement.value);
         if (valid) {
           this._skipUpdateTextElem = true;
           setter.setValue(newV);
         }
       },
       onChange: () => {
-        const [valid, newV] = this._to(this.domElement.value);
+        const [valid, newV] = this._from(this.domElement.value);
         if (valid) {
           this._skipUpdateTextElem = true;
           setter.setFinalValue(newV);
@@ -27,7 +27,7 @@ export default class TextView extends View {
   }
   updateDisplay(v) {
     if (!this._skipUpdateTextElem) {
-      this.domElement.value = this._from(v);
+      this.domElement.value = this._to(v);
     }
     this._skipUpdateTextElem = false;
   }

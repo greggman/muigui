@@ -14,8 +14,8 @@ export default class Color extends ValueController {
     this._converters = colorFormatConverters[format];
     const {fromHex, toHex, fromStr, toStr} = this._converters;
 
-    this._colorView = this.add(new ColorView(this, {from: toHex, to: fromHex}));
-    this._textView = this.add(new TextView(this, {from: toStr, to: fromStr}));
+    this._colorView = this.add(new ColorView(this, {from: fromHex, to: toHex}));
+    this._textView = this.add(new TextView(this, {from: fromStr, to: toStr}));
     this.updateDisplay();
   }
   updateDisplay() {

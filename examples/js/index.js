@@ -308,26 +308,26 @@ if (false) {
 
   const degToRad = d => d * Math.PI / 180;
   const radToDeg = r => r * 180 / Math.PI;
-  gui.add(s, 'angleRad', -360, 360, 1, {from: radToDeg, to: v => [true, degToRad(v)]})
+  gui.add(s, 'angleRad', -360, 360, 1, {to: radToDeg, from: v => [true, degToRad(v)]})
       .name('rad ↔ deg')
       .onChange(v => log('rad:', v));
-  gui.add(s, 'angleDeg', -Math.PI * 2, Math.PI * 2, 0.001, {from: degToRad, to: v => [true, radToDeg(v)]})
+  gui.add(s, 'angleDeg', -Math.PI * 2, Math.PI * 2, 0.001, {to: degToRad, from: v => [true, radToDeg(v)]})
       .name('deg ↔ rad')
       .onChange(v => log('deg:', v));
 
   const cToF = c => (c * (212 - 32) / 100) + 32;
   const fToC = f => (f - 32) * 100 / (212 - 32);
-  gui.add(s, 'tempC', 32, 212, 0.1, {from: cToF, to: v => [true, fToC(v)]})
+  gui.add(s, 'tempC', 32, 212, 0.1, {to: cToF, from: v => [true, fToC(v)]})
       .name('C° ↔ F°')
       .onChange(v => log(`${v}C°`));
-  gui.add(s, 'tempF', 0, 100, 0.1, {from: fToC, to: v => [true, cToF(v)]})
+  gui.add(s, 'tempF', 0, 100, 0.1, {to: fToC, from: v => [true, cToF(v)]})
       .name('F° ↔ C°')
       .onChange(v => log(`${v}F°`));
 
   logger.setController(gui.addLabel(''));
 }
 
-{
+if (false) {
   const div = document.createElement('div');
   uiElem.appendChild(div);
   const gui = new GUI({parent: div, title: 'Numbers'});

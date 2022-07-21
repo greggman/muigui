@@ -1,9 +1,6 @@
 export default class View {
   constructor(elem) {
-    this._domElement = elem;
-  }
-  get domElement() {
-    return this._domElement;
+    this.domElement = elem;
   }
   add(view) {
     this._domElement.appendChild(view.domElement);

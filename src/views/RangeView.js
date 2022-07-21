@@ -9,14 +9,14 @@ export default class RangeView extends View {
       type: 'range',
       onInput: () => {
         this._skipUpdateRangeElem = true;
-        const [valid, v] = this._to(this.domElement.value);
+        const [valid, v] = this._from(this.domElement.value);
         if (valid) {
           setter.setValue(v);
         }
       },
       onChange: () => {
         this._skipUpdateRangeElem = true;
-        const [valid, v] = this._to(this.domElement.value);
+        const [valid, v] = this._from(this.domElement.value);
         if (valid) {
           setter.setFinalValue(v);
         }
@@ -28,7 +28,7 @@ export default class RangeView extends View {
   }
   updateDisplay(v) {
     if (!this._skipUpdateRangeElem) {
-      this.domElement.value = stepify(v, this._from, this._step);
+      this.domElement.value = stepify(v, this._to, this._step);
     }
     this._skipUpdateRangeElem = false;
   }

@@ -1,10 +1,13 @@
-export const identity = {from: v => v, to: v => [true, v] };
+export const identity = {
+  to: v => v,
+  from: v => [true, v],
+};
 
-// from: from value to string
-// to: from string to value
+// from: from string to value
+// to: from value to string
 export const strToNumber = {
-  from: v => v.toString(),
-  to: v => {
+  to: v => v.toString(),
+  from: v => {
     const newV = parseFloat(v);
     return [!Number.isNaN(newV), newV];
   },

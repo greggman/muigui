@@ -7,14 +7,14 @@ export default class ColorView extends View {
     const colorElem = createElem('input', {
       type: 'color',
       onInput: () => {
-        const [valid, newV] = this._to(colorElem.value);
+        const [valid, newV] = this._from(colorElem.value);
         if (valid) {
           this._skipUpdateTextElem = true;
           setter.setValue(newV);
         }
       },
       onChange: () => {
-        const [valid, newV] = this._to(colorElem.value);
+        const [valid, newV] = this._from(colorElem.value);
         if (valid) {
           this._skipUpdateTextElem = true;
           setter.setFinalValue(newV);
@@ -29,7 +29,7 @@ export default class ColorView extends View {
   }
   updateDisplay(v) {
     if (!this._skipUpdateTextElem) {
-      this._colorElem.value = this._from(v);
+      this._colorElem.value = this._to(v);
     }
     this._skipUpdateTextElem = false;
   }
