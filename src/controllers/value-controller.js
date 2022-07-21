@@ -9,6 +9,7 @@ export default class ValueController extends LabelController {
     this._property = property;
     this._initialValue = this.getValue();
     this._listening = false;
+    this._views = [];
   }
   get initialValue() {
     return this._initialValue;
@@ -21,6 +22,10 @@ export default class ValueController extends LabelController {
   }
   setJustValue(v) {
     this._object[this._property] = v;
+  }
+  add(view) {
+    this._views.push(view);
+    return super.add(view);
   }
   setValue(v) {
     if (typeof v === 'object') {
@@ -38,11 +43,22 @@ export default class ValueController extends LabelController {
     } else {
       this._object[this._property] = v;
     }
+    this.updateDisplay();
     this.emitChange(this.getValue(), this._object, this._property);
+    return this;
   }
   setFinalValue(v) {
     this.setValue(v);
+    this.updateDisplay();
     this.emitFinalChange(this.getValue(), this._object, this._property);
+    return this;
+  }
+  updateDisplay() {
+    const newV = this.getValue();
+    for (const view of this._views) {
+      view.updateDisplay(newV);
+    }
+    return this;
   }
   getValue() {
     return this._object[this._property];

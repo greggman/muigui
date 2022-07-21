@@ -23,8 +23,6 @@ export default class Button extends Controller {
     this._buttonElem.textContent = name;
     return this;
   }
-  updateDisplay() {
-  }
   onChange() { return this; } // what
   onFinishChange() { return this; } // what?
 }

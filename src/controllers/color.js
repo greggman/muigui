@@ -18,15 +18,4 @@ export default class Color extends ValueController {
     this._textView = this.add(new TextView(this, {from: fromStr, to: toStr}));
     this.updateDisplay();
   }
-  updateDisplay() {
-    const newV = super.getValue();
-    this._textView.updateDisplay(newV);
-    this._colorView.updateDisplay(newV);
-    return this;
-  }
-  setValue(v) {
-    super.setValue(v);
-    this.updateDisplay();
-    return this;
-  }
 }

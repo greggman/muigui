@@ -31,15 +31,4 @@ export default class Slider extends ValueController {
     this.updateDisplay();
     return this;
   }
-  updateDisplay() {
-    const newV = super.getValue();
-    this._numberView.updateDisplay(newV);
-    this._rangeView.updateDisplay(newV);
-    return this;
-  }
-  setValue(v) {
-    super.setValue(v);
-    this.updateDisplay();
-    return this;
-  }
 }

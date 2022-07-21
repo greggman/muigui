@@ -245,7 +245,7 @@ if (false) {
     f.add(s, 'propertyWithLongName', ['longNamedEnumThatWillPushSizeTooFar']);
     f.addController(new Direction(s, 'direction')).listen();
     f.addController(new Vec2(s, 'vec', {range: 100})).listen();
-//    f.addController(new ColorChooser(s, 'c2')).listen();
+    f.addController(new ColorChooser(s, 'c2')).listen();
 
     const ctx = c.canvas.getContext('2d');
     let lastY = 0;
@@ -287,6 +287,7 @@ if (false) {
   }
 }
 
+// Using Sliders
 {
   const div = document.createElement('div');
   uiElem.appendChild(div);
@@ -327,7 +328,8 @@ if (false) {
   logger.setController(gui.addLabel(''));
 }
 
-if (false) {
+// Using TextNumber
+{
   const div = document.createElement('div');
   uiElem.appendChild(div);
   const gui = new GUI({parent: div, title: 'Numbers'});
@@ -350,19 +352,19 @@ if (false) {
 
   const degToRad = d => d * Math.PI / 180;
   const radToDeg = r => r * 180 / Math.PI;
-  gui.add(s, 'angleRad', {from: radToDeg, to: degToRad}, 1)
+  gui.add(s, 'angleRad', {to: radToDeg, from: v => [true, degToRad(v)]}, 1)
       .name('rad ↔ deg')
       .onChange(v => log('rad:', v));
-  gui.add(s, 'angleDeg', {from: degToRad, to: radToDeg}, 0.001)
+  gui.add(s, 'angleDeg', {to: degToRad, from: v => [true, radToDeg(v)]}, 0.001)
       .name('deg ↔ rad')
       .onChange(v => log('deg:', v));
 
   const cToF = c => (c * (212 - 32) / 100) + 32;
   const fToC = f => (f - 32) * 100 / (212 - 32);
-  gui.add(s, 'tempC', {from: cToF, to: fToC}, 0.1)
+  gui.add(s, 'tempC', {to: cToF, from: v => [true, fToC(v)]}, 0.1)
       .name('C° ↔ F°')
       .onChange(v => log(`${v}C°`));
-  gui.add(s, 'tempF', {from: fToC, to: cToF}, 0.1)
+  gui.add(s, 'tempF', {to: fToC, from: v => [true, cToF(v)]}, 0.1)
       .name('F° ↔ C°')
       .onChange(v => log(`${v}F°`));
 

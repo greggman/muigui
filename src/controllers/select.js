@@ -1,6 +1,4 @@
-import {
-  createElem,
-} from '../libs/elem.js';
+import SelectView from '../views/SelectView.js';
 import ValueController from './value-controller.js';
 
 // 4 cases
@@ -31,30 +29,9 @@ function convertToKeyValues(keyValues, valueIsNumber) {
 export default class Select extends ValueController {
   constructor(object, property, keyValuesInput) {
     super(object, property, 'muigui-select');
-    const root = this.contentElement;
-
     const valueIsNumber = typeof this.getValue() === 'number';
     const keyValues = convertToKeyValues(keyValuesInput, valueIsNumber);
-
-    this._values = [];
-    this._selectElem = createElem('select', {
-      onChange: () => {
-        this.setFinalValue(this._values[this._selectElem.selectedIndex]);
-      },
-    }, keyValues.map(([key, value]) => {
-      this._values.push(value);
-      return createElem('option', {textContent: key});
-    }));
-    this.updateDisplay();
-    root.appendChild(this._selectElem);
-  }
-  updateDisplay() {
-    const newV = super.getValue();
-    const ndx = this._values.indexOf(newV);
-    this._selectElem.selectedIndex = ndx;
-  }
-  setValue(v) {
-    super.setValue(v);
+    this.add(new SelectView(this, keyValues));
     this.updateDisplay();
   }
 }
