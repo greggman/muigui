@@ -1,7 +1,7 @@
 import { identity } from '../libs/conversions.js';
 import DirectionView from '../views/DirectionView.js';
 import NumberView from '../views/NumberView.js';
-import ValueController from './value-controller.js';
+import ValueController from './ValueController.js';
 
 
 

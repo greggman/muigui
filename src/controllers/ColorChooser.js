@@ -1,4 +1,4 @@
-import ValueController from './value-controller.js';
+import ValueController from './ValueController.js';
 import ColorChooserView from '../views/ColorChooserView.js';
 import TextView from '../views/TextView.js';
 

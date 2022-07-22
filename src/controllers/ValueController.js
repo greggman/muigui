@@ -1,6 +1,6 @@
 import {addTask, removeTask} from '../libs/taskrunner.js';
 import { isTypedArray } from '../libs/utils.js';
-import LabelController from './label-controller.js';
+import LabelController from './LabelController.js';
 
 export default class ValueController extends LabelController {
   constructor(object, property, className = '') {

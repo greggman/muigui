@@ -1,5 +1,5 @@
 import { identity } from '../libs/conversions.js';
-import ValueController from './value-controller.js';
+import ValueController from './ValueController.js';
 import NumberView from '../views/NumberView.js';
 import RangeView from '../views/RangeView.js';
 

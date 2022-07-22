@@ -2,7 +2,7 @@ import {
   colorFormatConverters,
   guessFormat,
 } from '../libs/color-utils.js';
-import ValueController from './value-controller.js';
+import ValueController from './ValueController.js';
 import TextView from '../views/TextView.js';
 import ColorView from '../views/ColorView.js';
 

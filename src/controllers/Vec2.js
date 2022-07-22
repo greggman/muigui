@@ -1,6 +1,6 @@
 import NumberView from '../views/NumberView.js';
 import Vec2View from '../views/Vec2View.js';
-import ValueController from './value-controller.js';
+import ValueController from './ValueController.js';
 
 // TODO: zoom with wheel and pinch?
 // TODO: grid?

@@ -1,6 +1,6 @@
 
 import NumberView from '../views/NumberView.js';
-import ValueController from './value-controller.js';
+import ValueController from './ValueController.js';
 import { strToNumber } from '../libs/conversions.js';
 
 // Wanted to name this `Number` but it conflicts with

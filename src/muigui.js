@@ -1,4 +1,4 @@
-import Folder from './controllers/folder.js';
+import Folder from './controllers/Folder.js';
 import css from './styles/muigui.css.js';
 import {createElem} from './libs/elem.js';
 

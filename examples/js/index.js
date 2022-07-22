@@ -8,9 +8,9 @@ import {
   hsl,
 } from './utils.js';
 
-import Direction from '../../src/controllers/direction.js';
-import Vec2 from '../../src/controllers/vec2.js';
-import ColorChooser from '../../src/controllers/color-chooser.js';
+import Direction from '../../src/controllers/Direction.js';
+import Vec2 from '../../src/controllers/Vec2.js';
+import ColorChooser from '../../src/controllers/ColorChooser.js';
 
 const uiElem = document.querySelector('#ui');
 

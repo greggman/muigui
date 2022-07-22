@@ -1,7 +1,7 @@
 import {
   createElem,
 } from '../libs/elem.js';
-import LabelController from './label-controller.js';
+import LabelController from './LabelController.js';
 
 // TODO: remove this? Should just be user side
 export default class SVG extends LabelController {

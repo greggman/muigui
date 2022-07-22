@@ -1,5 +1,5 @@
 import SelectView from '../views/SelectView.js';
-import ValueController from './value-controller.js';
+import ValueController from './ValueController.js';
 
 // 4 cases
 //   (a) keyValues is array of arrays, each sub array is key value

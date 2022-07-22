@@ -1,9 +1,9 @@
-import Button from './button.js';
-import Checkbox from './checkbox.js';
-import TextNumber from './text-number.js';
-import Select from './select.js';
-import Slider from './slider.js';
-import Text from './text.js';
+import Button from './Button.js';
+import Checkbox from './Checkbox.js';
+import TextNumber from './TextNumber.js';
+import Select from './Select.js';
+import Slider from './Slider.js';
+import Text from './Text.js';
 
 const isConversion = o => typeof o.to === 'function' && typeof o.from === 'function';
 

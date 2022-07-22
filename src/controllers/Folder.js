@@ -1,10 +1,10 @@
 import { createElem } from '../libs/elem.js';
-import Canvas from './canvas.js';
-import Color from './color.js';
+import Canvas from './Canvas.js';
+import Color from './Color.js';
 import { createController } from './create-controller.js';
 import Controller from './controller.js';
-import Divider from './divider.js';
-import Label from './label.js';
+import Divider from './Divider.js';
+import Label from './Label.js';
 
 export default class Folder extends Controller {
   constructor(name = 'Controls', className = 'muigui-menu') {
