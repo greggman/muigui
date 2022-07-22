@@ -50,8 +50,8 @@ updateUIColors();
     viscosity: 0.5,
     shoes: 1,
     show: () => {
- log(JSON.stringify(s));
-},
+     log(JSON.stringify(s));
+    },
     background: '#123456',
     period1: 1,
     period2: 1.37,
@@ -83,12 +83,6 @@ updateUIColors();
     if (i === 2) {
       gui.name('Disabled');
       gui.disable();
-      if (false) {
-        const g = gui;
-        setTimeout(() => {
-          g.enable();
-        }, 3000);
-      }
     }
 
     const f = gui.addFolder('Submenu');

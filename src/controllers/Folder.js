@@ -1,10 +1,5 @@
 import { createElem } from '../libs/elem.js';
-import Canvas from './Canvas.js';
-import Color from './Color.js';
-import { createController } from './create-controller.js';
 import Controller from './controller.js';
-import Divider from './Divider.js';
-import Label from './Label.js';
 
 export default class Folder extends Controller {
   constructor(name = 'Controls', className = 'muigui-menu') {
@@ -71,23 +66,5 @@ export default class Folder extends Controller {
     this._controllers.push(controller);
     controller.setParent(this);
     return controller;
-  }
-  add(object, property, ...args) {
-    return this.addController(createController(object, property, ...args));
-  }
-  addCanvas(name) {
-    return this.addController(new Canvas(name));
-  }
-  addColor(object, property, ...args) {
-    return this.addController(new Color(object, property, ...args));
-  }
-  addDivider() {
-    return this.addController(new Divider());
-  }
-  addFolder(name) {
-    return this.addController(new Folder(name));
-  }
-  addLabel(text) {
-    return this.addController(new Label(text));
   }
 }
