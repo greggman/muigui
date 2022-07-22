@@ -8,18 +8,9 @@ import {
   hsl,
 } from './utils.js';
 
-import Pane from '../../src/layouts/pane.js';
-import Row from '../../src/layouts/row.js';
-import Tabs from '../../src/layouts/tab.js';
-import Column from '../../src/layouts/column.js';
-import SVG from '../../src/controllers/svg.js';
 import Direction from '../../src/controllers/direction.js';
 import Vec2 from '../../src/controllers/vec2.js';
 import ColorChooser from '../../src/controllers/color-chooser.js';
-import Color from '../../src/components/color-picker.js';
-import PropertySetter from '../../src/base-components/property-setter.js';
-import Divider from '../../src/controllers/divider.js';
-import Select from '../../src/controllers/select.js';
 
 const uiElem = document.querySelector('#ui');
 
@@ -48,142 +39,6 @@ const updateUIColors = (() => {
   };
 })();
 updateUIColors();
-
-
-{
-  const s = {
-    color: '#ABCDEF',
-  };
-
-  const div = document.createElement('div');
-  div.className = '.foobar';
-  uiElem.appendChild(div);
-
-  const outer = new Pane();
-  outer.domElement.style.width = '250px';
-
-  outer.add(new Row());
-  outer.add(new Row());
-  outer.add(new Row());
-  const row = outer.add(new Row());
-  const setter = new PropertySetter(s, 'color');
-  row.add(new Color(setter));
-  const pane = row.add(new Pane());
-  const col1 = pane.add(new Column());
-  col1.domElement.style.flex = '0 0 auto';
-  const col2 = pane.add(new Column());
-  const col3 = pane.add(new Column());
-
-  div.appendChild(outer.domElement);
-
-
-  //row.add(new Color(new PropertySetter(s, 'color')));
-  //row.add(new Color)
-}
-
-if (false) {
-  const s = {
-    speed: 0.5,
-    direction: 45,
-    friction: 0.01,
-    run: true,
-    animal: 'Bird',
-    viscosity: 0.5,
-    shoes: 1,
-    show: () => {
- log(JSON.stringify(s));
-},
-    background: '#123456',
-    period1: 1,
-    period2: 1.37,
-    name: 'gman',
-    hobby: 'coding',
-    propertyWithLongName: 0,
-    vec: [10, 20],
-    c2: '#123456',
-  };
-
-  for (let i = 0; i < 3; ++i) {
-    const div = document.createElement('div');
-    uiElem.appendChild(div);
-
-    const pane = new Pane(div);
-    pane.add(s, 'speed', new Range(0, 100, 1));
-    pane.add(s, 'direction', new Range(0, 360, 1)).listen();
-    pane.add(s, 'friction', new Range(0, 1));
-    pane.add(new Divider());
-    pane.add(s, 'run', new Button());
-    pane.add(new Label('Pet'));
-    pane.add(s, 'animal', new Select(['Cat', 'Bird', 'Dog'])).listen();
-    pane.add(s, 'viscosity', new Select([['Slow', 0.1], ['Medium', 0.5], ['Fast', 1.0]]));
-    pane.add(s, 'shoes', new Select({'Loafers': 0, 'Sandals': 1, 'Sneakers': 2}));
-    pane.add(s, 'background', new Color()).onChange((e) => {
-      document.body.style.backgroundColor = e.value;
-    });
-    pane.add(s, 'show').name('Show Current Values');
-
-    if (i === 2) {
-      pane.name('Disabled');
-      pane.disable();
-      if (false) {
-        const g = pane;
-        setTimeout(() => {
-          g.enable();
-        }, 3000);
-      }
-    }
-
-    const f = pane.addFolder('Submenu');
-    const c = f.addCanvas('signal');
-    f.add(s, 'period1', 0.1, 4);
-    f.add(s, 'period2', 0.1, 4);
-    f.add(s, 'name').listen();
-    f.add(s, 'hobby').onFinishChange(e => log(new Date(), e.value));
-    f.add(s, 'propertyWithLongName', ['longNamedEnumThatWillPushSizeTooFar']);
-    f.addController(new Direction(s, 'direction'));
-    f.addController(new Vec2(s, 'vec'));
-    f.addController(new ColorChooser(s, 'c2'));
-
-    const ctx = c.canvas.getContext('2d');
-    let lastY = 0;
-    let lTime1 = 0;
-    let lTime2 = 0;
-    let then = 0;
-    function draw(now) {
-      const elapsedTime = now - then;
-      then = now;
-      lTime1 += elapsedTime * s.period1;
-      lTime2 += elapsedTime * s.period2;
-      const res = 2;
-      resizeCanvasToDisplaySize(ctx.canvas, res);
-      const width = ctx.canvas.width / res;
-      const height = ctx.canvas.height / res;
-      ctx.save();
-      ctx.scale(res, res);
-      ctx.globalCompositeOperation = 'copy';
-      ctx.drawImage(
-          ctx.canvas,
-          1 * res, 0, (width - 1) * res, height * res,
-          0, 0, width - 1, height);
-      ctx.clearRect(width - 1, 0, 1, height);
-      ctx.globalCompositeOperation = 'source-over';
-      ctx.strokeStyle = uiColors.color;
-      const s1 = Math.sin(lTime1 * 0.01);
-      const s2 = Math.sin(lTime2 * 0.01);
-      const newY = height / 2 + (s1 + s2) * (height - 1) / 4;
-      ctx.beginPath();
-      ctx.lineTo(width - 2, lastY);
-      ctx.lineTo(width - 1, newY);
-      ctx.stroke();
-      //ctx.fillRect(width - 1, Math.min(lastY, newY), 1, Math.abs(lastY - newY) + 1);
-      ctx.restore();
-      lastY = newY;
-      requestAnimationFrame(draw);
-    }
-    requestAnimationFrame(draw);
-  }
-}
-
 
 {
   const s = {

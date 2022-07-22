@@ -291,8 +291,10 @@ const css = `
   height: 200%;
 }
 .muigui-disabled canvas,
+.muigui-disabled svg,
+.muigui-disabled img,
 .muigui-disabled .muigui-color input[type=color] {
-  opacity: 0.3;
+  opacity: 0.2;
 }
 
 /* ------ [ checkbox ] ------ */
