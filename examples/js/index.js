@@ -11,6 +11,7 @@ import {
 import Direction from '../../src/controllers/Direction.js';
 import Vec2 from '../../src/controllers/Vec2.js';
 import ColorChooser from '../../src/controllers/ColorChooser.js';
+import RadioGrid from '../../src/controllers/RadioGrid.js';
 
 const uiElem = document.querySelector('#ui');
 
@@ -47,6 +48,7 @@ updateUIColors();
     friction: 0.01,
     run: true,
     animal: 'Bird',
+    dessert: 'Pie',
     viscosity: 0.5,
     shoes: 1,
     show: () => {
@@ -73,11 +75,12 @@ updateUIColors();
     gui.add(s, 'run');
     gui.addLabel('Pet');
     gui.add(s, 'animal', ['Cat', 'Bird', 'Dog']).listen();
+    gui.addController(new RadioGrid(s, 'dessert', ['Cake', 'Pie', 'Ice Cream', 'Cupcake', 'Brownie'], 2)).listen();
     gui.add(s, 'viscosity', [['Slow', 0.1], ['Medium', 0.5], ['Fast', 1.0]]);
     gui.add(s, 'shoes', {'Loafers': 0, 'Sandals': 1, 'Sneakers': 2});
     gui.addColor(s, 'background').onChange((e) => {
       document.body.style.backgroundColor = e.value;
-    });
+    }).listen();
     gui.add(s, 'show').name('Show Current Values');
 
     if (i === 2) {

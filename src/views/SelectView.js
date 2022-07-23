@@ -1,7 +1,7 @@
 import { createElem } from '../libs/elem.js';
-import View from './View.js';
+import EditView from './EditView.js';
 
-export default class SelectView extends View {
+export default class SelectView extends EditView {
   constructor(setter, keyValues) {
     const values = [];
     super(createElem('select', {

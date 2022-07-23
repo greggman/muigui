@@ -1,7 +1,7 @@
 import { createElem } from '../libs/elem.js';
 import { addTouchEvents } from '../libs/touch.js';
 import { clamp } from '../libs/utils.js';
-import View from './View.js';
+import EditView from './EditView.js';
 import {
   hexToUint8RGB,
   hexToFloatRGB,
@@ -46,7 +46,7 @@ const svg = `
 </svg>
 `;
 
-export default class ColorChooserView extends View {
+export default class ColorChooserView extends EditView {
   constructor(setter) {
     super(createElem('div', {
       innerHTML: svg,

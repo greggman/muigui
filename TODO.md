@@ -35,7 +35,12 @@
 - [x] disable
 - [x] remove
 - [x] hide
+- [ ] interval
+- [ ] radio
 - [ ] scroll wheel
+- [ ] text red if invalid?
+- [ ] fix editing text (forgot where it's failing)
+- [ ] what should 0x123 do for hex colors because we want it to be 0x000123. I guess it just works.
 - [ ] angle (circle with arrow) - both display, and editor
 - [ ] circle input (circle with 2 arrows) - both display and editor
 - [x] Label (not interactive)
@@ -115,7 +120,7 @@
 
 - [ ] look into add without object. eg
 
-  ```
+  ```js
   gui.addButton(title, fn);
   gui.addSlider(title, get, set, min, max, step);
   gui.addNumber(title, get, set, converter, step);
@@ -126,7 +131,7 @@
 
   or
 
-  ```
+  ```js
   gui.addController(new Button(title, fn));
   gui.addController(new Slider(title, get, set, min, max, step));
   gui.addController(new Number(title, get, set, converter, step));
@@ -134,6 +139,21 @@
   gui.addController(new Checkbox(title, get, set));
   gui.addController(new Color(title, get, set, format));
   ```
+
+  It's kind of gross but given this is probably a not a common desire, if you really want to mod a
+  local variable you can do this
+
+  ```js
+  let temperature = 72.0;
+
+  const helper = {
+    get v() { return temperature; }
+    set v(newV) { temperature = newV; }
+  };
+
+  gui.add(helper, 'v').name('temperature');
+  ```
+
 
   The second is arguably better than the first? The first is cluttered API, having to add every widget.
   Sadly the `addColor` and `addFolder` are already the expected API 😭

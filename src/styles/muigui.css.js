@@ -13,6 +13,7 @@ const css = `
   --hover-bg-color: #666666;
   --focus-color: #8AF;
   --slider-color: #888;
+  --selected-color: rgba(255, 255, 255, 0.3);
 
   --button-bg-color: var(--value-bg-color);
 
@@ -40,6 +41,9 @@ const css = `
   box-sizing: inherit;
 }
 
+.muigui-grid {
+  display: grid;
+}
 .muigui-rows {
   display: flex;
   flex-direction: column;
@@ -342,6 +346,29 @@ const css = `
 }
 .muigui input[type=number] {
   -moz-appearance: textfield;
+}
+
+/* ------ [ radio grid ] ------ */
+
+.muigui-radio-grid>div {
+  display: grid;
+  gap: 2px;
+}
+
+.muigui-radio-grid input {
+  appearance: none;
+  display: none;
+}
+
+.muigui-radio-grid button {
+  color: var(--color);
+  width: 100%;
+  text-align: left;
+}
+
+.muigui-radio-grid input:checked + button {
+  color: var(--value-color);
+  background-color: var(--selected-color);
 }
 
 /* ------ [ color-chooser ] ------ */

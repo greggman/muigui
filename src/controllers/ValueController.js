@@ -56,7 +56,7 @@ export default class ValueController extends LabelController {
   updateDisplay() {
     const newV = this.getValue();
     for (const view of this._views) {
-      view.updateDisplay(newV);
+      view.updateDisplayIfNeeded(newV);
     }
     return this;
   }

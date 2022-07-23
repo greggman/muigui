@@ -1,3 +1,4 @@
+import GridView from '../views/GridView.js';
 import NumberView from '../views/NumberView.js';
 import Vec2View from '../views/Vec2View.js';
 import ValueController from './ValueController.js';
@@ -15,6 +16,7 @@ export default class Vec2 extends ValueController {
   constructor(object, property) {
     super(object, property, 'muigui-vec2');
     this.add(new Vec2View(this));
+    this.pushSubView(new GridView(2));
     this.add(new NumberView(this, {
       to: v => v[0],
       from: v => {
@@ -31,6 +33,7 @@ export default class Vec2 extends ValueController {
         return [true, newV];
       },
     }));
+    this.popSubView();
     this.updateDisplay();
   }
 }

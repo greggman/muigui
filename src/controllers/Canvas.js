@@ -1,16 +1,11 @@
-import {
-  createElem,
-} from '../libs/elem.js';
+import ElementView from '../views/ElementView.js';
 import LabelController from './LabelController.js';
 
 // TODO: remove this? Should just be user side
 export default class Canvas extends LabelController {
   constructor(name) {
     super('muigui-canvas', name);
-    const root = this.contentElement;
-
-    this._canvasElem =  createElem('canvas');
-    root.appendChild(this._canvasElem);
+    this._canvasElem = this.add(new ElementView('canvas', 'muigui-canvas')).domElement;
   }
   get canvas() {
     return this._canvasElem;

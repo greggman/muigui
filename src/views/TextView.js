@@ -1,8 +1,8 @@
 import { createElem } from '../libs/elem.js';
 import { identity } from '../libs/conversions.js';
-import View from './View.js';
+import EditView from './EditView.js';
 
-export default class TextView extends View {
+export default class TextView extends EditView {
   constructor(setter, converters = identity) {
     super(createElem('input', {
       type: 'text',

@@ -1,7 +1,7 @@
 import { createElem } from '../libs/elem.js';
-import View from './View.js';
+import EditView from './EditView.js';
 
-export default class CheckboxView extends View {
+export default class CheckboxView extends EditView {
   constructor(setter, id) {
     const checkboxElem = createElem('input', {
       type: 'checkbox',

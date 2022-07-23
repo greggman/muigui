@@ -1,7 +1,7 @@
 import { createElem } from '../libs/elem.js';
 import { addTouchEvents } from '../libs/touch.js';
 import { onResizeSVGNoScale } from '../libs/resize-helpers.js';
-import View from './View.js';
+import EditView from './EditView.js';
 
 const svg = `
 <svg tabindex="0" viewBox="-32 -32 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;">
@@ -13,7 +13,7 @@ const svg = `
 </svg>
 `;
 
-export default class Vec2View extends View {
+export default class Vec2View extends EditView {
   constructor(setter) {
     super(createElem('div', {
       innerHTML: svg,
