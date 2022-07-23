@@ -24,9 +24,14 @@ export default class LabelController extends Controller {
     return view;
   }
   name(name) {
+    if (this._nameElem.title === this._nameElem.textContent) {
+      this._nameElem.title = name;
+    }
     this._nameElem.textContent = name;
-    this._nameElem.title = name;
     return this;
+  }
+  tooltip(tip) {
+    this._nameElem.title = tip;
   }
 }
 
