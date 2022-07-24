@@ -438,8 +438,7 @@ const css = `
   background-color: transparent;
 }
 
-
-.muigui-range input[type=range]::-webkit-range-thumb {
+.muigui-range input[type=range]::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
   border-radius: calc(var(--border-radius) + 2px);
@@ -453,7 +452,7 @@ const css = `
   height: calc(var(--line-height) - 2px);
 }
 
-.muigui-range input[type=range]::-webkit-range-runnable-track {
+.muigui-range input[type=range]::-webkit-slider-runnable-track {
   -webkit-appearance: none;
   appearance: none;
   border: 1px solid var(--menu-sep-color);
@@ -479,7 +478,7 @@ const css = `
   background-color: var(--range-right-hover-color);
 }
 
-.muigui-range input[type=range]::-webkit-range-runnable-track {
+.muigui-range input[type=range]::-webkit-slider-runnable-track {
   -webkit-appearance: none;
   appearance: none;
   height: max-content;
@@ -487,7 +486,7 @@ const css = `
   margin-top: -1px;
 }
 
-.muigui-range input[type=range]::-webkit-range-thumb {
+.muigui-range input[type=range]::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
   width: 0px;
