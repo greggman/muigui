@@ -11,8 +11,9 @@ const css = `
   --menu-bg-color: #000000;
   --menu-sep-color: #444444;
   --hover-bg-color: #666666;
-  --focus-color: #8AF;
-  --slider-color: #888;
+  --focus-color: #88AAFF;
+  --range-color: #888888;
+  --invalid-color: #FF6666;
   --selected-color: rgba(255, 255, 255, 0.3);
 
   --button-bg-color: var(--value-bg-color);
@@ -22,11 +23,9 @@ const css = `
   --font-family-mono: Menlo, Monaco, Consolas, "Droid Sans Mono", monospace;
   --font-size-mono: 11px;
 
-  --slider-width: 30px;
-
-  --slider-left-color: var(--value-color);
-  --slider-right-color: var(--value-bg-color);
-  --slider-right-hover-color: var(--hover-bg-color);
+  --range-left-color: var(--value-color);
+  --range-right-color: var(--value-bg-color);
+  --range-right-hover-color: var(--hover-bg-color);
   --line-height: 1.7em;
   --border-radius: 0px;
 
@@ -84,7 +83,7 @@ const css = `
   pointer-events: none;
   --color: var(--disabled-color) !important;
   --value-color: var(--disabled-color) !important;
-  --slider-left-color: var(--disabled-color) !important;
+  --range-left-color: var(--disabled-color) !important;
 }
 
 .muigui canvas {
@@ -94,12 +93,8 @@ const css = `
 }
 
 .muigui-controller {
-  word-wrap: initial;
-  display: flex;
-  align-items: stretch;
   min-width: 0;
   min-height: var(--line-height);
-  margin: 0.4em 0 0.4em 0;
 }
 .muigui-root,
 .muigui-menu {
@@ -115,7 +110,6 @@ const css = `
 .muigui-menu {
   border-bottom: 1px solid var(--menu-sep-color);
 }
-
 
 .muigui-root>button:nth-child(1),
 .muigui-menu>button:nth-child(1) {
@@ -158,6 +152,18 @@ const css = `
   flex: 1 1 75%;
   min-width: 0;
 }
+
+/* -----------------------------------------
+  a label controller is  [[label][value]]
+*/
+
+.muigui-label-controller {
+  display: flex;
+  margin: 0.4em 0 0.4em 0;
+  word-wrap: initial;
+  align-items: stretch;
+}
+
 .muigui-value {
   display: flex;
   align-items: stretch;
@@ -260,6 +266,10 @@ const css = `
 
 /* ------ [ button ] ------ */
 
+.muigui-button {
+  display: grid;
+
+}
 .muigui-button button {
   border: none;
   color: var(--value-color);
@@ -419,31 +429,31 @@ const css = `
   fill: var(--value-color);
 }
 
-/* ------ [ slider ] ------ */
+/* ------ [ range ] ------ */
 
 
-.muigui-slider input[type=range] {
+.muigui-range input[type=range] {
   -webkit-appearance: none;
   appearance: none;
   background-color: transparent;
 }
 
 
-.muigui-slider input[type=range]::-webkit-slider-thumb {
+.muigui-range input[type=range]::-webkit-range-thumb {
   -webkit-appearance: none;
   appearance: none;
-  border-radius: 2px;
+  border-radius: calc(var(--border-radius) + 2px);
   border-left: 1px solid rgba(255,255,255,0.3);
   border-top: 1px solid rgba(255,255,255,0.3);
   border-bottom: 1px solid rgba(0,0,0,0.2);
   border-right: 1px solid rgba(0,0,0,0.2);
-  background-color: var(--slider-color);
+  background-color: var(--range-color);
   margin-top: calc((var(--line-height) - 2px) / -2);
   width: calc(var(--line-height) - 2px);
   height: calc(var(--line-height) - 2px);
 }
 
-.muigui-slider input[type=range]::-webkit-slider-runnable-track {
+.muigui-range input[type=range]::-webkit-range-runnable-track {
   -webkit-appearance: none;
   appearance: none;
   border: 1px solid var(--menu-sep-color);
@@ -454,48 +464,48 @@ const css = `
 /* dat.gui style - doesn't work on Safari iOS */
 
 /*
-.muigui-slider input[type=range] {
+.muigui-range input[type=range] {
   cursor: ew-resize;
   overflow: hidden;
 }
 
-.muigui-slider input[type=range] {
+.muigui-range input[type=range] {
   -webkit-appearance: none;
   appearance: none;
-  background-color: var(--slider-right-color);
+  background-color: var(--range-right-color);
   margin: 0;
 }
-.muigui-slider input[type=range]:hover {
-  background-color: var(--slider-right-hover-color);
+.muigui-range input[type=range]:hover {
+  background-color: var(--range-right-hover-color);
 }
 
-.muigui-slider input[type=range]::-webkit-slider-runnable-track {
+.muigui-range input[type=range]::-webkit-range-runnable-track {
   -webkit-appearance: none;
   appearance: none;
   height: max-content;
-  color: var(--slider-left-color);
+  color: var(--range-left-color);
   margin-top: -1px;
 }
 
-.muigui-slider input[type=range]::-webkit-slider-thumb {
+.muigui-range input[type=range]::-webkit-range-thumb {
   -webkit-appearance: none;
   appearance: none;
   width: 0px;
   height: max-content;
-  box-shadow: -1000px 0 0 1000px var(--slider-left-color);
+  box-shadow: -1000px 0 0 1000px var(--range-left-color);
 }
 */
 
 /* FF */
 /*
-.muigui-slider input[type=range]::-moz-range-progress {
-  background-color: var(--slider-left-color); 
+.muigui-range input[type=range]::-moz-range-progress {
+  background-color: var(--range-left-color); 
 }
-.muigui-slider input[type=range]::-moz-range-thumb {
+.muigui-range input[type=range]::-moz-range-thumb {
   height: max-content;
   width: 0;
   border: none;
-  box-shadow: -1000px 0 0 1000px var(--slider-left-color);
+  box-shadow: -1000px 0 0 1000px var(--range-left-color);
   box-sizing: border-box;
 }
 */

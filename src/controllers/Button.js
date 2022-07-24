@@ -1,7 +1,7 @@
 import {
   createElem,
 } from '../libs/elem.js';
-import Controller from './controller.js';
+import Controller from './Controller.js';
 
 export default class Button extends Controller {
   constructor(object, property) {

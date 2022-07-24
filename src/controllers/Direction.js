@@ -7,7 +7,7 @@ import ValueController from './ValueController.js';
 
 // deg2rad
 // where is 0
-// range (0, 360), (-180, +180), (0,0)   Really this is a slider
+// range (0, 360), (-180, +180), (0,0)   Really this is a range
 
 export default class Direction extends ValueController {
   constructor(object, property, options) {

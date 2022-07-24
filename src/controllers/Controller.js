@@ -12,6 +12,9 @@ export default class Controller extends View {
       this.domElement.classList.add(className);
     }
   }
+  get parent() {
+    return this._parent;
+  }
   setParent(parent) {
     this._parent = parent;
     this.enable(!this.disabled());

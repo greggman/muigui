@@ -426,36 +426,70 @@ const updateAppearance = function() {
         .muigui {
           --bg-color: #f6f6f6;
           --color: #3d3d3d;
-          --value-bg-color: #e8e8e8;
           --value-color: #2b95a1;
-          --hover-bg-color: #f0f0f0;
+          --value-bg-color: #e8e8e8;
+          --disabled-color: #cccccc;
           --menu-bg-color: #eeeeee;
           --menu-sep-color: #bbbbbb;
-          --disabled-color: #cccccc;
+          --hover-bg-color: #f0f0f0;
+          --invalid-color: #FF0000;
+          --selected-color: rgba(0, 0, 0, 0.1);
         }
     `,
     'solarized-light': `
         .muigui {
           --bg-color: #fdf6e3;
           --color: #657b83;
-          --value-bg-color: #e8e8e8;
           --value-color: #2aa0f3;
-          --hover-bg-color: #e7e1cf;
+          --value-bg-color: #e8e8e8;
+          --disabled-color: #cccccc;
           --menu-bg-color: #f5efdc;
           --menu-sep-color: #bbbbbb;
-          --disabled-color: #cccccc;
+          --hover-bg-color: #e7e1cf;
+          --invalid-color: #FF0000;
+          --selected-color: rgba(0, 0, 0, 0.1);
         }
     `,
     'solarized-dark': `
         .muigui {
           --bg-color: #002b36;
           --color: #b2c2c2;
-          --value-bg-color: #094e5f;
           --value-color: #5abaff;
-          --hover-bg-color: #0a6277;
+          --value-bg-color: #094e5f;
+          --disabled-color: #3876a1;
           --menu-bg-color: #001f27;
           --menu-sep-color: #004e62;
-          --disabled-color: #3876a1;
+          --hover-bg-color: #0a6277;
+          --invalid-color: #FF6666;
+        }
+    `,
+    'bubble-dark': `
+        .muigui {
+          --border-radius: 1em;
+        }
+    `,
+    'form': `
+        :root {
+          color-scheme: light dark,
+        }
+        .muigui {
+          --width: 600px;
+          --font-family: inherit;
+          --font-size: medium;
+          --font-family-mono: inherit;
+          --font-size-mono: medium;
+          --bg-color: inherit;
+          --color: inherit;
+
+          --value-color: #2b95a1;
+          --value-bg-color: #e8e8e8;
+          --disabled-color: #cccccc;
+          --menu-bg-color: #eeeeee;
+          --menu-sep-color: #bbbbbb;
+          --hover-bg-color: #f0f0f0;
+          --invalid-color: #FF0000;
+          --selected-color: rgba(0, 0, 0, 0.1);
+
         }
     `,
   };
@@ -484,6 +518,7 @@ const updateAppearance = function() {
   const rule = getCSSRulesBySelector('.muigui')[0];  // assuming the first one
   const varNames = Object.values(rule.style).filter(s => s.startsWith('--'));
   const obj = {};
+  const controllersByKey = {};
 
   const updateStyles = () => {
     styleElem.textContent = `.muigui {\n${
@@ -497,10 +532,10 @@ const updateAppearance = function() {
     const value = rule.style.getPropertyValue(key).trim();
     if (value.startsWith('#')) {
       obj[key] = cssStringToHexColor(value);
-      folder.addColor(obj, key).onChange(updateStyles);
+      controllersByKey[key] = folder.addColor(obj, key).onChange(updateStyles);
     } else if (!value.startsWith('var')){
       obj[key] = value;
-      folder.add(obj, key).onChange(v => {
+      controllersByKey[key] = folder.add(obj, key).onChange(v => {
         const fn = fns[key];
         if (fn) {
           fn(v);
@@ -519,10 +554,13 @@ const updateAppearance = function() {
         map.set(key, value);
       }
     }
-    folder.controllers.forEach(c => {
-      const key = c.property;
-      const value = map.get(key);
-      c.setValue(value);
+    map.forEach((value, key) => {
+      const controller = controllersByKey[key];
+      if (controller) {
+        controller.setValue(value);
+      } else {
+        console.warn(`no setting in this theme for: ${key}`);
+      }
     });
     updateUIColors();
   };

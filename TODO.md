@@ -38,11 +38,15 @@
 - [ ] interval
 - [ ] radio
 - [ ] scroll wheel
-- [ ] text red if invalid?
+- [x] text red if invalid?
 - [ ] fix editing text (forgot where it's failing)
 - [ ] what should 0x123 do for hex colors because we want it to be 0x000123. I guess it just works.
 - [ ] angle (circle with arrow) - both display, and editor
+- [ ] slider with ticks and number
 - [ ] circle input (circle with 2 arrows) - both display and editor
+- [ ] add keyboard controls to direction
+- [ ] add keyboard controls to vec2
+- [ ] add keyboard controls to color picker
 - [x] Label (not interactive)
 - [x] Label multi line (use as log) 
 - [x] ask for file? (nah, drag and drop is better)

@@ -1,7 +1,7 @@
 import { createElem } from '../libs/elem.js';
-import Controller from './controller.js';
+import Container from './Container.js';
 
-export default class Folder extends Controller {
+export default class Folder extends Container {
   constructor(name = 'Controls', className = 'muigui-menu') {
     super(className);
     this._labelElem = createElem('label');
@@ -9,27 +9,9 @@ export default class Folder extends Controller {
       type: 'button',
       onClick: () => this.toggleOpen(),
     }, [this._labelElem]));
-    this._controllerElem = this.addElem(createElem('div'));
-    this._controllers = [];
+    this.pushContainer(new Container());
     this.name(name);
     this.open();
-  }
-  get children() {
-    return this._controllers; // should we return a copy?
-  }
-  get controllers() {
-    return this._controllers.filter(c => !(c instanceof Folder));
-  }
-  get folders() {
-    return this._controllers.filter(c => c instanceof Folder);
-  }
-  reset(recursive = true) {
-    for (const controller of this._controllers) {
-      if (!(controller instanceof Folder) || recursive) {
-        controller.reset(recursive);
-      }
-    }
-    return this;
   }
   open(open = true) {
     this.domElement.classList.toggle('muigui-closed', !open);
@@ -49,21 +31,5 @@ export default class Folder extends Controller {
   toggleOpen() {
     this.open(!this.domElement.classList.contains('muigui-open'));
     return this;
-  }
-  remove(controller) {
-    const ndx = this._controllers.indexOf(controller);
-    if (ndx >= 0) {
-      const c = this._controllers.splice(ndx, 1);
-      const c0 = c[0];
-      const elem = c0.domElement;
-      elem.remove();
-      c0.setParent(null);
-    }
-  }
-  addController(controller) {
-    this._controllerElem.appendChild(controller.domElement);
-    this._controllers.push(controller);
-    controller.setParent(this);
-    return controller;
   }
 }
