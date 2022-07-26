@@ -2,6 +2,7 @@ import { createElem } from '../libs/elem.js';
 import View from './View.js';
 
 export default class GridView extends View {
+  // FIX: should this be 'options'?
   constructor(cols) {
     super(createElem('div', {
       className: 'muigui-grid',

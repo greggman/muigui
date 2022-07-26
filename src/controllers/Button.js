@@ -1,12 +1,16 @@
 import {
   createElem,
 } from '../libs/elem.js';
+import { copyExistingProperties } from '../libs/utils.js';
 import Controller from './Controller.js';
 
 export default class Button extends Controller {
   #object;
   #property;
   #buttonElem;
+  #options = {
+    name: '',
+  };
 
   constructor(object, property, options = {}) {
     super('muigui-button', '');
@@ -16,18 +20,15 @@ export default class Button extends Controller {
     this.#buttonElem = this.addElem(
         createElem('button', {
           type: 'button',
-          textContent: property,
           onClick: () => {
             this.#object[this.#property](this);
           },
         }));
-    const {name} = options;
-    if (name) {
-      this.name(name);
-    }
+    this.setOptions({name: property, ...options});
   }
-  name(name) {
+  setOptions(options) {
+    copyExistingProperties(this.#options, options);
+    const {name} = this.#options;
     this.#buttonElem.textContent = name;
-    return this;
   }
 }

@@ -1,14 +1,18 @@
 import { createElem } from '../libs/elem.js';
 import { identity } from '../libs/conversions.js';
 import EditView from './EditView.js';
+import { copyExistingProperties } from '../libs/utils.js';
 
 export default class ColorView extends EditView {
   #to;
   #from;
   #colorElem;
   #skipUpdate;
+  #options = {
+    converters: identity,
+  };
 
-  constructor(setter, converters = identity) {
+  constructor(setter, options) {
     const colorElem = createElem('input', {
       type: 'color',
       onInput: () => {
@@ -27,9 +31,7 @@ export default class ColorView extends EditView {
       },
     });
     super(createElem('div', {}, [colorElem]));
-    const {to, from} = converters;
-    this.#to = to;
-    this.#from = from;
+    this.setOptions(options);
     this.#colorElem = colorElem;
   }
   updateDisplay(v) {
@@ -37,5 +39,11 @@ export default class ColorView extends EditView {
       this.#colorElem.value = this.#to(v);
     }
     this.#skipUpdate = false;
+  }
+  setOptions(options) {
+    copyExistingProperties(this.#options, options);
+    const {converters: {to, from}} = this.#options;
+    this.#to = to;
+    this.#from = from;
   }
 }

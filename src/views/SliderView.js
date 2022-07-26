@@ -1,5 +1,6 @@
 import { createElem } from '../libs/elem.js';
 import { addTouchEvents } from '../libs/touch.js';
+import { copyExistingProperties } from '../libs/utils.js';
 import EditView from './EditView.js';
 
 const svg = `
@@ -60,19 +61,19 @@ export default class SliderView extends EditView {
   #rightGradElem;
   #width;
   #height;
+  #lastV;
+  #options = {
+    min: -100,
+    max: 100,
+    step: 10,
+    unitSize: 10,
+    ticksPerUnit: 5,
+  };
 
   constructor(setter, options) {
     super(createElem('div', {
       innerHTML: svg,
     }));
-    const {
-      min = -100,
-      max = 100,
-      step = 10,
-      thicks = 30,
-      unitSize = 10,
-      ticksPerUnit = 5,
-    } = options;
     this.#svgElem = this.$('svg');
     this.#originElem = this.$('#origin');
     this.#ticksElem = this.$('#ticks');
@@ -80,6 +81,7 @@ export default class SliderView extends EditView {
     this.#numbersElem = this.$('#numbers');
     this.#leftGradElem = this.$('#left-grad');
     this.#rightGradElem = this.$('#right-grad');
+    this.setOptions(options);
     let start;
     addTouchEvents(this.domElement, {
       onDown: (e) => {
@@ -90,12 +92,6 @@ export default class SliderView extends EditView {
 // setter.setValue(Math.atan2(ny, nx) * 180 / Math.PI);
       },
     });
-    const updateSlider = () => {
-      const unitsAcross = this.#width / this.unitSize;
-      this.#ticksElem.setAttribute('d', createSVGTicks(min, max, step));
-      this.#thicksElem.setAttribute('d', createSVGTicks(min, max, thicks));
-    };
-    updateSlider();
     new ResizeObserver(() => {
       const {width, height} = this.#svgElem.getBoundingClientRect();
       if (this.#width !== width || this.#height !== height) {
@@ -106,27 +102,33 @@ export default class SliderView extends EditView {
         this.#rightGradElem.setAttribute('x', width / 2 - 20);
         this.#svgElem.setAttribute('viewBox', viewBox);
         const minusSize = computeSizeOfMinus(this.#numbersElem);
-        this.#numbersElem.innerHTML = createSVGNumbers(min, max, thicks, minusSize);
+        const {min, max, unitSize} = this.#options;
+        this.#numbersElem.innerHTML = createSVGNumbers(min, max, unitSize, minusSize);
+        this.#updateSlider();
       }
     }).observe(this.#svgElem);
   }
+  // |--------V--------|
+  // . . | . . . | . . . |
+  //
+  #updateSlider() {
+    // There's no size of ResizeObserver has not fired yet.
+    if (!this.#width) {
+      return;
+    }
+    const {unitSize, ticksPerUnit} = this.#options;
+    const unitsAcross = Math.ceil(this.#width / unitSize);
+    const start = unitsAcross * unitSize * -2;
+    const end = unitsAcross * unitSize * 2;
+    this.#ticksElem.setAttribute('d', createSVGTicks(start, end, unitSize / ticksPerUnit));
+    this.#thicksElem.setAttribute('d', createSVGTicks(start, end, unitSize));
+
+  }
   updateDisplay(v) {
-//    this.#lastV = 
+    this.#lastV = v;
+    this.#updateSlider();
   }
-  min(min) {
-    //this.#rangeView.min(min);
-    //this.updateDisplay();
-    return this;
-  }
-  max(max) {
-    //this.#rangeView.max(max);
-    //this.updateDisplay();
-    return this;
-  }
-  step(step) {
-    //this.#rangeView.step(step);
-    //this.#numberView.step(step);
-    this.updateDisplay();
-    return this;
+  setOptions(options) {
+    copyExistingProperties(this.#options, options);
   }
 }

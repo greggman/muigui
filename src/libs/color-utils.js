@@ -258,7 +258,7 @@ const strTo3Floats = s => {
   return [badNdx < 0, v.map(v => f3(v))];
 };
 
-const strToUint32RGBRegex = /^\s*(?:0x){0,1}([0-9a-z]{6})\s*$/i;
+const strToUint32RGBRegex = /^\s*(?:0x){0,1}([0-9a-z]{1,6})\s*$/i;
 const strToUint32RGB = s => {
   const m = strToUint32RGBRegex.exec(s);
   if (!m) {

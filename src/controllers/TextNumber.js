@@ -1,7 +1,6 @@
 
 import NumberView from '../views/NumberView.js';
 import ValueController from './ValueController.js';
-import { strToNumber } from '../libs/conversions.js';
 
 // Wanted to name this `Number` but it conflicts with
 // JavaScript `Number`. It most likely wouldn't be
@@ -13,17 +12,7 @@ export default class TextNumber extends ValueController {
 
   constructor(object, property, options = {}) {
     super(object, property, 'muigui-checkbox');
-    const {
-      conversion = strToNumber,
-      step = 0.01,
-    } = options;
-    this.#textView = this.add(new NumberView(this, conversion));
-    this.step(step);
+    this.#textView = this.add(new NumberView(this, options));
     this.updateDisplay();
-  }
-  step(step) {
-    this.#step = step;  // FIX
-    this.updateDisplay();
-    return this;
   }
 }

@@ -42,3 +42,12 @@ export const isArrayOrTypedArray = v => Array.isArray(v) || isTypedArray(v);
 //     19.9
 //
 export const stepify = (v, from, step) => Math.round(from(v) / step) / (1 / step);
+
+export function copyExistingProperties(dst, src) {
+  for (const key in src) {
+    if (key in dst) {
+      dst[key] = src[key];
+    }
+  }
+  return dst;
+}

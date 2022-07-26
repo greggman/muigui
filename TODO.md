@@ -66,6 +66,7 @@
 - [x] splitter
 - [x] functions to query colors?
 - [x] (doesn't work) maybe just add color-scheme to CSS
+- [ ] make svg ids start with muigui
 - [ ] add all
   - [ ] add with filter? (pass in filter so you can make positive or negative)
   - [ ] add with list of fields?

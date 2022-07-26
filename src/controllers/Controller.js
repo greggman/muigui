@@ -5,7 +5,7 @@ import View from '../views/View.js';
 export default class Controller extends View {
   #changeFns;
   #finishChangeFns;
-  #parent
+  #parent;
 
   constructor(className) {
     super(createElem('div', {className: 'muigui-controller'}));

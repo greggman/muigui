@@ -1,6 +1,6 @@
 import { createElem } from '../libs/elem.js';
-import { identity } from '../libs/conversions.js';
-import { stepify } from '../libs/utils.js';
+import { strToNumber } from '../libs/conversions.js';
+import { copyExistingProperties, stepify } from '../libs/utils.js';
 import EditView from './EditView.js';
 
 export default class NumberView extends EditView {
@@ -8,8 +8,12 @@ export default class NumberView extends EditView {
   #from;
   #step;
   #skipUpdate;
+  #options = {
+    step: 0.01,
+    converters: strToNumber,
+  };
 
-  constructor(setter, converters = identity) {
+  constructor(setter, options) {
     super(createElem('input', {
       type: 'number',
       onInput: () => {
@@ -27,10 +31,7 @@ export default class NumberView extends EditView {
         }
       },
     }));
-    const {to, from} = converters;
-    this.#to = to;
-    this.#from = from;
-    this.#step = 0.01;
+    this.setOptions(options);
   }
   updateDisplay(v) {
     if (!this.#skipUpdate) {
@@ -38,8 +39,15 @@ export default class NumberView extends EditView {
     }
     this.#skipUpdate = false;
   }
-  step(step) {
+  setOptions(options) {
+    // FIX: add min/max
+    copyExistingProperties(this.#options, options);
+    const {
+      step,
+      converters: {to, from},
+    } = this.#options;
+    this.#to = to;
+    this.#from = from;
     this.#step = step;
-    return this;
   }
 }

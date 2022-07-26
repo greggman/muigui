@@ -14,6 +14,8 @@ import ColorChooser from '../../src/controllers/ColorChooser.js';
 import RadioGrid from '../../src/controllers/RadioGrid.js';
 import Slider from '../../src/controllers/Slider.js';
 import Select from '../../src/controllers/Select.js';
+import Range from '../../src/controllers/Range.js';
+import TextNumber from '../../src/controllers/TextNumber.js';
 
 const uiElem = document.querySelector('#ui');
 
@@ -43,6 +45,19 @@ const updateUIColors = (() => {
 })();
 updateUIColors();
 
+if (false) {
+  const s = {
+    speed: 0.5,
+    color: [0.2, 0.9, 0.5],
+  };
+  const div = document.createElement('div');
+  uiElem.appendChild(div);
+  const gui = new GUI(div);
+  //gui.add(s, 'speed', {min: 0, max: 100, step: 1});
+  gui.addColor(s, 'color');
+}
+
+if (true) {
 {
   const s = {
     speed: 0.5,
@@ -78,7 +93,7 @@ updateUIColors();
       min: 0.5,
       max: 40,
       step: 0.05,
-      unitSize: 40,
+      unitSize: 20,
       ticksPerUnit: 10,
     }));
     gui.addDivider();
@@ -91,7 +106,7 @@ updateUIColors();
     gui.addColor(s, 'background').onChange((e) => {
       document.body.style.backgroundColor = e.value;
     }).listen();
-    gui.add(s, 'show').name('Show Current Values');
+    gui.add(s, 'show', {name: 'Show Current Values'});
 
     if (i === 2) {
       gui.name('Disabled');
@@ -205,28 +220,28 @@ updateUIColors();
   const logger = new Logger(3);
   const log = logger.log;
 
-  gui.add([123], '0')
+  gui.addController(new TextNumber([123], '0'))
      .name('xxx')
      .onChange(v => log(v));
-  gui.add([456.78], '0')
+  gui.add(new TextNumber([456.78], '0'))
      .name('xxx.xx')
      .onChange(v => log(v));
 
   const degToRad = d => d * Math.PI / 180;
   const radToDeg = r => r * 180 / Math.PI;
-  gui.add(s, 'angleRad', {conversion: {to: radToDeg, from: v => [true, degToRad(v)]}, step: 1})
+  gui.add(new TextNumber(s, 'angleRad', {conversion: {to: radToDeg, from: v => [true, degToRad(v)]}, step: 1}))
       .name('rad ↔ deg')
       .onChange(v => log('rad:', v));
-  gui.add(s, 'angleDeg', {conversion: {to: degToRad, from: v => [true, radToDeg(v)]}, step: 0.001})
+  gui.add(new TextNumber(s, 'angleDeg', {conversion: {to: degToRad, from: v => [true, radToDeg(v)]}, step: 0.001}))
       .name('deg ↔ rad')
       .onChange(v => log('deg:', v));
 
   const cToF = c => (c * (212 - 32) / 100) + 32;
   const fToC = f => (f - 32) * 100 / (212 - 32);
-  gui.add(s, 'tempC', {conversion: {to: cToF, from: v => [true, fToC(v)]}, step: 0.1})
+  gui.add(new TextNumber(s, 'tempC', {conversion: {to: cToF, from: v => [true, fToC(v)]}, step: 0.1}))
       .name('C° ↔ F°')
       .onChange(v => log(`${v}C°`));
-  gui.add(s, 'tempF', {conversion: {to: fToC, from: v => [true, cToF(v)]}, step: 0.1})
+  gui.add(new TextNumber(s, 'tempF', {conversion: {to: fToC, from: v => [true, cToF(v)]}, step: 0.1}))
       .name('F° ↔ C°')
       .onChange(v => log(`${v}F°`));
 
@@ -575,3 +590,5 @@ const updateAppearance = function() {
     updateUIColors();
   };
 }();
+
+}

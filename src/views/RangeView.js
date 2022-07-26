@@ -1,6 +1,6 @@
 import { createElem } from '../libs/elem.js';
 import { identity } from '../libs/conversions.js';
-import { stepify } from '../libs/utils.js';
+import { copyExistingProperties, stepify } from '../libs/utils.js';
 import EditView from './EditView.js';
 
 export default class RangeView extends EditView {
@@ -8,8 +8,14 @@ export default class RangeView extends EditView {
   #from;
   #step;
   #skipUpdate;
+  #options = {
+    step: 0.01,
+    min: 0,
+    max: 1,
+    converters: identity,
+  };
 
-  constructor(setter, converters = identity) {
+  constructor(setter, options) {
     super(createElem('input', {
       type: 'range',
       onInput: () => {
@@ -27,9 +33,7 @@ export default class RangeView extends EditView {
         }
       },
     }));
-    const {to, from} = converters;
-    this.#to = to;
-    this.#from = from;
+    this.setOptions(options);
   }
   updateDisplay(v) {
     if (!this.#skipUpdate) {
@@ -37,17 +41,19 @@ export default class RangeView extends EditView {
     }
     this.#skipUpdate = false;
   }
-  min(min) {
-    this.domElement.min = min;
-    return this;
-  }
-  max(max) {
-    this.domElement.max = max;
-    return this;
-  }
-  step(step) {
-    this.domElement.step = step;
+  setOptions(options) {
+    copyExistingProperties(this.#options, options);
+    const {
+      step,
+      min,
+      max,
+      converters: {to, from},
+    } = this.#options;
+    this.#to = to;
+    this.#from = from;
     this.#step = step;
+    this.domElement.min = min;
+    this.domElement.max = max;
     return this;
   }
 }

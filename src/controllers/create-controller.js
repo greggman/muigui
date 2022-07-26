@@ -30,7 +30,7 @@ export function createController(object, property, ...args) {
   const t = typeof object[property];
   switch (t) {
     case 'number':
-      return args.length === 0 || (args.length <= 2 && typeof args[0] === 'object')
+      return args.length === 0
           ? new TextNumber(object, property, ...args)
           : new Range(object, property, ...args);
     case 'boolean':

@@ -516,10 +516,10 @@ const css = `
 
 /* FF */
 /*
-.muigui-range input[type=range]::-moz-range-progress {
+.muigui-range input[type=range]::-moz-slider-progress {
   background-color: var(--range-left-color); 
 }
-.muigui-range input[type=range]::-moz-range-thumb {
+.muigui-range input[type=range]::-moz-slider-thumb {
   height: max-content;
   width: 0;
   border: none;

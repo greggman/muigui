@@ -92,4 +92,7 @@ export default class EditView extends View {
       this.updateDisplay(newV);
     }
   }
+  setOptions(/*options*/) {
+    // override this
+  }
 }

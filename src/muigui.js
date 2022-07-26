@@ -6,13 +6,17 @@ import Color from './controllers/Color.js';
 import Divider from './controllers/Divider.js';
 import Folder from './controllers/Folder.js';
 import Label from './controllers/Label.js';
+import Controller from './controllers/Controller.js';
 
 let stylesInjected = false;
 const styleElem = createElem('style');
 
 export class GUIFolder extends Folder {
   add(object, property, ...args) {
-    return this.addController(createController(object, property, ...args));
+    const controller = object instanceof Controller
+        ? object
+        : createController(object, property, ...args);
+    return this.addController(controller);
   }
   addCanvas(name) {
     return this.addController(new Canvas(name));

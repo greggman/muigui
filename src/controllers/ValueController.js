@@ -27,12 +27,11 @@ export default class ValueController extends LabelController {
   get property() {
     return this.#property;
   }
-  setJustValue(v) {
-    this.#object[this.#property] = v;
-  }
   add(view) {
     this.#views.push(view);
-    return super.add(view);
+    super.add(view);
+    this.updateDisplay();
+    return view;
   }
   setValue(v) {
     if (typeof v === 'object') {
@@ -66,6 +65,12 @@ export default class ValueController extends LabelController {
       view.updateDisplayIfNeeded(newV);
     }
     return this;
+  }
+  setOptions(options) {
+    for (const view of this.#views) {
+      view.setOptions(options);
+    }
+    this.updateDisplay();
   }
   getValue() {
     return this.#object[this.#property];

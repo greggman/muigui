@@ -1,13 +1,17 @@
 import { createElem } from '../libs/elem.js';
 import { identity } from '../libs/conversions.js';
 import EditView from './EditView.js';
+import { copyExistingProperties } from '../libs/utils.js';
 
 export default class TextView extends EditView {
   #to;
   #from;
   #skipUpdate;
+  #options = {
+    converters: identity,
+  };
 
-  constructor(setter, converters = identity) {
+  constructor(setter, options) {
     super(createElem('input', {
       type: 'text',
       onInput: () => {
@@ -27,9 +31,7 @@ export default class TextView extends EditView {
         this.domElement.style.color = valid ? '' : 'var(--invalid-color)';
       },
     }));
-    const {to, from} = converters;
-    this.#to = to;
-    this.#from = from;
+    this.setOptions(options);
   }
   updateDisplay(v) {
     if (!this.#skipUpdate) {
@@ -37,5 +39,13 @@ export default class TextView extends EditView {
       this.domElement.style.color = '';
     }
     this.#skipUpdate = false;
+  }
+  setOptions(options) {
+    copyExistingProperties(this.#options, options);
+    const {
+      converters: {to, from},
+    } = this.#options;
+    this.#to = to;
+    this.#from = from;
   }
 }
