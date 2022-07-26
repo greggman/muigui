@@ -7,10 +7,10 @@ import TextView from '../views/TextView.js';
 import ColorView from '../views/ColorView.js';
 
 export default class Color extends ValueController {
-  constructor(object, property, format) {
+  constructor(object, property, options = {}) {
     super(object, property, 'muigui-color');
 
-    format = format || guessFormat(this.getValue());
+    const format = options.format || guessFormat(this.getValue());
     this._converters = colorFormatConverters[format];
     const {fromHex, toHex, fromStr, toStr} = this._converters;
 

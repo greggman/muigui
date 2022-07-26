@@ -132,31 +132,3 @@ export default class Controller extends View {
     return colors;
   }
 }
-
-/*
-  class LabelValue {
-    const row = new Row()
-    row.add(new Label);
-    row.add(new Row)
-  }
-
-  class Range extends LabelRow {
-    row.add(new Slider);
-    row.add(new Text);
-  }
-
-  class Color extends LabelRow {
-    row.add(new Color)
-    row.add(new Text);
-  }
-
-
-  class Range {
-    const row = new Row();
-    row.add(new Label)
-    row.add(new Slider)
-    row.add(new Text)
-
-    const col
-  }
-*/

@@ -1,18 +1,19 @@
 import { identity } from '../libs/conversions.js';
 import ValueController from './ValueController.js';
 import NumberView from '../views/NumberView.js';
-import RangeView from '../views/RangeView.js';
+import SliderView from '../views/SliderView.js';
 
-export default class Range extends ValueController {
-  constructor(object, property, options) {
-    super(object, property, 'muigui-range');
+export default class Slider extends ValueController {
+  constructor(object, property, options = {}) {
+    super(object, property, 'muigui-slider');
     const {
-      min = 0,
-      max = 1,
-      step = 0.01,
+      min = -100,
+      max = 100,
+      step = 5,
       conversion = identity,
     } = options;
-    this._rangeView = this.add(new RangeView(this, conversion));
+
+    this._rangeView = this.add(new SliderView(this, conversion, options));
     this._numberView = this.add(new NumberView(this, conversion));
 
     this.min(min);

@@ -12,6 +12,8 @@ import Direction from '../../src/controllers/Direction.js';
 import Vec2 from '../../src/controllers/Vec2.js';
 import ColorChooser from '../../src/controllers/ColorChooser.js';
 import RadioGrid from '../../src/controllers/RadioGrid.js';
+import Slider from '../../src/controllers/Slider.js';
+import Select from '../../src/controllers/Select.js';
 
 const uiElem = document.querySelector('#ui');
 
@@ -46,6 +48,7 @@ updateUIColors();
     speed: 0.5,
     direction: 45,
     friction: 0.01,
+    fStop: 4,
     run: true,
     animal: 'Bird',
     dessert: 'Pie',
@@ -68,16 +71,17 @@ updateUIColors();
     const div = document.createElement('div');
     uiElem.appendChild(div);
     const gui = new GUI(div);
-    gui.add(s, 'speed', 0, 100, 1);
-    gui.add(s, 'direction', 0, 360, 1).listen();
-    gui.add(s, 'friction', 0, 1);
+    gui.add(s, 'speed', {min: 0, max: 100, step: 1});
+    gui.add(s, 'direction', {min: 0, max: 360, step: 1}).listen();
+    gui.add(s, 'friction', {min: 0, max: 1});
+    gui.addController(new Slider(s, 'fStop'));
     gui.addDivider();
     gui.add(s, 'run');
     gui.addLabel('Pet');
-    gui.add(s, 'animal', ['Cat', 'Bird', 'Dog']).listen();
-    gui.addController(new RadioGrid(s, 'dessert', ['Cake', 'Pie', 'Ice Cream', 'Cupcake', 'Brownie'], 2)).listen();
-    gui.add(s, 'viscosity', [['Slow', 0.1], ['Medium', 0.5], ['Fast', 1.0]]);
-    gui.add(s, 'shoes', {'Loafers': 0, 'Sandals': 1, 'Sneakers': 2});
+    gui.addController(new Select(s, 'animal', {keyValues: ['Cat', 'Bird', 'Dog']})).listen();
+    gui.addController(new RadioGrid(s, 'dessert', {keyValues: ['Cake', 'Pie', 'Ice Cream', 'Cupcake', 'Brownie'], cols: 2})).listen();
+    gui.addController(new Select(s, 'viscosity', {keyValues: [['Slow', 0.1], ['Medium', 0.5], ['Fast', 1.0]]}));
+    gui.addController(new Select(s, 'shoes', {keyValues: {'Loafers': 0, 'Sandals': 1, 'Sneakers': 2}}));
     gui.addColor(s, 'background').onChange((e) => {
       document.body.style.backgroundColor = e.value;
     }).listen();
@@ -90,8 +94,8 @@ updateUIColors();
 
     const f = gui.addFolder('Submenu');
     const c = f.addCanvas('signal');
-    f.add(s, 'period1', 0.1, 4);
-    f.add(s, 'period2', 0.1, 4);
+    f.add(s, 'period1', {min: 0.1, max: 4});
+    f.add(s, 'period2', {min: 0.1, max: 4});
     f.add(s, 'name').listen();
     f.add(s, 'hobby').onFinishChange(e => log(new Date(), e.value));
     f.add(s, 'propertyWithLongName', ['longNamedEnumThatWillPushSizeTooFar']);
@@ -154,26 +158,26 @@ updateUIColors();
   const logger = new Logger(3);
   const log = logger.log;
 
-  gui.add([1], '0', 0, 1).name('0 ↔ 1');
-  gui.add([100], '0', 0, 200).name('0 ↔ 200');
-  gui.add([100000], '0', 0, 1000000).name('0 ↔ 1000000');
-  gui.add([1e+30], '0', -1e+50, 1e+50).name('-1e+50 ↔ 1e+50');
+  gui.add([1], '0', {min: 0, max: 1}).name('0 ↔ 1');
+  gui.add([100], '0', {min: 0, max: 200}).name('0 ↔ 200');
+  gui.add([100000], '0', {min: 0, max: 1000000}).name('0 ↔ 1000000');
+  gui.add([1e+30], '0', {min: -1e+50, max: 1e+50}).name('-1e+50 ↔ 1e+50');
 
   const degToRad = d => d * Math.PI / 180;
   const radToDeg = r => r * 180 / Math.PI;
-  gui.add(s, 'angleRad', -360, 360, 1, {to: radToDeg, from: v => [true, degToRad(v)]})
+  gui.add(s, 'angleRad', {min: -360, max: 360, step: 1, conversion: {to: radToDeg, from: v => [true, degToRad(v)]}})
       .name('rad ↔ deg')
       .onChange(v => log('rad:', v));
-  gui.add(s, 'angleDeg', -Math.PI * 2, Math.PI * 2, 0.001, {to: degToRad, from: v => [true, radToDeg(v)]})
+  gui.add(s, 'angleDeg', {min: -Math.PI * 2, max: Math.PI * 2, step: 0.001, conversion: {to: degToRad, from: v => [true, radToDeg(v)]}})
       .name('deg ↔ rad')
       .onChange(v => log('deg:', v));
 
   const cToF = c => (c * (212 - 32) / 100) + 32;
   const fToC = f => (f - 32) * 100 / (212 - 32);
-  gui.add(s, 'tempC', 32, 212, 0.1, {to: cToF, from: v => [true, fToC(v)]})
+  gui.add(s, 'tempC', {min: 32, max: 212, step: 0.1, conversion: {to: cToF, from: v => [true, fToC(v)]}})
       .name('C° ↔ F°')
       .onChange(v => log(`${v}C°`));
-  gui.add(s, 'tempF', 0, 100, 0.1, {to: fToC, from: v => [true, cToF(v)]})
+  gui.add(s, 'tempF', {min: 0, max: 100, step: 0.1, conversion: {to: fToC, from: v => [true, cToF(v)]}})
       .name('F° ↔ C°')
       .onChange(v => log(`${v}F°`));
 
@@ -204,19 +208,19 @@ updateUIColors();
 
   const degToRad = d => d * Math.PI / 180;
   const radToDeg = r => r * 180 / Math.PI;
-  gui.add(s, 'angleRad', {to: radToDeg, from: v => [true, degToRad(v)]}, 1)
+  gui.add(s, 'angleRad', {conversion: {to: radToDeg, from: v => [true, degToRad(v)]}, step: 1})
       .name('rad ↔ deg')
       .onChange(v => log('rad:', v));
-  gui.add(s, 'angleDeg', {to: degToRad, from: v => [true, radToDeg(v)]}, 0.001)
+  gui.add(s, 'angleDeg', {conversion: {to: degToRad, from: v => [true, radToDeg(v)]}, step: 0.001})
       .name('deg ↔ rad')
       .onChange(v => log('deg:', v));
 
   const cToF = c => (c * (212 - 32) / 100) + 32;
   const fToC = f => (f - 32) * 100 / (212 - 32);
-  gui.add(s, 'tempC', {to: cToF, from: v => [true, fToC(v)]}, 0.1)
+  gui.add(s, 'tempC', {conversion: {to: cToF, from: v => [true, fToC(v)]}, step: 0.1})
       .name('C° ↔ F°')
       .onChange(v => log(`${v}C°`));
-  gui.add(s, 'tempF', {to: fToC, from: v => [true, cToF(v)]}, 0.1)
+  gui.add(s, 'tempF', {conversion: {to: fToC, from: v => [true, cToF(v)]}, step: 0.1})
       .name('F° ↔ C°')
       .onChange(v => log(`${v}F°`));
 
@@ -239,8 +243,8 @@ updateUIColors();
   gui.add({Number: 0}, 'Number').onChange(change).onFinishChange(finishChange);
   gui.add({String: 'foo'}, 'String').onChange(change).onFinishChange(finishChange);
   gui.add({Boolean: true}, 'Boolean').onChange(change).onFinishChange(finishChange);
-  gui.add({Slider: 0}, 'Slider', 0, 1).onChange(change).onFinishChange(finishChange);
-  gui.add({Select: 'pear'}, 'Select', ['apple', 'banana', 'pear']).onChange(change).onFinishChange(finishChange);
+  gui.add({Slider: 0}, 'Slider', {min: 0, max: 1}).onChange(change).onFinishChange(finishChange);
+  gui.add({Select: 'pear'}, 'Select', {keyValues: ['apple', 'banana', 'pear']}).onChange(change).onFinishChange(finishChange);
   gui.addColor({Color: '#FEDCBA'}, 'Color').onChange(change).onFinishChange(finishChange);
   gui.add({func() {}}, 'func').onChange(change).onFinishChange(finishChange);
 }
@@ -256,7 +260,7 @@ updateUIColors();
 
   const addColor = (label, color, format, formatter = JSON.stringify) => {
     const c = {color};
-    gui.addColor(c, 'color', format)
+    gui.addColor(c, 'color', {format})
         .name(label)
         .onChange(v => log(formatter(v)));
   };
@@ -286,10 +290,10 @@ updateUIColors();
 
   const s = cube(gui.addCanvas('canvas').canvas);
   gui.addColor(s.material, 'color').name('material color');
-  gui.add(s.material, 'shininess', 0, 300);
+  gui.add(s.material, 'shininess', {min: 0, max: 300});
   gui.addColor(s.light, 'color').name('light color');
-  gui.add(s.light, 'intensity', 0, 5, 0.01);
-  gui.add(s.camera, 'fov', 1, 179).name('field of view');
+  gui.add(s.light, 'intensity', {min: 0, max: 5, step: 0.01});
+  gui.add(s.camera, 'fov', {min: 1, max: 179}).name('field of view');
 }
 
 {
@@ -392,7 +396,7 @@ updateUIColors();
   function makeGUI(title, num) {
     const gui = new GUI({title}).hide();
     for (let i = 0; i < num; ++i) {
-      gui.add([Math.random()], '0', 0, 1).name(`value ${i}`);
+      gui.add([Math.random()], '0', {min: 0, max: 1}).name(`value ${i}`);
     }
     return gui;
   }
@@ -497,7 +501,7 @@ const updateAppearance = function() {
   const div = document.createElement('div');
   uiElem.appendChild(div);
   const gui = new GUI(div).name('Appearance');
-  gui.add({theme: 'default'}, 'theme', [...Object.keys(themes)]).onChange(v => {
+  gui.addController(new Select({theme: 'default'}, 'theme', {keyValues: [...Object.keys(themes)]})).onChange(v => {
     themeElem.textContent = themes[v];
     styleElem.textContent = '';
     updateAppearance();

@@ -8,8 +8,12 @@ import { strToNumber } from '../libs/conversions.js';
 // an issue? But users might `import {Number} ...` and
 // things would break.
 export default class TextNumber extends ValueController {
-  constructor(object, property, conversion = strToNumber, step = 0.01) {
+  constructor(object, property, options = {}) {
     super(object, property, 'muigui-checkbox');
+    const {
+      conversion = strToNumber,
+      step = 0.01,
+    } = options;
     this._textView = this.add(new NumberView(this, conversion));
     this.step(step);
     this.updateDisplay();

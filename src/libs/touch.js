@@ -1,20 +1,26 @@
 function noop() {
 }
 
-export function computeRelativePosition(elem, event) {
+export function computeRelativePosition(elem, event, start) {
   const rect = elem.getBoundingClientRect();
   const x = event.clientX - rect.left;
   const y = event.clientY - rect.top;
   const nx = x / rect.width;
   const ny = y / rect.height;
-  return {x, y, nx, ny};
+  start = start || [x, y];
+  const dx = x - start[0];
+  const dy = y - start[1];
+  const ndx = dx / rect.width;
+  const ndy = dy / rect.width;
+  return {x, y, nx, ny, dx, dy, ndx, ndy};
 }
 
 export function addTouchEvents(elem, {onDown = noop, onMove = noop, onUp = noop}) {
+  let start;
   const mouseMove = function(event) {
     onMove({
       type: 'move',
-      ...computeRelativePosition(elem, event),
+      ...computeRelativePosition(elem, event, start),
     });
   };
 
@@ -27,9 +33,11 @@ export function addTouchEvents(elem, {onDown = noop, onMove = noop, onUp = noop}
   const mouseDown = function(event) {
     window.addEventListener('mousemove', mouseMove);
     window.addEventListener('mouseup', mouseUp);
+    const rel = computeRelativePosition(elem, event);
+    start = [rel.x, rel.y];
     onDown({
       type: 'down',
-      ...computeRelativePosition(elem, event),
+      ...rel,
     });
   };
 

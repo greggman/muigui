@@ -4,7 +4,7 @@ import {
 import Controller from './Controller.js';
 
 export default class Button extends Controller {
-  constructor(object, property) {
+  constructor(object, property, options = {}) {
     super('muigui-button', '');
     this._object = object;
     this._property = property;
@@ -17,6 +17,10 @@ export default class Button extends Controller {
             this._object[this._property](this);
           },
         }));
+    const {name} = options;
+    if (name) {
+      this.name(name);
+    }
   }
   name(name) {
     this._buttonElem.textContent = name;

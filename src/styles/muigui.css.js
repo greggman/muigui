@@ -429,6 +429,25 @@ const css = `
   fill: var(--value-color);
 }
 
+/* ------ [ slider ] ------ */
+
+.muigui-slider svg {
+  background-color: var(--value-bg-color);
+}
+.muigui-ticks {
+  stroke: red;
+}
+.muigui-thicks {
+  stroke: var(--color);
+}
+.muigui-svg-text {
+  fill: var(--color);
+  font-size: 7px;
+}
+.muigui-mark {
+  fill: var(--value-color);
+}
+
 /* ------ [ range ] ------ */
 
 

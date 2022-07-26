@@ -24,4 +24,7 @@ export default class View {
   popSubView() {
     this.popSubElem();
   }
+  $(selector) {
+    return this.domElement.querySelector(selector);
+  }
 }

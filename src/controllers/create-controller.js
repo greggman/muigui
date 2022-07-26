@@ -21,11 +21,11 @@ const isConversion = o => typeof o.to === 'function' && typeof o.from === 'funct
  * @returns {Controller}
  */
 export function createController(object, property, ...args) {
-  const [arg1] = args;
-  const arg1IsObject = typeof arg1 === 'object';
-  if (arg1IsObject && !isConversion(arg1)) {
-    return new Select(object, property, ...args);
-  }
+  //const [arg1] = args;
+  //const arg1IsObject = typeof arg1 === 'object';
+  //if (arg1IsObject && !isConversion(arg1)) {
+  //  return new Select(object, property, ...args);
+  //}
 
   const t = typeof object[property];
   switch (t) {
