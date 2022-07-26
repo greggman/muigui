@@ -94,5 +94,6 @@ export default class EditView extends View {
   }
   setOptions(/*options*/) {
     // override this
+    return this;
   }
 }

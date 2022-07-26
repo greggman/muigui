@@ -45,5 +45,6 @@ export default class ColorView extends EditView {
     const {converters: {to, from}} = this.#options;
     this.#to = to;
     this.#from = from;
+    return this;
   }
 }

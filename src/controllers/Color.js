@@ -34,5 +34,6 @@ export default class Color extends ValueController {
       this.#textView.setOptions(text);
     }
     super.setOptions(options);
+    return this;
   }
 }

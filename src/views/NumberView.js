@@ -49,5 +49,6 @@ export default class NumberView extends EditView {
     this.#to = to;
     this.#from = from;
     this.#step = step;
+    return this;
   }
 }

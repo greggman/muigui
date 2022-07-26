@@ -47,5 +47,6 @@ export default class TextView extends EditView {
     } = this.#options;
     this.#to = to;
     this.#from = from;
+    return this;
   }
 }

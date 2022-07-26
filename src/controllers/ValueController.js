@@ -71,6 +71,7 @@ export default class ValueController extends LabelController {
       view.setOptions(options);
     }
     this.updateDisplay();
+    return this;
   }
   getValue() {
     return this.#object[this.#property];

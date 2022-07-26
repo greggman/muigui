@@ -130,5 +130,6 @@ export default class SliderView extends EditView {
   }
   setOptions(options) {
     copyExistingProperties(this.#options, options);
+    return this;
   }
 }
