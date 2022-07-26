@@ -14,7 +14,6 @@ export default class CheckboxView extends EditView {
       },
     });
     super(createElem('label', {}, [checkboxElem]));
-    this._checkboxElem = checkboxElem;
   }
   updateDisplay(v) {
     this.domElement.checked = v;

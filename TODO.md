@@ -35,6 +35,7 @@
 - [x] disable
 - [x] remove
 - [x] hide
+- [ ] get rid of min/max/step etc... as setters and add setOptions
 - [ ] interval
 - [ ] radio
 - [ ] scroll wheel

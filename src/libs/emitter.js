@@ -4,47 +4,52 @@ import { removeArrayElem } from '../libs/utils.js';
  * Similar to EventSource
  */
 export default class Emitter {
+  #listeners;
+  #changes;
+  #receivers;
+  #emitting;
+
   constructor() {
-    this._listeners = {};
-    this._changes = [];
-    this._receivers = [];
+    this.#listeners = {};
+    this.#changes = [];
+    this.#receivers = [];
   }
   on(type, listener) {
-    if (this._emitting) {
-      this._changes.push(['add', type, listener]);
+    if (this.#emitting) {
+      this.#changes.push(['add', type, listener]);
       return;
     }
-    const listeners = this._listeners[type] || [];
+    const listeners = this.#listeners[type] || [];
     listeners.push(listener);
-    this._listeners[type] = listeners;
+    this.#listeners[type] = listeners;
   }
   addListener(type, listener) {
     return this.on(type, listener);
   }
   removeListener(type, listener) {
-    if (this._emitting) {
-      this._changes.push(['remove', type, listener]);
+    if (this.#emitting) {
+      this.#changes.push(['remove', type, listener]);
       return;
     }
-    const listeners = this._listeners[type];
+    const listeners = this.#listeners[type];
     if (listeners) {
       removeArrayElem(listeners, listener);
     }
   }
   propagate(receiver) {
-    this._receivers.push(receiver);
+    this.#receivers.push(receiver);
   }
   emit(type, ...args) {
-    this._emitting = true;
-    const listeners = this._listeners[type];
+    this.#emitting = true;
+    const listeners = this.#listeners[type];
     if (listeners) {
       for (const listener of listeners) {
         listener(...args);
       }
     }
-    this._emitting = false;
-    while (this._changes.length) {
-      const [cmd, type, listener] = this._changes.shift();
+    this.#emitting = false;
+    while (this.#changes.length) {
+      const [cmd, type, listener] = this.#changes.shift();
       switch (cmd) {
         case 'add':
           this.on(type, listener);
@@ -56,7 +61,7 @@ export default class Emitter {
           throw new Error('unknown type');
       }
     }
-    for (const receiver of this._receivers) {
+    for (const receiver of this.#receivers) {
       receiver.emit(type, ...args);
     }
   }

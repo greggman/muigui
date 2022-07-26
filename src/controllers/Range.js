@@ -4,6 +4,9 @@ import NumberView from '../views/NumberView.js';
 import RangeView from '../views/RangeView.js';
 
 export default class Range extends ValueController {
+  #rangeView;
+  #numberView;
+
   constructor(object, property, options) {
     super(object, property, 'muigui-range');
     const {
@@ -12,8 +15,8 @@ export default class Range extends ValueController {
       step = 0.01,
       conversion = identity,
     } = options;
-    this._rangeView = this.add(new RangeView(this, conversion));
-    this._numberView = this.add(new NumberView(this, conversion));
+    this.#rangeView = this.add(new RangeView(this, conversion));
+    this.#numberView = this.add(new NumberView(this, conversion));
 
     this.min(min);
     this.max(max);
@@ -21,18 +24,18 @@ export default class Range extends ValueController {
     this.updateDisplay();
   }
   min(min) {
-    this._rangeView.min(min);
+    this.#rangeView.min(min);
     this.updateDisplay();
     return this;
   }
   max(max) {
-    this._rangeView.max(max);
+    this.#rangeView.max(max);
     this.updateDisplay();
     return this;
   }
   step(step) {
-    this._rangeView.step(step);
-    this._numberView.step(step);
+    this.#rangeView.step(step);
+    this.#numberView.step(step);
     this.updateDisplay();
     return this;
   }

@@ -74,7 +74,13 @@ updateUIColors();
     gui.add(s, 'speed', {min: 0, max: 100, step: 1});
     gui.add(s, 'direction', {min: 0, max: 360, step: 1}).listen();
     gui.add(s, 'friction', {min: 0, max: 1});
-    gui.addController(new Slider(s, 'fStop'));
+    gui.addController(new Slider(s, 'fStop', {
+      min: 0.5,
+      max: 40,
+      step: 0.05,
+      unitSize: 40,
+      ticksPerUnit: 10,
+    }));
     gui.addDivider();
     gui.add(s, 'run');
     gui.addLabel('Pet');

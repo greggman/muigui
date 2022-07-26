@@ -14,6 +14,8 @@ const svg = `
 `;
 
 export default class DirectionView extends EditView {
+  #arrowElem;
+
   constructor(setter) {
     super(createElem('div', {
       innerHTML: svg,
@@ -25,10 +27,10 @@ export default class DirectionView extends EditView {
  setter.setValue(Math.atan2(ny, nx) * 180 / Math.PI);
       },
     });
-    this._arrowElem = this.domElement.querySelector('#arrow');
+    this.#arrowElem = this.$('#arrow');
   }
   updateDisplay(v) {
 const angle = v * Math.PI / 180;
-    this._arrowElem.style.transform = `rotate(${angle}rad)`;
+    this.#arrowElem.style.transform = `rotate(${angle}rad)`;
   }
 }

@@ -51,6 +51,16 @@ function computeSizeOfMinus(elem) {
 }
 
 export default class SliderView extends EditView {
+  #svgElem;
+  #originElem;
+  #ticksElem;
+  #thicksElem;
+  #numbersElem;
+  #leftGradElem;
+  #rightGradElem;
+  #width;
+  #height;
+
   constructor(setter, options) {
     super(createElem('div', {
       innerHTML: svg,
@@ -60,56 +70,62 @@ export default class SliderView extends EditView {
       max = 100,
       step = 10,
       thicks = 30,
+      unitSize = 10,
+      ticksPerUnit = 5,
     } = options;
-    this._svgElem = this.domElement.querySelector('svg');
-    this._originElem = this.domElement.querySelector('#origin');
-    this._ticksElem = this.domElement.querySelector('#ticks');
-    this._thicksElem = this.domElement.querySelector('#thicks');
-    this._numbersElem = this.domElement.querySelector('#numbers');
-    this._leftGradElem = this.domElement.querySelector('#left-grad');
-    this._rightGradElem = this.domElement.querySelector('#right-grad');
-    this._ticksElem.setAttribute('d', createSVGTicks(min, max, step));
-    this._thicksElem.setAttribute('d', createSVGTicks(min, max, thicks));
+    this.#svgElem = this.$('svg');
+    this.#originElem = this.$('#origin');
+    this.#ticksElem = this.$('#ticks');
+    this.#thicksElem = this.$('#thicks');
+    this.#numbersElem = this.$('#numbers');
+    this.#leftGradElem = this.$('#left-grad');
+    this.#rightGradElem = this.$('#right-grad');
     let start;
     addTouchEvents(this.domElement, {
       onDown: (e) => {
         start = 0;
       },
       onMove: (e) => {
-        this._originElem.setAttribute('transform', `translate(${e.dx})`);
+        this.#originElem.setAttribute('transform', `translate(${e.dx})`);
 // setter.setValue(Math.atan2(ny, nx) * 180 / Math.PI);
       },
     });
+    const updateSlider = () => {
+      const unitsAcross = this.#width / this.unitSize;
+      this.#ticksElem.setAttribute('d', createSVGTicks(min, max, step));
+      this.#thicksElem.setAttribute('d', createSVGTicks(min, max, thicks));
+    };
+    updateSlider();
     new ResizeObserver(() => {
-      const {width, height} = this._svgElem.getBoundingClientRect();
-      if (this._width !== width || this._height !== height) {
-        this._width = width;
-        this._height = height;
+      const {width, height} = this.#svgElem.getBoundingClientRect();
+      if (this.#width !== width || this.#height !== height) {
+        this.#width = width;
+        this.#height = height;
         const viewBox = `${-width / 2 | 0} 0 ${width | 0} ${height | 0}`;
-        this._leftGradElem.setAttribute('x', -width / 2);
-        this._rightGradElem.setAttribute('x', width / 2 - 20);
-        this._svgElem.setAttribute('viewBox', viewBox);
-        const minusSize = computeSizeOfMinus(this._numbersElem);
-console.log(minusSize);
-        this._numbersElem.innerHTML = createSVGNumbers(min, max, thicks, minusSize);
+        this.#leftGradElem.setAttribute('x', -width / 2);
+        this.#rightGradElem.setAttribute('x', width / 2 - 20);
+        this.#svgElem.setAttribute('viewBox', viewBox);
+        const minusSize = computeSizeOfMinus(this.#numbersElem);
+        this.#numbersElem.innerHTML = createSVGNumbers(min, max, thicks, minusSize);
       }
-    }).observe(this._svgElem);
+    }).observe(this.#svgElem);
   }
   updateDisplay(v) {
+//    this.#lastV = 
   }
   min(min) {
-    //this._rangeView.min(min);
+    //this.#rangeView.min(min);
     //this.updateDisplay();
     return this;
   }
   max(max) {
-    //this._rangeView.max(max);
+    //this.#rangeView.max(max);
     //this.updateDisplay();
     return this;
   }
   step(step) {
-    //this._rangeView.step(step);
-    //this._numberView.step(step);
+    //this.#rangeView.step(step);
+    //this.#numberView.step(step);
     this.updateDisplay();
     return this;
   }

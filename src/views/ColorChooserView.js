@@ -47,69 +47,78 @@ const svg = `
 `;
 
 export default class ColorChooserView extends EditView {
+  #satLevelElem;
+  #hueUIElem;
+  #circleElem;
+  #hueElem;
+  #hueCursorElem;
+  #hsv;
+  #skipHueUpdate;
+  #skipSatLevelUpdate;
+
   constructor(setter) {
     super(createElem('div', {
       innerHTML: svg,
     }));
-    this._satLevelElem = this.domElement.children[0];
-    this._hueUIElem = this.domElement.children[1];
-    this._circleElem = this.domElement.querySelector('.muigui-color-chooser-circle');
-    this._hueElem = this.domElement.querySelector('#muigui-color-chooser-hue');
-    this._hueCursorElem = this.domElement.querySelector('.muigui-color-chooser-cursor');
+    this.#satLevelElem = this.domElement.children[0];
+    this.#hueUIElem = this.domElement.children[1];
+    this.#circleElem = this.$('.muigui-color-chooser-circle');
+    this.#hueElem = this.$('#muigui-color-chooser-hue');
+    this.#hueCursorElem = this.$('.muigui-color-chooser-cursor');
 
     const handleSatLevelChange = (e) => {
       const s = clamp(e.nx, 0, 1);
       const v = clamp(e.ny, 0, 1);
-      this._hsv[1] = s;
-      this._hsv[2] = (1 - v);
-      this._skipHueUpdate = true;
-      setter.setValue(floatRGBToHex(hsv01ToRGBFloat(this._hsv)));
+      this.#hsv[1] = s;
+      this.#hsv[2] = (1 - v);
+      this.#skipHueUpdate = true;
+      setter.setValue(floatRGBToHex(hsv01ToRGBFloat(this.#hsv)));
     };
 
     const handleHueChange = (e) => {
       const h = clamp(e.nx, 0, 1);
-      this._hsv[0] = h;
-      this._skipSatLevelUpdate = true;
-      setter.setValue(floatRGBToHex(hsv01ToRGBFloat(this._hsv)));
+      this.#hsv[0] = h;
+      this.#skipSatLevelUpdate = true;
+      setter.setValue(floatRGBToHex(hsv01ToRGBFloat(this.#hsv)));
     };
 
-    addTouchEvents(this._satLevelElem, {
+    addTouchEvents(this.#satLevelElem, {
       onDown: handleSatLevelChange,
       onMove: handleSatLevelChange,
     });
-    addTouchEvents(this._hueUIElem, {
+    addTouchEvents(this.#hueUIElem, {
       onDown: handleHueChange,
       onMove: handleHueChange,
     });
   }
   updateDisplay(newV) {
-    if (!this._hsv) {
-      this._hsv = rgbFloatToHSV01(hexToFloatRGB(newV));
+    if (!this.#hsv) {
+      this.#hsv = rgbFloatToHSV01(hexToFloatRGB(newV));
     }
     {
       const [h, s, v] = rgbFloatToHSV01(hexToFloatRGB(newV));
       // Don't copy the hue if it was un-computable.
-      if (!this._skipHueUpdate) {
-        this._hsv[0] = s > 0.001 && v > 0.001 ? h : this._hsv[0];
+      if (!this.#skipHueUpdate) {
+        this.#hsv[0] = s > 0.001 && v > 0.001 ? h : this.#hsv[0];
       }
-      if (!this._skipSatLevelUpdate) {
-        this._hsv[1] = s;
-        this._hsv[2] = v;
+      if (!this.#skipSatLevelUpdate) {
+        this.#hsv[1] = s;
+        this.#hsv[2] = v;
       }
     }
     {
-      const [h, s, v] = this._hsv;
-      if (!this._skipHueUpdate) {
-        this._hueCursorElem.setAttribute('transform', `translate(${h * 64}, 0)`);
-        this._hueElem.children[0].setAttribute('stop-color', `hsl(${h * 360}, 0%, 100%)`);
-        this._hueElem.children[1].setAttribute('stop-color', `hsl(${h * 360}, 100%, 50%)`);
+      const [h, s, v] = this.#hsv;
+      if (!this.#skipHueUpdate) {
+        this.#hueCursorElem.setAttribute('transform', `translate(${h * 64}, 0)`);
+        this.#hueElem.children[0].setAttribute('stop-color', `hsl(${h * 360}, 0%, 100%)`);
+        this.#hueElem.children[1].setAttribute('stop-color', `hsl(${h * 360}, 100%, 50%)`);
       }
-      if (!this._skipSatLevelUpdate) {
-        this._circleElem.setAttribute('cx', `${s * 64}`);
-        this._circleElem.setAttribute('cy', `${(1 - v) * 48}`);
+      if (!this.#skipSatLevelUpdate) {
+        this.#circleElem.setAttribute('cx', `${s * 64}`);
+        this.#circleElem.setAttribute('cy', `${(1 - v) * 48}`);
       }
     }
-    this._skipHueUpdate = false;
-    this._skipSatLevelUpdate = false;
+    this.#skipHueUpdate = false;
+    this.#skipSatLevelUpdate = false;
   }
 }

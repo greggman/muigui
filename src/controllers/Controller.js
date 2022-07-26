@@ -3,20 +3,24 @@ import { removeArrayElem } from '../libs/utils.js';
 import View from '../views/View.js';
 
 export default class Controller extends View {
+  #changeFns;
+  #finishChangeFns;
+  #parent
+
   constructor(className) {
     super(createElem('div', {className: 'muigui-controller'}));
-    this._changeFns = [];
-    this._finishChangeFns = [];
+    this.#changeFns = [];
+    this.#finishChangeFns = [];
     // we need the specialization to come last so it takes precedence.
     if (className) {
       this.domElement.classList.add(className);
     }
   }
   get parent() {
-    return this._parent;
+    return this.#parent;
   }
   setParent(parent) {
-    this._parent = parent;
+    this.#parent = parent;
     this.enable(!this.disabled());
   }
   show(show = true) {
@@ -58,34 +62,34 @@ export default class Controller extends View {
   }
   onChange(fn) {
     this.removeChange(fn);
-    this._changeFns.push(fn);
+    this.#changeFns.push(fn);
     return this;
   }
   removeChange(fn) {
-    removeArrayElem(this._changeFns, fn);
+    removeArrayElem(this.#changeFns, fn);
     return this;
   }
   onFinishChange(fn) {
     this.removeFinishChange(fn);
-    this._finishChangeFns.push(fn);
+    this.#finishChangeFns.push(fn);
     return this;
   }
   removeFinishChange(fn) {
-    removeArrayElem(this._finishChangeFns, fn);
+    removeArrayElem(this.#finishChangeFns, fn);
     return this;
   }
-  _callListeners(fns, newV) {
+  #callListeners(fns, newV) {
     for (const fn of fns) {
       fn.call(this, newV);
     }
   }
   emitChange(value, object, property) {
-    this._callListeners(this._changeFns, value);
-    if (this._parent) {
+    this.#callListeners(this.#changeFns, value);
+    if (this.#parent) {
       if (object === undefined) {
-        this._parent.emitChange(value);
+        this.#parent.emitChange(value);
       } else {
-        this._parent.emitChange({
+        this.#parent.emitChange({
           object,
           property,
           value,
@@ -95,12 +99,12 @@ export default class Controller extends View {
     }
   }
   emitFinalChange(value, object, property) {
-    this._callListeners(this._finishChangeFns, value);
-    if (this._parent) {
+    this.#callListeners(this.#finishChangeFns, value);
+    if (this.#parent) {
       if (object === undefined) {
-        this._parent.emitChange(value);
+        this.#parent.emitChange(value);
       } else {
-        this._parent.emitFinalChange({
+        this.#parent.emitFinalChange({
           object,
           property,
           value,

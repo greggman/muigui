@@ -14,6 +14,10 @@ const svg = `
 `;
 
 export default class Vec2View extends EditView {
+  #svgElem;
+  #arrowElem;
+  #circleElem;
+
   constructor(setter) {
     super(createElem('div', {
       innerHTML: svg,
@@ -23,17 +27,16 @@ export default class Vec2View extends EditView {
         const nx = e.nx * 2 - 1;
         const ny = e.ny * 2 - 1;
         setter.setValue([nx * 32, ny * 32]);
-//        this.updateDisplay();
       },
     });
-    this._svgElem = this.domElement.querySelector('svg');
-    this._arrowElem = this.domElement.querySelector('#arrow');
-    this._circleElem = this.domElement.querySelector('#circle');
-    onResizeSVGNoScale(this._svgElem, () => this.updateDisplay);
+    this.#svgElem = this.$('svg');
+    this.#arrowElem = this.$('#arrow');
+    this.#circleElem = this.$('#circle');
+    onResizeSVGNoScale(this.#svgElem, () => this.updateDisplay);
   }
   updateDisplay(v) {
     const [x, y] = v;
-    this._arrowElem.setAttribute('d', `M0,0L${x},${y}`);
-    this._circleElem.setAttribute('transform', `translate(${x}, ${y})`);
+    this.#arrowElem.setAttribute('d', `M0,0L${x},${y}`);
+    this.#circleElem.setAttribute('transform', `translate(${x}, ${y})`);
   }
 }

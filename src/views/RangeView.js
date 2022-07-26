@@ -4,33 +4,38 @@ import { stepify } from '../libs/utils.js';
 import EditView from './EditView.js';
 
 export default class RangeView extends EditView {
+  #to;
+  #from;
+  #step;
+  #skipUpdate;
+
   constructor(setter, converters = identity) {
     super(createElem('input', {
       type: 'range',
       onInput: () => {
-        this._skipUpdateRangeElem = true;
-        const [valid, v] = this._from(this.domElement.value);
+        this.#skipUpdate = true;
+        const [valid, v] = this.#from(this.domElement.value);
         if (valid) {
           setter.setValue(v);
         }
       },
       onChange: () => {
-        this._skipUpdateRangeElem = true;
-        const [valid, v] = this._from(this.domElement.value);
+        this.#skipUpdate = true;
+        const [valid, v] = this.#from(this.domElement.value);
         if (valid) {
           setter.setFinalValue(v);
         }
       },
     }));
     const {to, from} = converters;
-    this._to = to;
-    this._from = from;
+    this.#to = to;
+    this.#from = from;
   }
   updateDisplay(v) {
-    if (!this._skipUpdateRangeElem) {
-      this.domElement.value = stepify(v, this._to, this._step);
+    if (!this.#skipUpdate) {
+      this.domElement.value = stepify(v, this.#to, this.#step);
     }
-    this._skipUpdateRangeElem = false;
+    this.#skipUpdate = false;
   }
   min(min) {
     this.domElement.min = min;
@@ -42,7 +47,7 @@ export default class RangeView extends EditView {
   }
   step(step) {
     this.domElement.step = step;
-    this._step = step;
+    this.#step = step;
     return this;
   }
 }

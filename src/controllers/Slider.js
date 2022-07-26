@@ -4,6 +4,9 @@ import NumberView from '../views/NumberView.js';
 import SliderView from '../views/SliderView.js';
 
 export default class Slider extends ValueController {
+  #sliderView;
+  #numberView;
+
   constructor(object, property, options = {}) {
     super(object, property, 'muigui-slider');
     const {
@@ -13,8 +16,8 @@ export default class Slider extends ValueController {
       conversion = identity,
     } = options;
 
-    this._rangeView = this.add(new SliderView(this, conversion, options));
-    this._numberView = this.add(new NumberView(this, conversion));
+    this.#sliderView = this.add(new SliderView(this, conversion, options));
+    this.#numberView = this.add(new NumberView(this, conversion));
 
     this.min(min);
     this.max(max);
@@ -22,18 +25,18 @@ export default class Slider extends ValueController {
     this.updateDisplay();
   }
   min(min) {
-    this._rangeView.min(min);
+    this.#sliderView.min(min);
     this.updateDisplay();
     return this;
   }
   max(max) {
-    this._rangeView.max(max);
+    this.#sliderView.max(max);
     this.updateDisplay();
     return this;
   }
   step(step) {
-    this._rangeView.step(step);
-    this._numberView.step(step);
+    this.#sliderView.step(step);
+    this.#numberView.step(step);
     this.updateDisplay();
     return this;
   }

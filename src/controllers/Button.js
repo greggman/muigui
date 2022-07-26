@@ -4,17 +4,21 @@ import {
 import Controller from './Controller.js';
 
 export default class Button extends Controller {
+  #object;
+  #property;
+  #buttonElem;
+
   constructor(object, property, options = {}) {
     super('muigui-button', '');
-    this._object = object;
-    this._property = property;
+    this.#object = object;
+    this.#property = property;
 
-    this._buttonElem = this.addElem(
+    this.#buttonElem = this.addElem(
         createElem('button', {
           type: 'button',
           textContent: property,
           onClick: () => {
-            this._object[this._property](this);
+            this.#object[this.#property](this);
           },
         }));
     const {name} = options;
@@ -23,7 +27,7 @@ export default class Button extends Controller {
     }
   }
   name(name) {
-    this._buttonElem.textContent = name;
+    this.#buttonElem.textContent = name;
     return this;
   }
 }

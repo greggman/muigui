@@ -3,6 +3,8 @@ import { makeId } from '../libs/ids.js';
 import EditView from './EditView.js';
 
 export default class RadioGridView extends EditView {
+  #values;
+
   constructor(setter, keyValues, cols = 3) {
     const values = [];
     const name = makeId();
@@ -29,11 +31,11 @@ export default class RadioGridView extends EditView {
       ]);
     })));
     const that = this;
-    this._values = values;
+    this.#values = values;
     this.cols(cols);
   }
   updateDisplay(v) {
-    const ndx = this._values.indexOf(v);
+    const ndx = this.#values.indexOf(v);
     for (let i = 0; i < this.domElement.children.length; ++i) {
       this.domElement.children[i].children[0].checked = i === ndx;
     }

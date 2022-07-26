@@ -10,9 +10,10 @@ import ValueController from './ValueController.js';
 // range (0, 360), (-180, +180), (0,0)   Really this is a range
 
 export default class Direction extends ValueController {
+  #options;
   constructor(object, property, options) {
     super(object, property, 'muigui-direction');
-this._options = options;
+this.#options = options; // FIX
     this.add(new DirectionView(this));
     this.add(new NumberView(this,
 identity));

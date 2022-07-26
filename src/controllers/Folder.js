@@ -2,13 +2,15 @@ import { createElem } from '../libs/elem.js';
 import Container from './Container.js';
 
 export default class Folder extends Container {
+  #labelElem;
+
   constructor(name = 'Controls', className = 'muigui-menu') {
     super(className);
-    this._labelElem = createElem('label');
+    this.#labelElem = createElem('label');
     this.addElem(createElem('button', {
       type: 'button',
       onClick: () => this.toggleOpen(),
-    }, [this._labelElem]));
+    }, [this.#labelElem]));
     this.pushContainer(new Container());
     this.name(name);
     this.open();
@@ -22,7 +24,7 @@ export default class Folder extends Container {
     return this.open(false);
   }
   name(name) {
-    this._labelElem.textContent = name;
+    this.#labelElem.textContent = name;
     return this;
   }
   title(title) {
