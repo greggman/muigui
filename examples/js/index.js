@@ -63,7 +63,10 @@ if (true) {
     speed: 0.5,
     direction: 45,
     friction: 0.01,
-    fStop: 4,
+    fStop: 5.6,
+    focalLength: 50,
+    iso: 100,
+    frame: 200,
     run: true,
     animal: 'Bird',
     dessert: 'Pie',
@@ -90,12 +93,45 @@ if (true) {
     gui.add(s, 'direction', {min: 0, max: 360, step: 1}).listen();
     gui.add(s, 'friction', {min: 0, max: 1});
     gui.addController(new Slider(s, 'fStop', {
-      min: 0.5,
+      min: 0.7,
       max: 40,
-      step: 0.05,
-      unitSize: 20,
+      step: 0.01,
+      unit: 0.1,
+      unitSize: 30,
       ticksPerUnit: 10,
+      tickHeight: 0.5,
+      orientation: 'up',
     }));
+    gui.addController(new Slider(s, 'focalLength', {
+      min: 6,
+      max: 800,
+      step: 1,
+      unit: 10,
+      unitSize: 40,
+      ticksPerUnit: 5,
+    }));
+    gui.addController(new Slider(s, 'iso', {
+      min: 100,
+      max: 25000,
+      step: 100,
+      unit: 200,
+      unitSize: 4,
+      ticksPerUnit: 1,
+      limits: false,
+      labelFn: () => '',
+      thicksColor: 'var(--range-color)',
+    }));
+    gui.addController(new Slider(s, 'frame', {
+      min: 100,
+      max: 25000,
+      step: 0.5,
+      unit: 10,
+      unitSize: 30,
+      ticksPerUnit: 15,
+      thicksColor: 'transparent',
+    }));
+
+
     gui.addDivider();
     gui.add(s, 'run');
     gui.addLabel('Pet');

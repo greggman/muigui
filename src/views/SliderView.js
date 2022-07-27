@@ -1,43 +1,60 @@
 import { createElem } from '../libs/elem.js';
+import { addKeyboardEvents } from '../libs/keyboard.js';
 import { addTouchEvents } from '../libs/touch.js';
-import { copyExistingProperties } from '../libs/utils.js';
+import { clamp, copyExistingProperties, stepify } from '../libs/utils.js';
 import EditView from './EditView.js';
 
 const svg = `
 <svg tabindex="0" viewBox="-32 -32 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;">
-  <circle cx="0" cy="2" r="2" class="muigui-mark"/>
-  <g id="origin">
-    <g transform="translate(0, 6)">
-      <path id="ticks" class="muigui-ticks"/>
-      <path id="thicks" class="muigui-thicks"/>
+  <g id="muigui-orientation">
+    <g id="muigui-origin">
+      <g transform="translate(0, 4)">
+        <path id="muigui-ticks" class="muigui-ticks"/>
+        <path id="muigui-thicks" class="muigui-thicks"/>
+      </g>
+      <g id="muigui-number-orientation">
+        <g id="muigui-numbers" transform="translate(0, 11)" class="muigui-svg-text"/>
+      </g>
     </g>
-    <g id="numbers" transform="translate(0, 14)" class="muigui-svg-text"/>
+    <linearGradient id="muigui-bg-to-transparent">
+      <stop stop-color="var(--value-bg-color)" offset="0%"/>
+      <stop stop-color="var(--value-bg-color)" stop-opacity="0" offset="100%"/>
+    </linearGradient>
+    <linearGradient id="muigui-transparent-to-bg">
+      <stop stop-color="var(--value-bg-color)" stop-opacity="0"  offset="0%"/>
+      <stop stop-color="var(--value-bg-color)" offset="100%"/>  
+    </linearGradient>
+    <!--<circle cx="0" cy="2" r="2" class="muigui-mark"/>-->
+    <!--<rect x="-1" y="0" width="2" height="10" class="muigui-mark"/>-->
+    <path d="M0 4L-2 0L2 0" class="muigui-mark"/>
   </g>
-  <linearGradient id="bg-to-transparent">
-    <stop stop-color="var(--value-bg-color)" offset="0%"/>
-    <stop stop-color="var(--value-bg-color)" stop-opacity="0" offset="100%"/>
-  </linearGradient>
-  <linearGradient id="transparent-to-bg">
-    <stop stop-color="var(--value-bg-color)" stop-opacity="0"  offset="0%"/>
-    <stop stop-color="var(--value-bg-color)" offset="100%"/>  
-  </linearGradient>
-  <rect id="left-grad" x="0" y="0" width="20" height="20" fill="url(#bg-to-transparent)"/>
-  <rect id="right-grad" x="48" y="0" width="20" height="20" fill="url(#transparent-to-bg)"/>
+  <rect id="muigui-left-grad" x="0" y="0" width="20" height="20" fill="url(#muigui-bg-to-transparent)"/>
+  <rect id="muigui-right-grad" x="48" y="0" width="20" height="20" fill="url(#muigui-transparent-to-bg)"/>
 </svg>
 `;
 
-function createSVGTicks(min, max, step) {
+function createSVGTicks(start, end, step, min, max, height) {
   const p = [];
-  for (let i = min; i <= max; i += step) {
-    p.push(`M${i} 0 l0 5`);
+  if (start < min) {
+    start += stepify(min - start, v => v, step);
+  }
+  end = Math.min(end, max);
+  for (let i = start; i <= end; i += step) {
+    p.push(`M${i} 0 l0 ${height}`);
   }
   return p.join(' ');
 }
 
-function createSVGNumbers(min, max, step, minusSize) {
+function createSVGNumbers(start, end, unitSize, unit, minusSize, min, max, labelFn) {
   const texts = [];
-  for (let i = min; i <= max; i += step) {
-    texts.push(`<text text-anchor="middle" dominant-baseline="hanging" x="${i >= 0 ? i : (i - minusSize / 2) }" y="0">${i}</text>`);
+  if (start < min) {
+    start += stepify(min - start, v => v, unitSize);
+  }
+  end = Math.min(end, max);
+  const digits = Math.max(0, -Math.log10(unit));
+  const f = v => labelFn(v.toFixed(digits));
+  for (let i = start; i <= end; i += unitSize) {
+    texts.push(`<text text-anchor="middle" dominant-baseline="hanging" x="${i >= 0 ? i : (i - minusSize / 2) }" y="0">${f(i / unitSize * unit)}</text>`);
   }
   return texts.join('\n');
 }
@@ -62,12 +79,19 @@ export default class SliderView extends EditView {
   #width;
   #height;
   #lastV;
+  #minusSize;
   #options = {
     min: -100,
     max: 100,
-    step: 10,
+    step: 1,
+    unit: 10,
     unitSize: 10,
     ticksPerUnit: 5,
+    labelFn: v => v,
+    tickHeight: 1,
+    limits: true,
+    thicksColor: undefined,
+    orientation: undefined,
   };
 
   constructor(setter, options) {
@@ -75,21 +99,29 @@ export default class SliderView extends EditView {
       innerHTML: svg,
     }));
     this.#svgElem = this.$('svg');
-    this.#originElem = this.$('#origin');
-    this.#ticksElem = this.$('#ticks');
-    this.#thicksElem = this.$('#thicks');
-    this.#numbersElem = this.$('#numbers');
-    this.#leftGradElem = this.$('#left-grad');
-    this.#rightGradElem = this.$('#right-grad');
+    this.#originElem = this.$('#muigui-origin');
+    this.#ticksElem = this.$('#muigui-ticks');
+    this.#thicksElem = this.$('#muigui-thicks');
+    this.#numbersElem = this.$('#muigui-numbers');
+    this.#leftGradElem = this.$('#muigui-left-grad');
+    this.#rightGradElem = this.$('#muigui-right-grad');
     this.setOptions(options);
-    let start;
+    let startV;
     addTouchEvents(this.domElement, {
-      onDown: (e) => {
-        start = 0;
+      onDown: () => {
+        startV = this.#lastV;
       },
       onMove: (e) => {
-        this.#originElem.setAttribute('transform', `translate(${e.dx})`);
-// setter.setValue(Math.atan2(ny, nx) * 180 / Math.PI);
+        const {min, max, unitSize, unit, step} = this.#options;
+        const newV = clamp(stepify(startV - e.dx / unitSize * unit, v => v, step), min, max);
+        setter.setValue(newV);
+      },
+    });
+    addKeyboardEvents(this.domElement, {
+      onDown: (e) => {
+        const {min, max, step} = this.#options;
+        const newV = clamp(stepify(this.#lastV + e.dx * step, v => v, step), min, max);
+        setter.setValue(newV);
       },
     });
     new ResizeObserver(() => {
@@ -101,9 +133,7 @@ export default class SliderView extends EditView {
         this.#leftGradElem.setAttribute('x', -width / 2);
         this.#rightGradElem.setAttribute('x', width / 2 - 20);
         this.#svgElem.setAttribute('viewBox', viewBox);
-        const minusSize = computeSizeOfMinus(this.#numbersElem);
-        const {min, max, unitSize} = this.#options;
-        this.#numbersElem.innerHTML = createSVGNumbers(min, max, unitSize, minusSize);
+        this.#minusSize = computeSizeOfMinus(this.#numbersElem);
         this.#updateSlider();
       }
     }).observe(this.#svgElem);
@@ -112,17 +142,40 @@ export default class SliderView extends EditView {
   // . . | . . . | . . . |
   //
   #updateSlider() {
-    // There's no size of ResizeObserver has not fired yet.
-    if (!this.#width) {
+    // There's no size if ResizeObserver has not fired yet.
+    if (!this.#width || this.#lastV === undefined) {
       return;
     }
-    const {unitSize, ticksPerUnit} = this.#options;
+    const {
+      labelFn,
+      limits,
+      min,
+      max,
+      orientation,
+      tickHeight,
+      ticksPerUnit,
+      unit,
+      unitSize,
+      thicksColor,
+    } = this.#options;
     const unitsAcross = Math.ceil(this.#width / unitSize);
-    const start = unitsAcross * unitSize * -2;
-    const end = unitsAcross * unitSize * 2;
-    this.#ticksElem.setAttribute('d', createSVGTicks(start, end, unitSize / ticksPerUnit));
-    this.#thicksElem.setAttribute('d', createSVGTicks(start, end, unitSize));
-
+    const center = this.#lastV;
+    const centerUnitSpace = center / unit;
+    const startUnitSpace = Math.round(centerUnitSpace - unitsAcross);
+    const endUnitSpace = startUnitSpace + unitsAcross * 2;
+    const start = startUnitSpace * unitSize;
+    const end = endUnitSpace * unitSize;
+    const minUnitSpace = limits ? min * unitSize / unit : start;
+    const maxUnitSpace = limits ? max * unitSize / unit : end;
+    const height = labelFn(1) === '' ? 10 : 5;
+    if (ticksPerUnit > 1) {
+      this.#ticksElem.setAttribute('d', createSVGTicks(start, end, unitSize / ticksPerUnit, minUnitSpace, maxUnitSpace, height * tickHeight));
+    }
+    this.#thicksElem.style.stroke =  thicksColor; //setAttribute('stroke', thicksColor);
+    this.#thicksElem.setAttribute('d', createSVGTicks(start, end, unitSize, minUnitSpace, maxUnitSpace, height));
+    this.#numbersElem.innerHTML = createSVGNumbers(start, end, unitSize, unit, this.#minusSize, minUnitSpace, maxUnitSpace, labelFn);
+    this.#originElem.setAttribute('transform', `translate(${-this.#lastV * unitSize / unit} 0)`);
+    this.#svgElem.classList.toggle('muigui-slider-up', orientation === 'up');
   }
   updateDisplay(v) {
     this.#lastV = v;

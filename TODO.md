@@ -35,10 +35,12 @@
 - [x] disable
 - [x] remove
 - [x] hide
+- [ ] camelCase to Camel Case
 - [ ] get rid of min/max/step etc... as setters and add setOptions
 - [ ] interval
 - [ ] radio
 - [ ] scroll wheel
+- [ ] add ticks like volume control to direction (rename knob)
 - [x] text red if invalid?
 - [ ] fix editing text (forgot where it's failing)
 - [ ] what should 0x123 do for hex colors because we want it to be 0x000123. I guess it just works.

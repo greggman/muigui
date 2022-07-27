@@ -86,7 +86,8 @@ const css = `
   --range-left-color: var(--disabled-color) !important;
 }
 
-.muigui canvas {
+.muigui canvas,
+.muigui svg {
   display: block;
   background-color: var(--value-bg-color);
   border-radius: var(--border-radius);
@@ -414,6 +415,10 @@ const css = `
 
 /* ------ [ direction ] ------ */
 
+.muigui-direction svg {
+  background-color: var(--bg-color);
+}
+
 .muigui-direction-circle {
   stroke-width: 3px;
   fill: var(--value-bg-color);
@@ -431,14 +436,28 @@ const css = `
 
 /* ------ [ slider ] ------ */
 
-.muigui-slider svg {
-  background-color: var(--value-bg-color);
+.muigui-slider>div {
+  display: flex;
+  align-items: stretch;
+  height: var(--line-height);
 }
+.muigui-slider svg {
+  flex: 1 1 auto;
+}
+.muigui-slider .muigui-slider-up #muigui-orientation {
+  transform: scale(1, -1) translateY(-100%);
+}
+
+.muigui-slider .muigui-slider-up #muigui-number-orientation {
+  transform: scale(1,-1) translateY(-100%) translateY(-10px);
+}
+
 .muigui-ticks {
-  stroke: red;
+  stroke: var(--range-color);
 }
 .muigui-thicks {
   stroke: var(--color);
+  stroke-width: 2px;
 }
 .muigui-svg-text {
   fill: var(--color);
