@@ -12,8 +12,10 @@ const svg = `
         <path id="muigui-ticks" class="muigui-ticks"/>
         <path id="muigui-thicks" class="muigui-thicks"/>
       </g>
-      <g id="muigui-number-orientation">
-        <g id="muigui-numbers" transform="translate(0, 11)" class="muigui-svg-text"/>
+      <g transform="translate(0, 14)">
+        <g id="muigui-number-orientation">
+          <g id="muigui-numbers" transform="translate(0, -3)" class="muigui-svg-text"/>
+        </g>
       </g>
     </g>
     <linearGradient id="muigui-bg-to-transparent">

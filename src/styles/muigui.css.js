@@ -449,7 +449,7 @@ const css = `
 }
 
 .muigui-slider .muigui-slider-up #muigui-number-orientation {
-  transform: scale(1,-1) translateY(-100%) translateY(-10px);
+  transform: scale(1,-1);
 }
 
 .muigui-ticks {
