@@ -12,26 +12,23 @@ export default class TextView extends EditView {
   };
 
   constructor(setter, options) {
+    const setValue = setter.setValue.bind(setter);
+    const setFinalValue = setter.setFinalValue.bind(setter);
     super(createElem('input', {
       type: 'text',
-      onInput: () => {
-        const [valid, newV] = this.#from(this.domElement.value);
-        if (valid) {
-          this.#skipUpdate = true;
-          setter.setValue(newV);
-        }
-        this.domElement.style.color = valid ? '' : 'var(--invalid-color)';
-      },
-      onChange: () => {
-        const [valid, newV] = this.#from(this.domElement.value);
-        if (valid) {
-          this.#skipUpdate = true;
-          setter.setFinalValue(newV);
-        }
-        this.domElement.style.color = valid ? '' : 'var(--invalid-color)';
-      },
+      onInput: () => this.#handleInput(setValue, true),
+      onChange: () => this.#handleInput(setFinalValue, false),
     }));
     this.setOptions(options);
+  }
+  #handleInput(setFn, skipUpdate) {
+    const [valid, newV] = this.#from(this.domElement.value);
+    if (valid) {
+      this.#skipUpdate = skipUpdate;
+      setFn(newV);
+    }
+    this.domElement.style.color = valid ? '' : 'var(--invalid-color)';
+
   }
   updateDisplay(v) {
     if (!this.#skipUpdate) {

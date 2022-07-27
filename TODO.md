@@ -35,6 +35,7 @@
 - [x] disable
 - [x] remove
 - [x] hide
+- [ ] fix 'period'. It's stepping by 0.1 and only going to 3.1
 - [ ] camelCase to Camel Case
 - [ ] get rid of min/max/step etc... as setters and add setOptions
 - [ ] interval
@@ -69,6 +70,7 @@
 - [x] functions to query colors?
 - [x] (doesn't work) maybe just add color-scheme to CSS
 - [ ] make svg ids start with muigui
+- [ ] on enter in text field we need to invalidate value cache
 - [ ] add all
   - [ ] add with filter? (pass in filter so you can make positive or negative)
   - [ ] add with list of fields?

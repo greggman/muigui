@@ -2,6 +2,7 @@ import GridView from '../views/GridView.js';
 import NumberView from '../views/NumberView.js';
 import Vec2View from '../views/Vec2View.js';
 import ValueController from './ValueController.js';
+import { strToNumber } from '../libs/conversions.js';
 
 // TODO: zoom with wheel and pinch?
 // TODO: grid?
@@ -17,20 +18,32 @@ export default class Vec2 extends ValueController {
     super(object, property, 'muigui-vec2');
     this.add(new Vec2View(this));
     this.pushSubView(new GridView(2));
-    this.add(new NumberView(this, {
-      to: v => v[0],
-      from: v => {
-        const newV = this.getValue().slice();
-        newV[0] = v;
-        return [true, newV];
+
+    const makeSetter = (ndx) => {
+      return {
+        setValue: (v) => {
+          const newV = this.getValue();
+          newV[ndx] = v;
+          this.setValue(newV);
+        },
+        setFinalValue: (v) => {
+          const newV = this.getValue();
+          newV[ndx] = v;
+          this.setFinalValue(newV);
+        },
+      };
+    };
+
+    this.add(new NumberView(makeSetter(0), {
+      converters: {
+        to: v => v[0],
+        from: strToNumber.from,
       },
     }));
-    this.add(new NumberView(this, {
-      to: v => v[1],
-      from: v => {
-        const newV = this.getValue().slice();
-        newV[1] = v;
-        return [true, newV];
+    this.add(new NumberView(makeSetter(1), {
+      converters: {
+        to: v => v[1],
+        from: strToNumber.from,
       },
     }));
     this.popSubView();

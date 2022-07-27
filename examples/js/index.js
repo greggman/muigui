@@ -483,6 +483,11 @@ const updateAppearance = function() {
 
   const themes = {
     default: '',
+    'default-mono': `
+        .muigui {
+           --font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", monospace;
+        }
+    `,
     light: `
         .muigui {
           --bg-color: #f6f6f6;

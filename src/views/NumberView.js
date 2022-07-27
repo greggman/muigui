@@ -1,6 +1,6 @@
 import { createElem } from '../libs/elem.js';
 import { strToNumber } from '../libs/conversions.js';
-import { copyExistingProperties, stepify } from '../libs/utils.js';
+import { clamp, copyExistingProperties, stepify } from '../libs/utils.js';
 import EditView from './EditView.js';
 
 export default class NumberView extends EditView {
@@ -11,27 +11,30 @@ export default class NumberView extends EditView {
   #options = {
     step: 0.01,
     converters: strToNumber,
+    min: Number.NEGATIVE_INFINITY,
+    max: Number.POSITIVE_INFINITY,
   };
 
   constructor(setter, options) {
+    const setValue = setter.setValue.bind(setter);
+    const setFinalValue = setter.setFinalValue.bind(setter);
     super(createElem('input', {
       type: 'number',
-      onInput: () => {
-        const [valid, v] = this.#from(this.domElement.value);
-        if (valid) {
-          this.#skipUpdate = true;
-          setter.setValue(v);
-        }
-      },
-      onChange: () => {
-        const [valid, v] = this.#from(this.domElement.value);
-        if (valid) {
-          this.#skipUpdate = true;
-          setter.setFinalValue(v);
-        }
-      },
+      onInput: () => this.#handleInput(setValue, true),
+      onChange: () => this.#handleInput(setFinalValue, false),
     }));
     this.setOptions(options);
+  }
+  #handleInput(setFn, skipUpdate) {
+    const [valid, newV] = this.#from(this.domElement.value);
+    let inRange;
+    if (valid) {
+      const {min, max} = this.#options;
+      inRange = newV >= min && newV <= max;
+      this.#skipUpdate = skipUpdate;
+      setFn(clamp(newV, min, max));
+    }
+    this.domElement.style.color = (valid && inRange) ? '' : 'var(--invalid-color)';
   }
   updateDisplay(v) {
     if (!this.#skipUpdate) {
@@ -40,7 +43,6 @@ export default class NumberView extends EditView {
     this.#skipUpdate = false;
   }
   setOptions(options) {
-    // FIX: add min/max
     copyExistingProperties(this.#options, options);
     const {
       step,
