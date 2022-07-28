@@ -36,11 +36,11 @@
 - [x] remove
 - [x] hide
 - [x] fix 'period'. It's stepping by 0.1 and only going to 3.1
-- [ ] camelCase to Camel Case
-- [ ] get rid of min/max/step etc... as setters and add setOptions
+- [ ] camelCase to Camel Case?
+- [x] get rid of min/max/step etc... as setters and add setOptions
 - [ ] interval
 - [ ] radio
-- [ ] scroll wheel
+- [ ] scroll wheel (not sure, opt in?)
 - [ ] add ticks like volume control to direction (rename knob)
 - [x] text red if invalid?
 - [ ] fix editing text (forgot where it's failing)

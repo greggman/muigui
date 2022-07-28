@@ -1,5 +1,6 @@
 import { createElem } from '../libs/elem.js';
 import { strToNumber } from '../libs/conversions.js';
+import { createWheelHelper } from '../libs/wheel.js';
 import { clamp, copyExistingProperties, stepify } from '../libs/utils.js';
 import EditView from './EditView.js';
 
@@ -18,15 +19,24 @@ export default class NumberView extends EditView {
   constructor(setter, options) {
     const setValue = setter.setValue.bind(setter);
     const setFinalValue = setter.setFinalValue.bind(setter);
+    const wheelHelper = createWheelHelper();
     super(createElem('input', {
       type: 'number',
       onInput: () => this.#handleInput(setValue, true),
       onChange: () => this.#handleInput(setFinalValue, false),
+      onWheel: e => {
+        e.preventDefault();
+        const {min, max, step} = this.#options;
+        const delta = wheelHelper(e, step);
+        const v = parseFloat(this.domElement.value);
+        const newV = clamp(stepify(v + delta, v => v, step), min, max);
+        setter.setValue(newV);
+      },
     }));
     this.setOptions(options);
   }
   #handleInput(setFn, skipUpdate) {
-    const [valid, newV] = this.#from(this.domElement.value);
+    const [valid, newV] = this.#from(parseFloat(this.domElement.value));
     let inRange;
     if (valid) {
       const {min, max} = this.#options;

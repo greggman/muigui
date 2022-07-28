@@ -1,5 +1,7 @@
 import { createElem } from '../libs/elem.js';
 import { addTouchEvents } from '../libs/touch.js';
+import { createWheelHelper } from '../libs/wheel.js';
+import { clamp, copyExistingProperties, stepify } from '../libs/utils.js';
 import EditView from './EditView.js';
 
 const svg = `
@@ -15,10 +17,24 @@ const svg = `
 
 export default class DirectionView extends EditView {
   #arrowElem;
+  #lastV;
+  #options = {
+    step: 1,
+    min: -180,
+    max:  180,
+  };
 
   constructor(setter) {
+    const wheelHelper = createWheelHelper();
     super(createElem('div', {
       innerHTML: svg,
+      onWheel: e => {
+        e.preventDefault();
+        const {min, max, step} = this.#options;
+        const delta = wheelHelper(e, step);
+        const newV = clamp(stepify(this.#lastV + delta, v => v, step), min, max);
+        setter.setValue(newV);
+      },
     }));
     addTouchEvents(this.domElement, {
       onMove: (e) => {
@@ -30,7 +46,11 @@ export default class DirectionView extends EditView {
     this.#arrowElem = this.$('#muigui-arrow');
   }
   updateDisplay(v) {
+    this.#lastV = v;
 const angle = v * Math.PI / 180;
     this.#arrowElem.style.transform = `rotate(${angle}rad)`;
+  }
+  setOptions(options) {
+    copyExistingProperties(this.#options, options);
   }
 }

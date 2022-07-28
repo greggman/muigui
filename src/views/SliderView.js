@@ -1,6 +1,7 @@
 import { createElem } from '../libs/elem.js';
 import { addKeyboardEvents } from '../libs/keyboard.js';
 import { addTouchEvents } from '../libs/touch.js';
+import { createWheelHelper } from '../libs/wheel.js';
 import { clamp, copyExistingProperties, stepify } from '../libs/utils.js';
 import EditView from './EditView.js';
 
@@ -97,8 +98,16 @@ export default class SliderView extends EditView {
   };
 
   constructor(setter, options) {
+    const wheelHelper = createWheelHelper();
     super(createElem('div', {
       innerHTML: svg,
+      onWheel: e => {
+        e.preventDefault();
+        const {min, max, step} = this.#options;
+        const delta = wheelHelper(e, step);
+        const newV = clamp(stepify(this.#lastV + delta, v => v, step), min, max);
+        setter.setValue(newV);
+      },
     }));
     this.#svgElem = this.$('svg');
     this.#originElem = this.$('#muigui-origin');
