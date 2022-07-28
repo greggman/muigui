@@ -35,7 +35,7 @@
 - [x] disable
 - [x] remove
 - [x] hide
-- [ ] fix 'period'. It's stepping by 0.1 and only going to 3.1
+- [x] fix 'period'. It's stepping by 0.1 and only going to 3.1
 - [ ] camelCase to Camel Case
 - [ ] get rid of min/max/step etc... as setters and add setOptions
 - [ ] interval

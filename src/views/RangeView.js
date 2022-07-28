@@ -52,6 +52,7 @@ export default class RangeView extends EditView {
     this.#to = to;
     this.#from = from;
     this.#step = step;
+    this.domElement.step = step;
     this.domElement.min = min;
     this.domElement.max = max;
     return this;
