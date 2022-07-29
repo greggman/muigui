@@ -209,7 +209,7 @@ const strToRGBObject = (s) => {
       throw new Error('not {r, g, b}');
     }
     return [true, rgb];
-  } catch(e) {
+  } catch (e) {
     return [false];
   }
 };
@@ -250,11 +250,13 @@ const strTo3Ints = s => {
 };
 
 const strTo3Floats = s => {
-  const v = s.split(',').map(v => parseFloat(v.trim()));
+  const numbers = s.split(',').map(s => s.trim());
+  const v = numbers.map(v => parseFloat(v));
   if (v.length !== 3) {
     return [false];
   }
-  const badNdx = v.findIndex(v => Number.isNaN(v));
+  // Note: using isNaN not Number.isNaN
+  const badNdx = numbers.findIndex(v => isNaN(v));
   return [badNdx < 0, v.map(v => f3(v))];
 };
 
@@ -267,7 +269,7 @@ const strToUint32RGB = s => {
   return [true, parseInt(m[1], 16)];
 };
 
-const hexRE = /^\s*#[a-f0-9]{6}|#[a-f0-9]{3}\s*$/i;
+const hexRE = /^\s*#[a-f0-9]{6}\s*$|^\s*#[a-f0-9]{3}\s*$/i;
 const hexNoHashRE = /^\s*[a-f0-9]{6}\s*$/i;
 
 // For each format converter

@@ -70,14 +70,28 @@ describe('color-utils tests', () => {
     assertEqual(toStr('#456'), '#456');
   });
 
+  it('converts to/from hex6', () => {
+    const {
+      color: {from: fromHex, to: toHex},
+      text: {from: fromStr, to: toStr},
+    } = colorFormatConverters['hex6'];
+    assertEqual(fromHex('#123456'), [true, '#123456']);
+    assertEqual(fromHex('#223355'), [true, '#223355']);
+    assertEqual(toHex('#123456'), '#123456');
+    assertEqual(fromStr(' #123456 '), [true, '#123456']);
+    assertEqual(fromStr(' #123456f '), [false, '#123456f']);
+    assertEqual(toStr('#456789'), '#456789');
+  });
+
   it('converts to/from float-rgb', () => {
     const {
       color: {from: fromHex, to: toHex},
-      text: { from: fromStr, to: toStr},
+      text: {from: fromStr, to: toStr},
     } = colorFormatConverters['float-rgb'];
     assertEqual(fromHex('#123456'), [true, [0.071, 0.204, 0.337]]);
     assertEqual(toHex([0.337, 0.204, 0.071]), '#563412');
     assertEqual(fromStr('0.10 , 12.2301, 1.00'), [true, [0.1, 12.23, 1]]);
+    assertEqual(fromStr('0.10 , 12.2301, 1.00f'), [false, [0.1, 12.23, 1]]);
     assertEqual(toStr([0.12, 0.34, 5.67]), '0.12, 0.34, 5.67');
     assertEqual(toStr(new Float32Array([0.2, 0.9, 0.5])), '0.2, 0.9, 0.5');
   });
