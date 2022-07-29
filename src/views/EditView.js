@@ -80,15 +80,16 @@ export default class EditView extends View {
     }
   }
 
-
   // The point of this is updating DOM elements
   // is slow but if we've called `listen` then
   // every frame we're going to try to update
   // things with the current value so if nothing
   // has changed then skip it.
-  updateDisplayIfNeeded(newV) {
+  updateDisplayIfNeeded(newV, ignoreCache) {
     this.#updateCheck = this.#updateCheck || this.#getUpdateCheckForType(newV);
-    if (this.#updateCheck(newV)) {
+    // Note: We call #updateCheck first because it updates
+    // the cache
+    if (this.#updateCheck(newV) || ignoreCache) {
       this.updateDisplay(newV);
     }
   }

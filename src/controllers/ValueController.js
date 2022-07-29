@@ -33,7 +33,7 @@ export default class ValueController extends LabelController {
     this.updateDisplay();
     return view;
   }
-  setValue(v) {
+  #setValueImpl(v, ignoreCache) {
     if (typeof v === 'object') {
       const dst = this.#object[this.#property];
       // don't replace objects, just their values.
@@ -49,20 +49,22 @@ export default class ValueController extends LabelController {
     } else {
       this.#object[this.#property] = v;
     }
-    this.updateDisplay();
+    this.updateDisplay(ignoreCache);
     this.emitChange(this.getValue(), this.#object, this.#property);
     return this;
   }
+  setValue(v) {
+    this.#setValueImpl(v);
+  }
   setFinalValue(v) {
-    this.setValue(v);
-    this.updateDisplay();
+    this.#setValueImpl(v, true);
     this.emitFinalChange(this.getValue(), this.#object, this.#property);
     return this;
   }
-  updateDisplay() {
+  updateDisplay(ignoreCache) {
     const newV = this.getValue();
     for (const view of this.#views) {
-      view.updateDisplayIfNeeded(newV);
+      view.updateDisplayIfNeeded(newV, ignoreCache);
     }
     return this;
   }

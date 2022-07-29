@@ -40,7 +40,8 @@
 - [x] get rid of min/max/step etc... as setters and add setOptions
 - [ ] interval
 - [ ] radio
-- [ ] scroll wheel (not sure, opt in?)
+- [x] scroll wheel (not sure, opt in?)
+- [ ] make direction roll with min/max?
 - [ ] add ticks like volume control to direction (rename knob)
 - [x] text red if invalid?
 - [ ] fix editing text (forgot where it's failing)
@@ -167,3 +168,13 @@
 
   The second is arguably better than the first? The first is cluttered API, having to add every widget.
   Sadly the `addColor` and `addFolder` are already the expected API 😭
+
+- [ ] Decide what to do about to/from
+
+  DirectionView: pass in what you want
+  NumberView: pass in what you want
+    what if I want hex? (use text view?)
+  SliderView: pass in what you want
+  TextView: ???
+  ColorView: ???
+  Vec2View: pass in what you want

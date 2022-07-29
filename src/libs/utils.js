@@ -43,6 +43,8 @@ export const isArrayOrTypedArray = v => Array.isArray(v) || isTypedArray(v);
 //
 export const stepify = (v, from, step) => Math.round(from(v) / step) / (1 / step);
 
+export const euclideanModulo = (v, n) => ((v % n) + n) % n;
+export const lerp = (a, b, t) => a + (b - a) * t;
 export function copyExistingProperties(dst, src) {
   for (const key in src) {
     if (key in dst) {

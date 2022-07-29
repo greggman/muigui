@@ -18,10 +18,11 @@ export function computeRelativePosition(elem, event, start) {
 export function addTouchEvents(elem, {onDown = noop, onMove = noop, onUp = noop}) {
   let start;
   const mouseMove = function(event) {
-    onMove({
+    const e = {
       type: 'move',
       ...computeRelativePosition(elem, event, start),
-    });
+    };
+    onMove(e);
   };
 
   const mouseUp = function() {

@@ -139,8 +139,8 @@ if (true) {
     gui.addController(new RadioGrid(s, 'dessert', {keyValues: ['Cake', 'Pie', 'Ice Cream', 'Cupcake', 'Brownie'], cols: 2})).listen();
     gui.addController(new Select(s, 'viscosity', {keyValues: [['Slow', 0.1], ['Medium', 0.5], ['Fast', 1.0]]}));
     gui.addController(new Select(s, 'shoes', {keyValues: {'Loafers': 0, 'Sandals': 1, 'Sneakers': 2}}));
-    gui.addColor(s, 'background').onChange((e) => {
-      document.body.style.backgroundColor = e.value;
+    gui.addColor(s, 'background').onChange((v) => {
+      document.body.style.backgroundColor = v;
     }).listen();
     gui.add(s, 'show', {name: 'Show Current Values'});
 

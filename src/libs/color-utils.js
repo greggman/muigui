@@ -301,64 +301,104 @@ const hexNoHashRE = /^\s*[a-f0-9]{6}\s*$/i;
 //    )
 export const colorFormatConverters = {
   'hex6': {
-    fromHex: v => [true, v],
-    toHex: fixHex6,
-    fromStr: v => [hexRE.test(v), v.trim()],
-    toStr: v => v,
+    color: {
+      from: v => [true, v],
+      to: fixHex6,
+    },
+    text: {
+      from: v => [hexRE.test(v), v.trim()],
+      to: v => v,
+    },
   },
   'hex3': {
-    fromHex: v => [true, fixHex3(v)],
-    toHex: hex3ToHex6,
-    fromStr: v => [hexRE.test(v), hex6ToHex3(v.trim())],
-    toStr: v => v,
+    color: {
+      from: v => [true, fixHex3(v)],
+      to: hex3ToHex6,
+    },
+    text: {
+      from: v => [hexRE.test(v), hex6ToHex3(v.trim())],
+      to: v => v,
+    },
   },
   'hex6-no-hash': {
-    fromHex: v => [true, v.substring(1)],
-    toHex: v => `#${fixHex6(v)}`,
-    fromStr: v => [hexNoHashRE.test(v), v.trim()],
-    toStr: v => v,
+    color: {
+      from: v => [true, v.substring(1)],
+      to: v => `#${fixHex6(v)}`,
+    },
+    text: {
+      from: v => [hexNoHashRE.test(v), v.trim()],
+      to: v => v,
+    },
   },
   'hex3-no-hash': {
-    fromHex: v => [true, fixHex3(v).substring(1)],
-    toHex: hex3ToHex6,
-    fromStr: v => [hexNoHashRE.test(v), hex6ToHex3(v.trim())],
-    toStr: v => v,
+    color: {
+      from: v => [true, fixHex3(v).substring(1)],
+      to: hex3ToHex6,
+    },
+    text: {
+      from: v => [hexNoHashRE.test(v), hex6ToHex3(v.trim())],
+      to: v => v,
+    },
   },
   'uint32-rgb': {
-    fromHex: v => [true, hexToUint32RGB(v)],
-    toHex: uint32RGBToHex,
-    fromStr: v => strToUint32RGB(v),
-    toStr: v => `0x${v.toString(16).padStart(6, '0')}`,
+    color: {
+      from: v => [true, hexToUint32RGB(v)],
+      to: uint32RGBToHex,
+    },
+    text: {
+      from: v => strToUint32RGB(v),
+      to: v => `0x${v.toString(16).padStart(6, '0')}`,
+    },
   },
   'uint8-rgb': {
-    fromHex: v => [true, hexToUint8RGB(v)],
-    toHex: uint8RGBToHex,
-    fromStr: strTo3Ints,
-    toStr: v => v.join(', '),
+    color: {
+      from: v => [true, hexToUint8RGB(v)],
+      to: uint8RGBToHex,
+    },
+    text: {
+      from: strTo3Ints,
+      to: v => v.join(', '),
+    },
   },
   'float-rgb': {
-    fromHex: v => [true, hexToFloatRGB(v)],
-    toHex: floatRGBToHex,
-    fromStr: strTo3Floats,
-    // We need Array.from because map of Float32Array makes a Float32Array
-    toStr: v => Array.from(v).map(v => f3(v)).join(', '),
+    color: {
+      from: v => [true, hexToFloatRGB(v)],
+      to: floatRGBToHex,
+    },
+    text: {
+      from: strTo3Floats,
+      // need Array.from because map of Float32Array makes a Float32Array
+      to: v => Array.from(v).map(v => f3(v)).join(', '),
+    },
   },
   'object-rgb': {
-    fromHex: v => [true, hexToObjectRGB(v)],
-    toHex: objectRGBToHex,
-    fromStr: strToRGBObject,
-    toStr: rgbObjectToStr,
+    color: {
+      from: v => [true, hexToObjectRGB(v)],
+      to: objectRGBToHex,
+    },
+    text: {
+      from: strToRGBObject,
+      to: rgbObjectToStr,
+    },
   },
   'css-rgb': {
-    fromHex: v => [true, hexToCssRGB(v)],
-    toHex: cssRGBToHex,
-    fromStr: strToCssRGB,
-    toStr: v => strToCssRGB(v)[1],
+    color: {
+      from: v => [true, hexToCssRGB(v)],
+      to: cssRGBToHex,
+    },
+    text: {
+      from: strToCssRGB,
+      to: v => strToCssRGB(v)[1],
+    },
   },
   'css-hsl': {
-    fromHex: v => [true, hexToCssHSL(v)],
-    toHex: cssHSLToHex,
-    fromStr: strToCssHSL,
-    toStr: v => strToCssHSL(v)[1],
+    color: {
+      from: v => [true, hexToCssHSL(v)],
+      to: cssHSLToHex,
+    },
+    text: {
+      from: strToCssHSL,
+      to: v => strToCssHSL(v)[1],
+    },
   },
 };
