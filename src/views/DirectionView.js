@@ -10,8 +10,8 @@ import EditView from './EditView.js';
 
 const svg = `
 <svg tabindex="0" viewBox="-32 -32 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;">
-    <circle id="muigui-outline" cx="0" cy="0" r="28.871" class="muigui-direction-circle"/>
-    <path id="muigui-range" style="fill: var(--bg-color);"/>
+    <!--<circle id="muigui-outline" cx="0" cy="0" r="28.871" class="muigui-direction-circle"/>-->
+    <path id="muigui-range" class="muigui-direction-range" />
     <g id="muigui-arrow">
         <g transform="translate(-32, -32)">
           <path d="M31.029,33.883c-1.058,-0.007 -1.916,-0.868 -1.916,-1.928c0,-1.065 0.864,-1.929 1.929,-1.929c0.204,0 0.401,0.032 0.586,0.091l14.729,-0l0,-2.585l12.166,4.468l-12.166,4.468l0,-2.585l-15.315,0l-0.013,0Z" class="muigui-direction-arrow"/>
@@ -30,7 +30,7 @@ function getEllipsePointForAngle(cx, cy, rx, ry, phi, theta) {
   ];
 }
 
-function getEndpointParameters(cx, cy, rx, ry, phi, theta, dTheta) {  
+function getEndpointParameters(cx, cy, rx, ry, phi, theta, dTheta) {
   const [x1, y1] = getEllipsePointForAngle(cx, cy, rx, ry, phi, theta);
   const [x2, y2] = getEllipsePointForAngle(cx, cy, rx, ry, phi, theta + dTheta);
 
@@ -42,10 +42,8 @@ function getEndpointParameters(cx, cy, rx, ry, phi, theta, dTheta) {
 
 function arc(cx, cy, r, start, end) {
   const { x1, y1, x2, y2, fa, fs } = getEndpointParameters(cx, cy, r, r, 0, start, end - start);
-  return `M${cx} ${cy} L${x1} ${y1} A ${r} ${r} 0 ${fa} ${fs} ${x2} ${y2}`;
+  return `M${cx} ${cy} L${x1} ${y1} A ${r} ${r} 0 ${fa} ${fs} ${x2} ${y2} L${cx} ${cy}`;
 }
-
-
 
 const twoPiMod = v => euclideanModulo(v + Math.PI, Math.PI * 2) - Math.PI;
 
@@ -97,6 +95,7 @@ export default class DirectionView extends EditView {
   constructor(setter, options = {}) {
     const wheelHelper = createWheelHelper();
     super(createElem('div', {
+      className: 'muigui-direction',
       innerHTML: svg,
       onWheel: e => {
         e.preventDefault();
@@ -156,6 +155,6 @@ export default class DirectionView extends EditView {
        : Math.abs(dirMin - dirMax) >= Math.PI * 2 - Number.EPSILON;
     assert(Math.abs(dirMax - dirMin) <= Math.PI * 2);
     const [min, max] = dirMin < dirMax ? [dirMin, dirMax] : [dirMax , dirMin];
-    this.#rangeElem.setAttribute('d', arc(0, 0, 28.87, max, min));
+    this.#rangeElem.setAttribute('d', arc(0, 0, 28.87, min, max));
   }
 }

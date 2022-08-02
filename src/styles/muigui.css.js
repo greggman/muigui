@@ -89,7 +89,7 @@ const css = `
 .muigui canvas,
 .muigui svg {
   display: block;
-  background-color: var(--value-bg-color);
+  gbackground-color: var(--bg-color);
   border-radius: var(--border-radius);
 }
 
@@ -441,20 +441,32 @@ const css = `
 /* ------ [ direction ] ------ */
 
 .muigui-direction svg {
-  background-color: var(--bg-color);
+  background-color: rgba(0,0,0,0.2);
 }
 
 .muigui-direction-circle {
   stroke-width: 3px;
-  fill: var(--value-bg-color);
+  gfill: var(--value-bg-color);
 }
 .muigui-direction:focus-within svg {
   outline: none;
 }
+.muigui-direction-range {
+  fill: var(--value-bg-color);
+}
+.muigui-direction svg:focus {
+  outline: none;
+}
+.muigui-direction svg:focus .muigui-direction-range {
+  stroke-width: 1px;
+  stroke: var(--focus-color);
+}
+/*
 .muigui-direction svg:focus .muigui-direction-circle {
   stroke-width: 1px;
   stroke: var(--focus-color);
 }
+*/
 .muigui-direction-arrow {
   fill: var(--value-color);
 }
