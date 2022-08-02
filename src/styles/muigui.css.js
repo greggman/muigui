@@ -212,6 +212,31 @@ const css = `
   overflow: hidden;
 }
 
+/* ---- popdown ---- */
+
+.muigui-pop-down-top {
+  display: flex;
+}
+
+.muigui-pop-down-bottom {
+
+}
+
+.muigui-pop-down-values {
+  min-width: 0;
+  display: flex;
+}
+.muigui-pop-down-values>* {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.muigui-value.muigui-pop-down-controller {
+  flex-direction: column;
+}
+
+/* ---- select ---- */
+
 .muigui select,
 .muigui option,
 .muigui input,

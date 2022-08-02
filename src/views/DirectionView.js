@@ -1,5 +1,6 @@
 import { identity } from '../libs/conversions.js';
 import { createElem } from '../libs/elem.js';
+import { addKeyboardEvents } from '../libs/keyboard.js';
 import { addTouchEvents } from '../libs/touch.js';
 import { createWheelHelper } from '../libs/wheel.js';
 import { clamp, copyExistingProperties, euclideanModulo, lerp, stepify } from '../libs/utils.js';
@@ -19,19 +20,32 @@ const svg = `
 </svg>
 `;
 
-const pointOnCircle = (x, y, r, a) => ({
-  x: x + r * Math.cos(a),
-  y: y + r * Math.sin(a),
-});
+function getEllipsePointForAngle(cx, cy, rx, ry, phi, theta) {
+  const m = Math.abs(rx) * Math.cos(theta);
+  const n = Math.abs(ry) * Math.sin(theta);
 
-function arc(x, y, r, start, end){
-  const s = pointOnCircle(x, y, r, end);
-  const e = pointOnCircle(x, y, r, start);
-
-  const largeArcFlag = e - s <= Math.PI ? '0' : '1';
-
-  return `M ${x},${y} L${s.x} ${s.y} A${r} ${r} 0 ${largeArcFlag} 0 ${e.x} ${e.y} Z`;
+  return [
+    cx + Math.cos(phi) * m - Math.sin(phi) * n,
+    cy + Math.sin(phi) * m + Math.cos(phi) * n,
+  ];
 }
+
+function getEndpointParameters(cx, cy, rx, ry, phi, theta, dTheta) {  
+  const [x1, y1] = getEllipsePointForAngle(cx, cy, rx, ry, phi, theta);
+  const [x2, y2] = getEllipsePointForAngle(cx, cy, rx, ry, phi, theta + dTheta);
+
+  const fa = Math.abs(dTheta) > Math.PI ? 1 : 0;
+  const fs = dTheta > 0 ? 1 : 0;
+
+  return { x1, y1, x2, y2, fa, fs };
+}
+
+function arc(cx, cy, r, start, end) {
+  const { x1, y1, x2, y2, fa, fs } = getEndpointParameters(cx, cy, r, r, 0, start, end - start);
+  return `M${cx} ${cy} L${x1} ${y1} A ${r} ${r} 0 ${fa} ${fs} ${x2} ${y2}`;
+}
+
+
 
 const twoPiMod = v => euclideanModulo(v + Math.PI, Math.PI * 2) - Math.PI;
 
@@ -62,8 +76,8 @@ export default class DirectionView extends EditView {
       \   π/2  /
        --------
     */
-    //dirMin: -Math.PI,
-    //dirMax:  Math.PI,
+    dirMin: -Math.PI,
+    dirMax:  Math.PI,
     //dirMin: Math.PI * 0.5,
     //dirMax: Math.PI * 2.5,
     //dirMin: -Math.PI * 0.75,  // test 10:30 to 7:30
@@ -74,8 +88,8 @@ export default class DirectionView extends EditView {
     //dirMax: -Math.PI * 0.25,
     //dirMin:  Math.PI * 0.25,   // test 4:30 to 7:30
     //dirMax:  Math.PI * 0.75,
-    dirMin:  Math.PI * 0.75,   // test 4:30 to 7:30
-    dirMax:  Math.PI * 0.25,
+    //dirMin:  Math.PI * 0.75,   // test 4:30 to 7:30
+    //dirMax:  Math.PI * 0.25,
     wrap: undefined,
     converters: identity,
   };
@@ -115,6 +129,13 @@ export default class DirectionView extends EditView {
     addTouchEvents(this.domElement, {
       onDown: handleTouch,
       onMove: handleTouch,
+    });
+    addKeyboardEvents(this.domElement, {
+      onDown: (e) => {
+        const {min, max, step} = this.#options;
+        const newV = clamp(stepify(this.#lastV + e.dx * step, v => v, step), min, max);
+        setter.setValue(newV);
+      },
     });
     this.#arrowElem = this.$('#muigui-arrow');
     this.#rangeElem = this.$('#muigui-range');

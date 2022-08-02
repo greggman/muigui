@@ -4,10 +4,11 @@ export function onResize(elem, callback) {
   }).observe(elem);
 }
 
-export function onResizeSVGNoScale(elem, callback) {
+export function onResizeSVGNoScale(elem, hAnchor, vAnchor, callback) {
   onResize(elem, ({rect}) => {
     const {width, height} = rect;
-    elem.setAttribute('viewBox', `-${width / 2} -${height / 2} ${width} ${height}`);
+console.log('resize svg: ', elem.parentElement.parentElement.className, width, height);
+    elem.setAttribute('viewBox', `-${width * hAnchor} -${height * vAnchor} ${width} ${height}`);
     callback({elem, rect});
   });
 }

@@ -1,5 +1,8 @@
+import { removeArrayElem } from '../libs/utils.js';
+
 export default class View {
   #childDestElem;
+  #views = [];
 
   constructor(elem) {
     this.domElement = elem;
@@ -7,6 +10,10 @@ export default class View {
   }
   addElem(elem) {
     this.#childDestElem.appendChild(elem);
+    return elem;
+  }
+  removeElem(elem) {
+    this.#childDestElem.removeChild(elem);
     return elem;
   }
   pushSubElem(elem) {
@@ -17,7 +24,13 @@ export default class View {
     this.#childDestElem = this.#childDestElem.parentElement;
   }
   add(view) {
+    this.#views.push(view);
     this.addElem(view.domElement);
+    return view;
+  }
+  remove(view) {
+    this.removeElem(view.domElement);
+    removeArrayElem(this.#views, view);
     return view;
   }
   pushSubView(view) {
@@ -25,6 +38,17 @@ export default class View {
   }
   popSubView() {
     this.popSubElem();
+  }
+  setOptions(options) {
+    for (const view of this.#views) {
+      view.setOptions(options);
+    }
+  }
+  updateDisplayIfNeeded(newV, ignoreCache) {
+    for (const view of this.#views) {
+      view.updateDisplayIfNeeded(newV, ignoreCache);
+    }
+    return this;
   }
   $(selector) {
     return this.domElement.querySelector(selector);

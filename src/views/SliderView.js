@@ -2,6 +2,7 @@ import { createElem } from '../libs/elem.js';
 import { addKeyboardEvents } from '../libs/keyboard.js';
 import { addTouchEvents } from '../libs/touch.js';
 import { createWheelHelper } from '../libs/wheel.js';
+import { onResizeSVGNoScale } from '../libs/resize-helpers.js';
 import { clamp, copyExistingProperties, stepify } from '../libs/utils.js';
 import EditView from './EditView.js';
 
@@ -135,19 +136,13 @@ export default class SliderView extends EditView {
         setter.setValue(newV);
       },
     });
-    new ResizeObserver(() => {
-      const {width, height} = this.#svgElem.getBoundingClientRect();
-      if (this.#width !== width || this.#height !== height) {
-        this.#width = width;
-        this.#height = height;
-        const viewBox = `${-width / 2 | 0} 0 ${width | 0} ${height | 0}`;
-        this.#leftGradElem.setAttribute('x', -width / 2);
-        this.#rightGradElem.setAttribute('x', width / 2 - 20);
-        this.#svgElem.setAttribute('viewBox', viewBox);
-        this.#minusSize = computeSizeOfMinus(this.#numbersElem);
-        this.#updateSlider();
-      }
-    }).observe(this.#svgElem);
+    onResizeSVGNoScale(this.#svgElem, 0.5, 0, ({rect: {width}}) => {
+      this.#leftGradElem.setAttribute('x', -width / 2);
+      this.#rightGradElem.setAttribute('x', width / 2 - 20);
+      this.#minusSize = computeSizeOfMinus(this.#numbersElem);
+      this.#width = width;
+      this.#updateSlider();
+    });
   }
   // |--------V--------|
   // . . | . . . | . . . |

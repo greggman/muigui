@@ -1,7 +1,7 @@
 import GridView from '../views/GridView.js';
 import NumberView from '../views/NumberView.js';
 import Vec2View from '../views/Vec2View.js';
-import ValueController from './ValueController.js';
+import PopDownController from './PopDownController.js';
 import { strToNumber } from '../libs/conversions.js';
 
 // TODO: zoom with wheel and pinch?
@@ -13,11 +13,9 @@ import { strToNumber } from '../libs/conversions.js';
 //   xRange:
 // deg/rad/turn
 
-export default class Vec2 extends ValueController {
+export default class Vec2 extends PopDownController {
   constructor(object, property) {
     super(object, property, 'muigui-vec2');
-    this.add(new Vec2View(this));
-    this.pushSubView(new GridView(2));
 
     const makeSetter = (ndx) => {
       return {
@@ -34,19 +32,19 @@ export default class Vec2 extends ValueController {
       };
     };
 
-    this.add(new NumberView(makeSetter(0), {
+    this.addTop(new NumberView(makeSetter(0), {
       converters: {
         to: v => v[0],
         from: strToNumber.from,
       },
     }));
-    this.add(new NumberView(makeSetter(1), {
+    this.addTop(new NumberView(makeSetter(1), {
       converters: {
         to: v => v[1],
         from: strToNumber.from,
       },
     }));
-    this.popSubView();
+    this.addBottom(new Vec2View(this));
     this.updateDisplay();
   }
 }

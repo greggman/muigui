@@ -1,12 +1,12 @@
-import ValueController from './ValueController.js';
 import ColorChooserView from '../views/ColorChooserView.js';
 import TextView from '../views/TextView.js';
+import PopDownController from './PopDownController.js';
 
-export default class ColorChooser extends ValueController {
+export default class ColorChooser extends PopDownController {
   constructor(object, property) {
     super(object, property, 'muigui-color-chooser');
-    this.add(new ColorChooserView(this));
-    this.add(new TextView(this));
+    this.addTop(new TextView(this));
+    this.addBottom(new ColorChooserView(this));
     this.updateDisplay();
   }
 }

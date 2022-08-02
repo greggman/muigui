@@ -1,0 +1,53 @@
+<style>
+  :root {
+    color-scheme: light dark;
+  }
+  #ui {
+    columns: 250px;
+    column-gap: 10px;
+    orphans: 1;
+    widows: 1;
+    grid-column: 1 / -1;
+  }
+</style>
+<body>
+  <div id="ui"></div>
+</body>
+<script type="module">
+import {GUI} from '../../src/muigui.js';
+import Direction from '../../src/controllers/Direction.js';
+
+const s = {
+  direction: 75,
+};
+
+const root = document.querySelector('#ui');
+
+function makeGUI() {
+  const div = document.createElement('div');
+  root.appendChild(div);
+  return new GUI(div);
+}
+
+{
+  const gui = makeGUI();
+  gui.addController(new Direction(s, 'direction')).listen();
+}
+
+const num = 32;
+for (let i = 0; i < num; ++i) {
+  const l = i / num;
+  const start = l * Math.PI * 2;
+  //makeArc(ctx, s / 2, s /2, s / 2.2, start, start + Math.PI * 0.3);
+  //makeArc(ctx, s / 2, s /2, s / 2.2, start, start + Math.PI * 1.7);
+
+  {
+    const gui = makeGUI();
+    gui.addController(new Direction(s, 'direction', { dirMin: start, dirMax: start + Math.PI * 0.3})).listen();
+  }
+  {
+    const gui = makeGUI();
+    gui.addController(new Direction(s, 'direction', { dirMin: start, dirMax: start + Math.PI * 1.7})).listen();
+  }
+}
+</script>

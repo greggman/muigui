@@ -17,26 +17,35 @@ export default class Vec2View extends EditView {
   #svgElem;
   #arrowElem;
   #circleElem;
+  #lastV = [];
 
   constructor(setter) {
     super(createElem('div', {
       innerHTML: svg,
     }));
+    const onTouch = (e) => {
+      const {width, height} = this.#svgElem.getBoundingClientRect();
+      const nx = e.nx * 2 - 1;
+      const ny = e.ny * 2 - 1;
+      setter.setValue([nx * width * 0.5, ny * height * 0.5]);
+    };
     addTouchEvents(this.domElement, {
-      onMove: (e) => {
-        const nx = e.nx * 2 - 1;
-        const ny = e.ny * 2 - 1;
-        setter.setValue([nx * 32, ny * 32]);
-      },
+      onDown: onTouch,
+      onMove: onTouch,
     });
     this.#svgElem = this.$('svg');
     this.#arrowElem = this.$('#muigui-arrow');
     this.#circleElem = this.$('#muigui-circle');
-    onResizeSVGNoScale(this.#svgElem, () => this.updateDisplay);
+    onResizeSVGNoScale(this.#svgElem, 0.5, 0.5, () => this.#updateDisplayImpl);
   }
-  updateDisplay(v) {
-    const [x, y] = v;
+  #updateDisplayImpl() {
+    const [x, y] = this.#lastV;
     this.#arrowElem.setAttribute('d', `M0,0L${x},${y}`);
     this.#circleElem.setAttribute('transform', `translate(${x}, ${y})`);
+  }
+  updateDisplay(v) {
+    this.#lastV[0] = v[0];
+    this.#lastV[1] = v[1];
+    this.#updateDisplayImpl();
   }
 }
