@@ -7,7 +7,6 @@ export function onResize(elem, callback) {
 export function onResizeSVGNoScale(elem, hAnchor, vAnchor, callback) {
   onResize(elem, ({rect}) => {
     const {width, height} = rect;
-console.log('resize svg: ', elem.parentElement.parentElement.className, width, height);
     elem.setAttribute('viewBox', `-${width * hAnchor} -${height * vAnchor} ${width} ${height}`);
     callback({elem, rect});
   });

@@ -89,8 +89,10 @@ const css = `
 .muigui canvas,
 .muigui svg {
   display: block;
-  gbackground-color: var(--bg-color);
   border-radius: var(--border-radius);
+}
+.muigui canvas {
+  background-color: var(--value-bg-color);
 }
 
 .muigui-controller {
@@ -184,17 +186,17 @@ const css = `
 /* fix! */
 .muigui-open>button>label::before,
 .muigui-closed>button>label::before {
-  width: 1.5em;
+  width: 1.25em;
   height: var(--line-height);
   display: inline-grid;
-  place-content: center;
+  place-content: center start;
   pointer-events: none;
 }
 .muigui-open>button>label::before {
-  content: "▼";
+  content: "ⓧ"; /*"▼";*/
 }
 .muigui-closed>button>label::before {
-  content: "▶";
+  content: "⨁"; /*"▶";*/
 }
 .muigui-open>*:nth-child(2) {
   transition: max-height 0.2s ease-out,
@@ -234,6 +236,44 @@ const css = `
 .muigui-value.muigui-pop-down-controller {
   flex-direction: column;
 }
+
+.muigui-pop-down-top input[type=checkbox] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: auto;
+  color: var(--value-color);
+  background-color: var(--value-bg-color);
+  cursor: pointer;
+
+  display: grid;
+  place-content: center;
+  margin: 0;
+  font: inherit;
+  color: currentColor;
+  width: 1.7em;
+  height: 1.7em;
+  transform: translateY(-0.075em);
+}
+
+.muigui-pop-down-top input[type=checkbox]::before {
+  content: "+";
+  display: grid;
+  place-content: center;
+  border-radius: calc(var(--border-radius) + 2px);
+  border-left: 1px solid rgba(255,255,255,0.3);
+  border-top: 1px solid rgba(255,255,255,0.3);
+  border-bottom: 1px solid rgba(0,0,0,0.2);
+  border-right: 1px solid rgba(0,0,0,0.2);
+  background-color: var(--range-color);
+  color: var(--value-bg-color);
+  width: calc(var(--line-height) - 4px);
+  height: calc(var(--line-height) - 4px);
+}
+
+.muigui-pop-down-top input[type=checkbox]:checked::before {
+  content: "Ｘ";
+}
+
 
 /* ---- select ---- */
 
@@ -444,10 +484,6 @@ const css = `
   background-color: rgba(0,0,0,0.2);
 }
 
-.muigui-direction-circle {
-  stroke-width: 3px;
-  gfill: var(--value-bg-color);
-}
 .muigui-direction:focus-within svg {
   outline: none;
 }
@@ -458,15 +494,10 @@ const css = `
   outline: none;
 }
 .muigui-direction svg:focus .muigui-direction-range {
-  stroke-width: 1px;
+  stroke-width: 0.5px;
   stroke: var(--focus-color);
 }
-/*
-.muigui-direction svg:focus .muigui-direction-circle {
-  stroke-width: 1px;
-  stroke: var(--focus-color);
-}
-*/
+
 .muigui-direction-arrow {
   fill: var(--value-color);
 }

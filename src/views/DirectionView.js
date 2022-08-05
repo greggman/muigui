@@ -1,12 +1,11 @@
 import { identity } from '../libs/conversions.js';
 import { createElem } from '../libs/elem.js';
 import { addKeyboardEvents } from '../libs/keyboard.js';
+import { arc } from '../libs/svg.js';
 import { addTouchEvents } from '../libs/touch.js';
 import { createWheelHelper } from '../libs/wheel.js';
 import { clamp, copyExistingProperties, euclideanModulo, lerp, stepify } from '../libs/utils.js';
 import EditView from './EditView.js';
-
-// TODO: make focus outline go around out of range area
 
 const svg = `
 <svg tabindex="0" viewBox="-32 -32 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;">
@@ -20,38 +19,7 @@ const svg = `
 </svg>
 `;
 
-function getEllipsePointForAngle(cx, cy, rx, ry, phi, theta) {
-  const m = Math.abs(rx) * Math.cos(theta);
-  const n = Math.abs(ry) * Math.sin(theta);
-
-  return [
-    cx + Math.cos(phi) * m - Math.sin(phi) * n,
-    cy + Math.sin(phi) * m + Math.cos(phi) * n,
-  ];
-}
-
-function getEndpointParameters(cx, cy, rx, ry, phi, theta, dTheta) {
-  const [x1, y1] = getEllipsePointForAngle(cx, cy, rx, ry, phi, theta);
-  const [x2, y2] = getEllipsePointForAngle(cx, cy, rx, ry, phi, theta + dTheta);
-
-  const fa = Math.abs(dTheta) > Math.PI ? 1 : 0;
-  const fs = dTheta > 0 ? 1 : 0;
-
-  return { x1, y1, x2, y2, fa, fs };
-}
-
-function arc(cx, cy, r, start, end) {
-  const { x1, y1, x2, y2, fa, fs } = getEndpointParameters(cx, cy, r, r, 0, start, end - start);
-  return `M${cx} ${cy} L${x1} ${y1} A ${r} ${r} 0 ${fa} ${fs} ${x2} ${y2} L${cx} ${cy}`;
-}
-
 const twoPiMod = v => euclideanModulo(v + Math.PI, Math.PI * 2) - Math.PI;
-
-function assert(truthy, msg = '') {
-  if (!truthy) {
-    throw new Error(msg);
-  }
-}
 
 export default class DirectionView extends EditView {
   #arrowElem;
@@ -153,7 +121,6 @@ export default class DirectionView extends EditView {
     this.#wrap = wrap !== undefined
        ? wrap
        : Math.abs(dirMin - dirMax) >= Math.PI * 2 - Number.EPSILON;
-    assert(Math.abs(dirMax - dirMin) <= Math.PI * 2);
     const [min, max] = dirMin < dirMax ? [dirMin, dirMax] : [dirMax , dirMin];
     this.#rangeElem.setAttribute('d', arc(0, 0, 28.87, min, max));
   }

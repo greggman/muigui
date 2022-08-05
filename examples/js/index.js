@@ -174,26 +174,28 @@ if (true) {
       resizeCanvasToDisplaySize(ctx.canvas, res);
       const width = ctx.canvas.width / res;
       const height = ctx.canvas.height / res;
-      ctx.save();
-      ctx.scale(res, res);
-      ctx.globalCompositeOperation = 'copy';
-      ctx.drawImage(
-          ctx.canvas,
-          1 * res, 0, (width - 1) * res, height * res,
-          0, 0, width - 1, height);
-      ctx.clearRect(width - 1, 0, 1, height);
-      ctx.globalCompositeOperation = 'source-over';
-      ctx.strokeStyle = uiColors.color;
-      const s1 = Math.sin(lTime1 * 0.01);
-      const s2 = Math.sin(lTime2 * 0.01);
-      const newY = height / 2 + (s1 + s2) * (height - 1) / 4;
-      ctx.beginPath();
-      ctx.lineTo(width - 2, lastY);
-      ctx.lineTo(width - 1, newY);
-      ctx.stroke();
-      //ctx.fillRect(width - 1, Math.min(lastY, newY), 1, Math.abs(lastY - newY) + 1);
-      ctx.restore();
-      lastY = newY;
+      if (width && height) {
+        ctx.save();
+        ctx.scale(res, res);
+        ctx.globalCompositeOperation = 'copy';
+        ctx.drawImage(
+            ctx.canvas,
+            1 * res, 0, (width - 1) * res, height * res,
+            0, 0, width - 1, height);
+        ctx.clearRect(width - 1, 0, 1, height);
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.strokeStyle = uiColors.color;
+        const s1 = Math.sin(lTime1 * 0.01);
+        const s2 = Math.sin(lTime2 * 0.01);
+        const newY = height / 2 + (s1 + s2) * (height - 1) / 4;
+        ctx.beginPath();
+        ctx.lineTo(width - 2, lastY);
+        ctx.lineTo(width - 1, newY);
+        ctx.stroke();
+        //ctx.fillRect(width - 1, Math.min(lastY, newY), 1, Math.abs(lastY - newY) + 1);
+        ctx.restore();
+        lastY = newY;
+      }
       requestAnimationFrame(draw);
     }
     requestAnimationFrame(draw);
@@ -405,45 +407,47 @@ if (true) {
 
     const width = ctx.canvas.width / res;
     const height = ctx.canvas.height / res;
-    ctx.save();
-    ctx.scale(res, res);
-    ctx.globalCompositeOperation = 'copy';
-    ctx.drawImage(
-        ctx.canvas,
-        res, 0, (width - 1) * res, height * res,
-        0, 0, width - 1, height);
-    ctx.globalCompositeOperation = 'source-over';
-    const x = width - 1;
-    ctx.fillStyle = ticks % 16 === 0 ? uiColors.menuSepColor : uiColors.menuBgColor;
-    ctx.fillRect(x, 0, 1, height);
-    ctx.fillStyle = uiColors.menuSepColor;
-    for (let y = 8; y < height; y += 16) {
-      ctx.fillRect(x, y, 1, 1);
-    }
-    for (let i = 0; i < controllers.length; ++i) {
-      const l = i / controllers.length;
-      const scale = s.separate ? 1 / controllers.length : 1;
+    if (width && height) {
       ctx.save();
-      if (s.separate) {
-        ctx.translate(0, l * height);
-        ctx.scale(1, scale);
+      ctx.scale(res, res);
+      ctx.globalCompositeOperation = 'copy';
+      ctx.drawImage(
+          ctx.canvas,
+          res, 0, (width - 1) * res, height * res,
+          0, 0, width - 1, height);
+      ctx.globalCompositeOperation = 'source-over';
+      const x = width - 1;
+      ctx.fillStyle = ticks % 16 === 0 ? uiColors.menuSepColor : uiColors.menuBgColor;
+      ctx.fillRect(x, 0, 1, height);
+      ctx.fillStyle = uiColors.menuSepColor;
+      for (let y = 8; y < height; y += 16) {
+        ctx.fillRect(x, y, 1, 1);
       }
-      times[i] += elapsedTime * periods[i];
-      const sine = Math.sin(times[i] * 0.01);
-      const lastY = lastYs[i];
-      const newY = height / 2 + sine * (height - 2) / 2;
+      for (let i = 0; i < controllers.length; ++i) {
+        const l = i / controllers.length;
+        const scale = s.separate ? 1 / controllers.length : 1;
+        ctx.save();
+        if (s.separate) {
+          ctx.translate(0, l * height);
+          ctx.scale(1, scale);
+        }
+        times[i] += elapsedTime * periods[i];
+        const sine = Math.sin(times[i] * 0.01);
+        const lastY = lastYs[i];
+        const newY = height / 2 + sine * (height - 2) / 2;
 
-      ctx.strokeStyle = hsl(l, 1, 0.7);
-      ctx.beginPath();
-      ctx.lineWidth = 2;
-      ctx.lineTo(x - 1, lastY);
-      ctx.lineTo(x, newY);
-      ctx.stroke();
-      //ctx.fillRect(x, Math.min(lastY, newY), 1, Math.abs(lastY - newY) + 1 / scale);
-      lastYs[i] = newY;
+        ctx.strokeStyle = hsl(l, 1, 0.7);
+        ctx.beginPath();
+        ctx.lineWidth = 2;
+        ctx.lineTo(x - 1, lastY);
+        ctx.lineTo(x, newY);
+        ctx.stroke();
+        //ctx.fillRect(x, Math.min(lastY, newY), 1, Math.abs(lastY - newY) + 1 / scale);
+        lastYs[i] = newY;
+        ctx.restore();
+      }
       ctx.restore();
     }
-    ctx.restore();
     requestAnimationFrame(draw);
   }
   requestAnimationFrame(draw);

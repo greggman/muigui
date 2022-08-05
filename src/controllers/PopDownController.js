@@ -1,7 +1,8 @@
 import ElementView from '../views/ElementView.js';
 import ValueController from './ValueController.js';
 import CheckboxView from '../views/CheckboxView.js';
-
+import { copyExistingProperties } from '../libs/utils.js';
+import { createElem } from '../libs/elem.js';
 /*
 
 holder = new TabHolder
@@ -41,9 +42,9 @@ export default class PopDownController extends ValueController {
   #top;
   #valuesView;
   #bottom;
-  #open = {open: false};
+  #options = {open: false};
 
-  constructor(object, property) {
+  constructor(object, property, options = {}) {
     super(object, property, 'muigui-pop-down-controller');
     /*
     [ValueView
@@ -52,9 +53,27 @@ export default class PopDownController extends ValueController {
     ]
     */
     this.#top = this.add(new ElementView('div', 'muigui-pop-down-top'));
-    this.#top.add(this.add(new CheckboxView(makeSetter(this.#open, 'open'))));
+//    this.#top.add(new CheckboxView(makeSetter(this.#options, 'open')));
+    const checkboxElem = this.#top.addElem(createElem('input', {
+      type: 'checkbox',
+      onChange: () => {
+        this.#options.open = checkboxElem.checked;
+      },
+    }));
     this.#valuesView = this.#top.add(new ElementView('div', 'muigui-pop-down-values'));
     this.#bottom = this.add(new ElementView('div', 'muigui-pop-down-bottom'));
+    this.setOptions(options);
+  }
+  updateDisplay() {
+    super.updateDisplay();
+    const {open} = this.#options;
+    this.domElement.children[1].classList.toggle('muigui-open', open);
+    this.domElement.children[1].classList.toggle('muigui-closed', !open);
+  }
+  setOptions(options) {
+    copyExistingProperties(this.#options, options);
+    super.setOptions(options);
+    this.updateDisplay();
   }
   addTop(view) {
     return this.#valuesView.add(view);
