@@ -9,9 +9,9 @@ import Label from './controllers/Label.js';
 import Controller from './controllers/Controller.js';
 
 import Column from './layout/Column.js';
-import Frame from './layout/frame.js';
-import Grid from './layout/grid.js';
-import Row from './layout/row.js';
+import Frame from './layout/Frame.js';
+import Grid from './layout/Grid.js';
+import Row from './layout/Row.js';
 
 export {
   Column,
