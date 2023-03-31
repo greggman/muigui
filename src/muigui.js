@@ -8,6 +8,18 @@ import Folder from './controllers/Folder.js';
 import Label from './controllers/Label.js';
 import Controller from './controllers/Controller.js';
 
+import Column from './layout/Column.js';
+import Frame from './layout/frame.js';
+import Grid from './layout/grid.js';
+import Row from './layout/row.js';
+
+export {
+  Column,
+  Frame,
+  Grid,
+  Row,
+};
+
 let stylesInjected = false;
 const styleElem = createElem('style');
 
