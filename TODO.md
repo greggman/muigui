@@ -1,6 +1,7 @@
 # To Do
 
 - [ ] Tests
+- [ ] DirectionView to use converters
 - [ ] Color RGB, HSL, LAB, Alpha? (just input=color for now?)
   - [x] red, green, blue color formats
     - [x] #RGB

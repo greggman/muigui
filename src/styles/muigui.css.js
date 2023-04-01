@@ -40,6 +40,11 @@ const css = `
   box-sizing: inherit;
 }
 
+.muigui-invalid-value {
+  background-color: red !important;
+  color: white !important;
+}
+
 .muigui-grid {
   display: grid;
 }
@@ -150,6 +155,7 @@ const css = `
 .muigui-controller>label:nth-child(1) {
   place-content: center start;
   display: inline-grid;
+  overflow: hidden;
 }
 .muigui-controller>*:nth-child(2) {
   flex: 1 1 75%;
@@ -219,7 +225,10 @@ const css = `
 .muigui-pop-down-top {
   display: flex;
 }
-
+/* fix? */
+.muigui-value>*:nth-child(1).muigui-pop-down-top {
+  flex: 0;
+}
 .muigui-pop-down-bottom {
 
 }

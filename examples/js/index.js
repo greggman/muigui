@@ -72,6 +72,7 @@ if (true) {
     dessert: 'Pie',
     viscosity: 0.5,
     shoes: 1,
+    hour: 2,
     show: () => {
      log(JSON.stringify(s));
     },
@@ -157,6 +158,18 @@ if (true) {
     f.add(s, 'hobby').onFinishChange(e => log(new Date(), e.value));
     f.add(s, 'propertyWithLongName', ['longNamedEnumThatWillPushSizeTooFar']);
     f.addController(new Direction(s, 'direction')).listen();
+    f.addController(new Direction(s, 'hour', {step: 360 / 12, conversion: {
+      to: v => {
+        const newV = (v - 3) * 360 / 12;
+        console.log('to:', v, newV);
+        return newV;
+      },
+      from: v => {
+        const newV = v * 12 / 360 + 3;
+        console.log('from:', v, newV);
+        return [true, newV];
+      },
+    }})).listen();
     f.addController(new Vec2(s, 'vec', {range: 100})).listen();
     f.addController(new ColorChooser(s, 'c2')).listen();
 
@@ -224,19 +237,19 @@ if (true) {
 
   const degToRad = d => d * Math.PI / 180;
   const radToDeg = r => r * 180 / Math.PI;
-  gui.add(s, 'angleRad', {min: -360, max: 360, step: 1, conversion: {to: radToDeg, from: v => [true, degToRad(v)]}})
+  gui.add(s, 'angleRad', {min: -360, max: 360, step: 1, converters: {to: radToDeg, from: v => [true, degToRad(v)]}})
       .name('rad ↔ deg')
       .onChange(v => log('rad:', v));
-  gui.add(s, 'angleDeg', {min: -Math.PI * 2, max: Math.PI * 2, step: 0.001, conversion: {to: degToRad, from: v => [true, radToDeg(v)]}})
+  gui.add(s, 'angleDeg', {min: -Math.PI * 2, max: Math.PI * 2, step: 0.001, converters: {to: degToRad, from: v => [true, radToDeg(v)]}})
       .name('deg ↔ rad')
       .onChange(v => log('deg:', v));
 
   const cToF = c => (c * (212 - 32) / 100) + 32;
   const fToC = f => (f - 32) * 100 / (212 - 32);
-  gui.add(s, 'tempC', {min: 32, max: 212, step: 0.1, conversion: {to: cToF, from: v => [true, fToC(v)]}})
+  gui.add(s, 'tempC', {min: 32, max: 212, step: 0.1, converters: {to: cToF, from: v => [true, fToC(v)]}})
       .name('C° ↔ F°')
       .onChange(v => log(`${v}C°`));
-  gui.add(s, 'tempF', {min: 0, max: 100, step: 0.1, conversion: {to: fToC, from: v => [true, cToF(v)]}})
+  gui.add(s, 'tempF', {min: 0, max: 100, step: 0.1, converters: {to: fToC, from: v => [true, cToF(v)]}})
       .name('F° ↔ C°')
       .onChange(v => log(`${v}F°`));
 
@@ -267,19 +280,19 @@ if (true) {
 
   const degToRad = d => d * Math.PI / 180;
   const radToDeg = r => r * 180 / Math.PI;
-  gui.add(new TextNumber(s, 'angleRad', {conversion: {to: radToDeg, from: v => [true, degToRad(v)]}, step: 1}))
+  gui.add(new TextNumber(s, 'angleRad', {converters: {to: radToDeg, from: v => [true, degToRad(v)]}, step: 1}))
       .name('rad ↔ deg')
       .onChange(v => log('rad:', v));
-  gui.add(new TextNumber(s, 'angleDeg', {conversion: {to: degToRad, from: v => [true, radToDeg(v)]}, step: 0.001}))
+  gui.add(new TextNumber(s, 'angleDeg', {converters: {to: degToRad, from: v => [true, radToDeg(v)]}, step: 0.001}))
       .name('deg ↔ rad')
       .onChange(v => log('deg:', v));
 
   const cToF = c => (c * (212 - 32) / 100) + 32;
   const fToC = f => (f - 32) * 100 / (212 - 32);
-  gui.add(new TextNumber(s, 'tempC', {conversion: {to: cToF, from: v => [true, fToC(v)]}, step: 0.1}))
+  gui.add(new TextNumber(s, 'tempC', {converters: {to: cToF, from: v => [true, fToC(v)]}, step: 0.1}))
       .name('C° ↔ F°')
       .onChange(v => log(`${v}C°`));
-  gui.add(new TextNumber(s, 'tempF', {conversion: {to: fToC, from: v => [true, cToF(v)]}, step: 0.1}))
+  gui.add(new TextNumber(s, 'tempF', {converters: {to: fToC, from: v => [true, cToF(v)]}, step: 0.1}))
       .name('F° ↔ C°')
       .onChange(v => log(`${v}F°`));
 
@@ -299,11 +312,12 @@ if (true) {
   folder.add(changes, 'onChange').disable().listen();
   folder.add(changes, 'onFinishChange').disable().listen();
 
+  // gui.add(objectToEdit, propName, ...)
   gui.add({Number: 0}, 'Number').onChange(change).onFinishChange(finishChange);
   gui.add({String: 'foo'}, 'String').onChange(change).onFinishChange(finishChange);
   gui.add({Boolean: true}, 'Boolean').onChange(change).onFinishChange(finishChange);
   gui.add({Slider: 0}, 'Slider', {min: 0, max: 1}).onChange(change).onFinishChange(finishChange);
-  gui.add({Select: 'pear'}, 'Select', {keyValues: ['apple', 'banana', 'pear']}).onChange(change).onFinishChange(finishChange);
+  gui.add({Select: 'pear'}, 'Select', ['apple', 'banana', 'pear']).onChange(change).onFinishChange(finishChange);
   gui.addColor({Color: '#FEDCBA'}, 'Color').onChange(change).onFinishChange(finishChange);
   gui.add({func() {}}, 'func').onChange(change).onFinishChange(finishChange);
 }

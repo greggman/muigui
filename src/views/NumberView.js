@@ -36,15 +36,16 @@ export default class NumberView extends EditView {
     this.setOptions(options);
   }
   #handleInput(setFn, skipUpdate) {
-    const [valid, newV] = this.#from(parseFloat(this.domElement.value));
+    const v = parseFloat(this.domElement.value);
+    const [valid, newV] = this.#from(v);
     let inRange;
-    if (valid) {
+    if (valid && !Number.isNaN(v)) {
       const {min, max} = this.#options;
       inRange = newV >= min && newV <= max;
       this.#skipUpdate = skipUpdate;
       setFn(clamp(newV, min, max));
     }
-    this.domElement.style.color = (valid && inRange) ? '' : 'var(--invalid-color)';
+    this.domElement.classList.toggle('muigui-invalid-value', !valid || !inRange);
   }
   updateDisplay(v) {
     if (!this.#skipUpdate) {
