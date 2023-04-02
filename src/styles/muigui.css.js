@@ -2,6 +2,7 @@ const css = `
 .muigui {
   --width: 250px;
   --label-width: 45%;
+  --number-width: 40%;
 
   --bg-color: #222222;
   --color: #dddddd;
@@ -182,10 +183,10 @@ const css = `
   min-width: 0;
 }
 .muigui-value>*:nth-child(1) {
-  flex: 1 1 60%;
+  flex: 1 1 calc(100% - var(--number-width));
 }
 .muigui-value>*:nth-child(2) {
-  flex: 1 1 40%;
+  flex: 1 1 var(--number-width);
   margin-left: 0.2em;
 }
 
