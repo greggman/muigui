@@ -17,7 +17,7 @@ export default class RadioGridView extends EditView {
           value: ndx,
           onChange: function() {
             if (this.checked) {
-              setter.setFinalValue(that._values[this.value]);
+              setter.setFinalValue(that.#values[this.value]);
             }
           },
         }),
