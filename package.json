@@ -34,10 +34,10 @@
   "devDependencies": {
     "eslint": "^8.20.0",
     "eslint-plugin-html": "^6.2.0",
+    "@rollup/plugin-node-resolve": "^15.0.1",
     "eslint-plugin-optional-comma-spacing": "0.0.4",
     "eslint-plugin-require-trailing-comma": "0.0.1",
     "google-closure-compiler": "^20220601.0.0",
-    "rollup": "^2.77.0",
-    "rollup-plugin-node-resolve": "^5.2.0"
+    "rollup": "^2.77.0"
   }
 }
