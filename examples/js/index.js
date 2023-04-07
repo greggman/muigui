@@ -90,7 +90,7 @@ if (true) {
     const div = document.createElement('div');
     uiElem.appendChild(div);
     const gui = new GUI(div);
-    gui.add(s, 'speed', {min: 0, max: 100, step: 1});
+    gui.add(s, 'speed', 0, 100, 1);
     gui.add(s, 'direction', {min: 0, max: 360, step: 1}).listen();
     gui.add(s, 'friction', {min: 0, max: 1});
     gui.addController(new Slider(s, 'fStop', {

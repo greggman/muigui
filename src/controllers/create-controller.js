@@ -28,6 +28,12 @@ export function createController(object, property, ...args) {
   const t = typeof object[property];
   switch (t) {
     case 'number':
+      if (typeof args[0] === 'number' && typeof args[1] === 'number') {
+        const min = args[0];
+        const max = args[1];
+        const step = args[2];
+        return new Range(object, property, {min, max, ...(step && {step})});
+      }
       return args.length === 0
           ? new TextNumber(object, property, ...args)
           : new Range(object, property, ...args);
