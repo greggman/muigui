@@ -102,6 +102,7 @@ export default class SliderView extends EditView {
     const wheelHelper = createWheelHelper();
     super(createElem('div', {
       innerHTML: svg,
+      className: 'muigui-no-v-scroll',
       onWheel: e => {
         e.preventDefault();
         const {min, max, step} = this.#options;

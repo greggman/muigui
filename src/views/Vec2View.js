@@ -22,6 +22,7 @@ export default class Vec2View extends EditView {
   constructor(setter) {
     super(createElem('div', {
       innerHTML: svg,
+      className: 'muigui-no-scroll',
     }));
     const onTouch = (e) => {
       const {width, height} = this.#svgElem.getBoundingClientRect();

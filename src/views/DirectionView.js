@@ -63,7 +63,7 @@ export default class DirectionView extends EditView {
   constructor(setter, options = {}) {
     const wheelHelper = createWheelHelper();
     super(createElem('div', {
-      className: 'muigui-direction',
+      className: 'muigui-direction muigui-no-scroll',
       innerHTML: svg,
       onWheel: e => {
         e.preventDefault();

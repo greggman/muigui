@@ -17,7 +17,7 @@ export function computeRelativePosition(elem, event, start) {
 
 export function addTouchEvents(elem, {onDown = noop, onMove = noop, onUp = noop}) {
   let start;
-  const mouseMove = function(event) {
+  const pointerMove = function(event) {
     const e = {
       type: 'move',
       ...computeRelativePosition(elem, event, start),
@@ -25,15 +25,21 @@ export function addTouchEvents(elem, {onDown = noop, onMove = noop, onUp = noop}
     onMove(e);
   };
 
-  const mouseUp = function() {
-    window.removeEventListener('mousemove', mouseMove);
-    window.removeEventListener('mouseup', mouseUp);
+  const pointerUp = function(event) {
+    elem.releasePointerCapture(event.pointerId);
+    elem.removeEventListener('pointermove', pointerMove);
+    elem.removeEventListener('pointerup', pointerUp);
+ 
+    document.body.style.backgroundColor = '';
+ 
     onUp('up');
   };
 
-  const mouseDown = function(event) {
-    window.addEventListener('mousemove', mouseMove);
-    window.addEventListener('mouseup', mouseUp);
+  const pointerDown = function(event) {
+    elem.addEventListener('pointermove', pointerMove);
+    elem.addEventListener('pointerup', pointerUp);
+    elem.setPointerCapture(event.pointerId);
+
     const rel = computeRelativePosition(elem, event);
     start = [rel.x, rel.y];
     onDown({
@@ -42,9 +48,9 @@ export function addTouchEvents(elem, {onDown = noop, onMove = noop, onUp = noop}
     });
   };
 
-  elem.addEventListener('mousedown', mouseDown);
+  elem.addEventListener('pointerdown', pointerDown);
 
   return function() {
-    elem.removeEventListener('mousedown', mouseDown);
+    elem.removeEventListener('pointerdown', pointerDown);
   };
 }

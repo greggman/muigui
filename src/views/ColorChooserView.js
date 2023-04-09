@@ -59,6 +59,7 @@ export default class ColorChooserView extends EditView {
   constructor(setter) {
     super(createElem('div', {
       innerHTML: svg,
+      className: 'muigui-no-scroll',
     }));
     this.#satLevelElem = this.domElement.children[0];
     this.#hueUIElem = this.domElement.children[1];

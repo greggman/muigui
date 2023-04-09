@@ -41,6 +41,16 @@ const css = `
   box-sizing: inherit;
 }
 
+.muigui-no-scroll {
+  touch-action: none;
+}
+.muigui-no-h-scroll {
+  touch-action: pan-y;
+}
+.muigui-no-v-scroll {
+  touch-action: pan-x;
+}
+
 .muigui-invalid-value {
   background-color: red !important;
   color: white !important;
