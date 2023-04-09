@@ -1,4 +1,4 @@
-/* muigui@0.0.3, license MIT */
+/* muigui@0.0.4, license MIT */
 const css = `
 .muigui {
   --width: 250px;
@@ -40,6 +40,16 @@ const css = `
 }
 .muigui * {
   box-sizing: inherit;
+}
+
+.muigui-no-scroll {
+  touch-action: none;
+}
+.muigui-no-h-scroll {
+  touch-action: pan-y;
+}
+.muigui-no-v-scroll {
+  touch-action: pan-x;
 }
 
 .muigui-invalid-value {

@@ -1,4 +1,4 @@
-/* muigui@0.0.3, license MIT */
+/* muigui@0.0.4, license MIT */
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
@@ -46,6 +46,16 @@
 }
 .muigui * {
   box-sizing: inherit;
+}
+
+.muigui-no-scroll {
+  touch-action: none;
+}
+.muigui-no-h-scroll {
+  touch-action: pan-y;
+}
+.muigui-no-v-scroll {
+  touch-action: pan-x;
 }
 
 .muigui-invalid-value {
