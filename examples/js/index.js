@@ -185,28 +185,26 @@ if (true) {
       lTime2 += elapsedTime * s.period2;
       const res = 2;
       resizeCanvasToDisplaySize(ctx.canvas, res);
-      const width = ctx.canvas.width / res;
-      const height = ctx.canvas.height / res;
+      
+      const width = ctx.canvas.width;
+      const height = ctx.canvas.height;
       if (width && height) {
         ctx.save();
-        ctx.scale(res, res);
         ctx.globalCompositeOperation = 'copy';
         ctx.drawImage(
             ctx.canvas,
-            1 * res, 0, (width - 1) * res, height * res,
-            0, 0, width - 1, height);
-        ctx.clearRect(width - 1, 0, 1, height);
+            res, 0, width - res, height,
+            0, 0, width - res, height);
+        ctx.clearRect(width - res, 0, res, height);
         ctx.globalCompositeOperation = 'source-over';
         ctx.strokeStyle = uiColors.color;
         const s1 = Math.sin(lTime1 * 0.01);
         const s2 = Math.sin(lTime2 * 0.01);
         const newY = height / 2 + (s1 + s2) * (height - 1) / 4;
         ctx.beginPath();
-        ctx.lineTo(width - 2, lastY);
+        ctx.lineTo(width - res * 2, lastY);
         ctx.lineTo(width - 1, newY);
         ctx.stroke();
-        //ctx.fillRect(width - 1, Math.min(lastY, newY), 1, Math.abs(lastY - newY) + 1);
-        ctx.restore();
         lastY = newY;
       }
       requestAnimationFrame(draw);
@@ -419,20 +417,18 @@ if (true) {
       times.push(...(new Array(rowsNeeded).fill(0)));
     }
 
-    const width = ctx.canvas.width / res;
-    const height = ctx.canvas.height / res;
+    const width = ctx.canvas.width;
+    const height = ctx.canvas.height;
     if (width && height) {
-      ctx.save();
-      ctx.scale(res, res);
       ctx.globalCompositeOperation = 'copy';
       ctx.drawImage(
           ctx.canvas,
-          res, 0, (width - 1) * res, height * res,
-          0, 0, width - 1, height);
+          res, 0, width - res, height,
+          0, 0, width - res, height);
       ctx.globalCompositeOperation = 'source-over';
-      const x = width - 1;
+      const x = width - res;
       ctx.fillStyle = ticks % 16 === 0 ? uiColors.menuSepColor : uiColors.menuBgColor;
-      ctx.fillRect(x, 0, 1, height);
+      ctx.fillRect(x, 0, res, height);
       ctx.fillStyle = uiColors.menuSepColor;
       for (let y = 8; y < height; y += 16) {
         ctx.fillRect(x, y, 1, 1);
@@ -460,7 +456,6 @@ if (true) {
         lastYs[i] = newY;
         ctx.restore();
       }
-      ctx.restore();
     }
     requestAnimationFrame(draw);
   }
