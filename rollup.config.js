@@ -7,7 +7,25 @@ const banner = `/* muigui@${pkg.version}, license MIT */`;
 
 export default [
   {
+    input: 'src/esm.js',
+    treeshake: false,
+    plugins: [
+      resolve({
+        modulesOnly: true,
+      }),
+    ],
+    output: [
+      {
+        format: 'es',
+        file: 'dist/0.x/muigui.module.js',
+        indent: '  ',
+        banner,
+      },
+    ],
+  },
+  {
     input: 'src/umd.js',
+    treeshake: false,
     plugins: [
       resolve({
         modulesOnly: true,
@@ -21,9 +39,21 @@ export default [
         banner,
         name: 'GUI',
       },
+    ],
+  },
+  {
+    input: 'src/esm.js',
+    treeshake: false,
+    plugins: [
+      resolve({
+        modulesOnly: true,
+      }),
+      terser(),
+    ],
+    output: [
       {
         format: 'es',
-        file: 'dist/0.x/muigui.module.js',
+        file: 'dist/0.x/muigui.module.min.js',
         indent: '  ',
         banner,
       },
@@ -31,6 +61,7 @@ export default [
   },
   {
     input: 'src/umd.js',
+    treeshake: false,
     plugins: [
       resolve({
         modulesOnly: true,
@@ -44,12 +75,6 @@ export default [
         indent: '  ',
         banner,
         name: 'GUI',
-      },
-      {
-        format: 'es',
-        file: 'dist/0.x/muigui.module.min.js',
-        indent: '  ',
-        banner,
       },
     ],
   },
