@@ -7,10 +7,10 @@ export default class CheckboxView extends EditView {
       type: 'checkbox',
       id,
       onInput: () => {
-        setter.setValue(this.domElement.checked);
+        setter.setValue(checkboxElem.checked);
       },
       onChange: () => {
-        setter.setFinalValue(this.domElement.checked);
+        setter.setFinalValue(checkboxElem.checked);
       },
     });
     super(createElem('label', {}, [checkboxElem]));
