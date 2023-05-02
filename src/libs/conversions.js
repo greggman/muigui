@@ -1,3 +1,7 @@
+import {
+  makeRangeConverters,
+} from './utils.js';
+
 export const identity = {
   to: v => v,
   from: v => [true, v],
@@ -11,4 +15,8 @@ export const strToNumber = {
     const newV = parseFloat(v);
     return [!Number.isNaN(newV), newV];
   },
+};
+
+export const converters = {
+  radToDeg: makeRangeConverters({to: [0, 180], from: [0, Math.PI]}),
 };

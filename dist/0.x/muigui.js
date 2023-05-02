@@ -43,6 +43,7 @@
   font-family: var(--font-family);
   font-size: var(--font-size);
   box-sizing: border-box;
+  line-height: 100%;
 }
 .muigui * {
   box-sizing: inherit;
@@ -744,6 +745,24 @@
     return dst;
   }
 
+  const mapRange = (v, inMin, inMax, outMin, outMax) => (v - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
+
+  const makeRangeConverters = ({from, to}) => {
+    return {
+      to: v => mapRange(v, ...from, ...to),
+      from: v => [true, mapRange(v, ...to, ...from)],
+    };
+  };
+
+  const makeRangeOptions = ({from, to, step}) => {
+    return {
+      min: to[0],
+      max: to[1],
+      ...(step && {step}),
+      converters: makeRangeConverters({from, to}),
+    };
+  };
+
   class View {
     #childDestElem;
     #views = [];
@@ -1067,10 +1086,10 @@
         type: 'checkbox',
         id,
         onInput: () => {
-          setter.setValue(this.domElement.checked);
+          setter.setValue(checkboxElem.checked);
         },
         onChange: () => {
-          setter.setFinalValue(this.domElement.checked);
+          setter.setFinalValue(checkboxElem.checked);
         },
       });
       super(createElem('label', {}, [checkboxElem]));
@@ -1302,6 +1321,10 @@
       const newV = parseFloat(v);
       return [!Number.isNaN(newV), newV];
     },
+  };
+
+  const converters = {
+    radToDeg: makeRangeConverters({to: [0, 180], from: [0, Math.PI]}),
   };
 
   function createWheelHelper() {
@@ -1616,6 +1639,8 @@
         return new Button(object, property, ...args);
       case 'string':
         return new Text(object, property, ...args);
+      case 'undefined':
+        throw new Error(`no property named ${property}`);
       default:
         throw new Error(`unhandled type ${t} for property ${property}`);
     }
@@ -2333,6 +2358,11 @@
   }
 
   class GUI extends GUIFolder {
+    static converters = converters;
+    static mapRange = mapRange;
+    static makeRangeConverters = makeRangeConverters;
+    static makeRangeOptions = makeRangeOptions;
+
     constructor(options = {}) {
       super('Controls', 'muigui-root');
       if (options instanceof HTMLElement) {

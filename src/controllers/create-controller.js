@@ -43,6 +43,8 @@ export function createController(object, property, ...args) {
       return new Button(object, property, ...args);
     case 'string':
       return new Text(object, property, ...args);
+    case 'undefined':
+      throw new Error(`no property named ${property}`);
     default:
       throw new Error(`unhandled type ${t} for property ${property}`);
   }

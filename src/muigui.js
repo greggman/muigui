@@ -1,6 +1,14 @@
 import css from './styles/muigui.css.js';
 import {createElem} from './libs/elem.js';
 import {createController} from './controllers/create-controller.js';
+import {
+  mapRange,
+  makeRangeConverters,
+  makeRangeOptions,
+} from './libs/utils.js';
+import {
+  converters
+} from './libs/conversions.js';
 import Canvas from './controllers/Canvas.js';
 import Color from './controllers/Color.js';
 import Divider from './controllers/Divider.js';
@@ -48,6 +56,11 @@ export class GUIFolder extends Folder {
 }
 
 export class GUI extends GUIFolder {
+  static converters = converters;
+  static mapRange = mapRange;
+  static makeRangeConverters = makeRangeConverters;
+  static makeRangeOptions = makeRangeOptions;
+
   constructor(options = {}) {
     super('Controls', 'muigui-root');
     if (options instanceof HTMLElement) {

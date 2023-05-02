@@ -53,3 +53,22 @@ export function copyExistingProperties(dst, src) {
   }
   return dst;
 }
+
+export const mapRange = (v, inMin, inMax, outMin, outMax) => (v - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
+
+export const makeRangeConverters = ({from, to}) => {
+  return {
+    to: v => mapRange(v, ...from, ...to),
+    from: v => [true, mapRange(v, ...to, ...from)],
+  };
+};
+
+export const makeRangeOptions = ({from, to, step}) => {
+  return {
+    min: to[0],
+    max: to[1],
+    ...(step && {step}),
+    converters: makeRangeConverters({from, to}),
+  };
+};
+
