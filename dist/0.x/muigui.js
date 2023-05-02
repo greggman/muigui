@@ -1,4 +1,4 @@
-/* muigui@0.0.5, license MIT */
+/* muigui@0.0.6, license MIT */
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :

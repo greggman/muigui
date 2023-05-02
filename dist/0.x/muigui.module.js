@@ -1,4 +1,4 @@
-/* muigui@0.0.5, license MIT */
+/* muigui@0.0.6, license MIT */
 var css = `
 .muigui-colors {
   --bg-color: #ddd;
