@@ -93,7 +93,7 @@ export class GUI extends GUIFolder {
     if (title) {
       this.title(title);
     }
-    this.domElement.classList.add('muigui');
+    this.domElement.classList.add('muigui', 'muigui-colors');
   }
 }
 
