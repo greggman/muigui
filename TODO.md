@@ -1,5 +1,6 @@
 # To Do
 
+- [ ] Figure out why ColorChooser is broke (and what the difference is between Color and ColorChooser 😅)
 - [ ] Tests
 - [ ] DirectionView to use converters
 - [ ] Color RGB, HSL, LAB, Alpha? (just input=color for now?)

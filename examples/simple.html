@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1,minimum-scale=1,maximum-scale=1">
+    <title>muigui</title>
+  </head>
+  <body>
+
+  <script type="module">
+import GUI from '../../src/muigui.js';
+import ColorChooser from '../../src/controllers/ColorChooser.js';
+import Color from '../../src/controllers/Color.js';
+
+const s = {
+  someNumber: 123,
+  someString: "hello",
+  someColor: '#ED3281',
+  someOption: "dog",
+  someFunction: () => console.log('called')
+};
+
+// Questions:
+// * how can we pass more options (listen, name)
+// * is there a point to this?
+const options = {
+  someNumber: [1, 200],   // range 0 to 200
+  someOption: [['cat', 'bird', 'dog']],
+  //someColor: ColorChooser,  // Why doesn't this work?
+  someColor: Color,
+};
+
+const gui = new GUI();
+gui.add(s, options);
+//gui.addController(new ColorChooser(s, 'someColor'));
+//gui.addColor(s, 'someColor');
+  </script>
+  </body>
+</html>

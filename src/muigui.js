@@ -22,10 +22,22 @@ export {
 
 export class GUIFolder extends Folder {
   add(object, property, ...args) {
-    const controller = object instanceof Controller
-        ? object
-        : createController(object, property, ...args);
-    return this.addController(controller);
+    if (object instanceof Controller) {
+      return this.addController(object);
+    }
+    const type = typeof property;
+    if (type === 'string' || type === 'number') {
+      return this.addController(createController(object, property, ...args));
+    }
+    for (const [key/*, value*/] of Object.entries(object)) {
+      const options = property[key];
+      if (typeof options === 'function') {
+        this.addController(new options(object, key));
+      } else {
+        const args = [...(options ? options : []),];
+        this.add(object, key, ...args);
+      }
+    }
   }
   addCanvas(name) {
     return this.addController(new Canvas(name));

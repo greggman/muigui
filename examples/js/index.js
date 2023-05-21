@@ -61,6 +61,7 @@ if (true) {
 {
   const s = {
     speed: 0.5,
+    foo: '#ED3281',
     direction: 45,
     friction: 0.01,
     fStop: 5.6,
@@ -91,6 +92,7 @@ if (true) {
     uiElem.appendChild(div);
     const gui = new GUI(div);
     gui.add(s, 'speed', 0, 100, 1);
+    gui.addController(new ColorChooser(s, 'foo'));
     gui.add(s, 'direction', {min: 0, max: 360, step: 1}).listen();
     gui.add(s, 'friction', {min: 0, max: 1});
     gui.addController(new Slider(s, 'fStop', {
@@ -488,12 +490,6 @@ if (true) {
 }
 
 const updateAppearance = function() {
-
-  const themeElem = document.createElement('style');
-  document.head.appendChild(themeElem);
-  const styleElem = document.createElement('style');
-  document.head.appendChild(styleElem);
-
   const themes = {
     default: '',
     'default-mono': `
@@ -572,14 +568,26 @@ const updateAppearance = function() {
         }
     `,
   };
+  const styleSheet = GUI.getStyleSheet();
+  const rule = getCSSRulesBySelector('.muigui', styleSheet)[0];  // assuming the first one
+
+  const themeSheets = Object.fromEntries(
+    Object.entries(themes).map(([key, css]) => {
+      const styleSheet = new CSSStyleSheet();
+      styleSheet.replaceSync(css);
+      return [key, styleSheet];
+    })
+  );
 
   const div = document.createElement('div');
   uiElem.appendChild(div);
   const gui = new GUI(div).name('Appearance');
   gui.addController(new Select({theme: 'default'}, 'theme', {keyValues: [...Object.keys(themes)]})).onChange(v => {
-    themeElem.textContent = themes[v];
-    styleElem.textContent = '';
-    updateAppearance();
+    const styleSheet = themeSheets[v];
+    for (const [key, value] of styleSheet.rules.styleMap.entries()) {
+      rule.styleMap.set(key, value);
+    }
+    //updateAppearance();
   });
 
   const cssStringToHexColor = s => s.length === 7
@@ -594,16 +602,21 @@ const updateAppearance = function() {
   };
 
   const folder = gui.addFolder('Style');
-  const rule = getCSSRulesBySelector('.muigui')[0];  // assuming the first one
   const varNames = Object.values(rule.style).filter(s => s.startsWith('--'));
   const obj = {};
   const controllersByKey = {};
 
+  window.rule = rule;
+
   const updateStyles = () => {
-    styleElem.textContent = `.muigui {\n${
+    GUI.setStyles(`.muigui {\n${
       [...Object.entries(obj)].map(([key, value]) => {
         return `${key}: ${value};`;
-      }).join('\n')}\n}`;
+      }).join('\n')}\n}`);
+    // @type {CSSRule}
+    //for (const [key, value] of Object.entries(obj)) {
+    //  rule.styleMap.set(key, value);
+    //}
     updateUIColors();
   };
 
@@ -626,7 +639,7 @@ const updateAppearance = function() {
 
   return function() {
     const map = new Map();
-    for (const rule of getCSSRulesBySelector('.muigui')) {
+    for (const rule of getCSSRulesBySelector('.muigui', styleSheet)) {
       const varNames = Object.values(rule.style).filter(s => s.startsWith('--'));
       for (const key of varNames) {
         const value = rule.style.getPropertyValue(key).trim();
