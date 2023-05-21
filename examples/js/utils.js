@@ -1,7 +1,8 @@
-export function getCSSRulesBySelector(selector) {
+export function getCSSRulesBySelector(selector, styleSheet) {
   const rules = [];
-  for (let s = 0; s < document.styleSheets.length; ++s) {
-    const cssRules = document.styleSheets[s].cssRules;
+  const styleSheets = styleSheet ? [styleSheet] : document.styleSheets;
+  for (let s = 0; s < styleSheets.length; ++s) {
+    const cssRules = styleSheets[s].cssRules;
     for (let i = 0; i < cssRules.length; ++i) {
       const r = cssRules[i];
       if (r.selectorText === selector) {

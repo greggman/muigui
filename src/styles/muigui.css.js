@@ -36,6 +36,7 @@ const css = `
   font-family: var(--font-family);
   font-size: var(--font-size);
   box-sizing: border-box;
+  line-height: 100%;
 }
 .muigui * {
   box-sizing: inherit;
