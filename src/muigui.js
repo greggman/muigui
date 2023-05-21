@@ -28,9 +28,6 @@ export {
   Row,
 };
 
-let stylesInjected = false;
-const styleElem = createElem('style');
-
 export class GUIFolder extends Folder {
   add(object, property, ...args) {
     const controller = object instanceof Controller
@@ -55,11 +52,40 @@ export class GUIFolder extends Folder {
   }
 }
 
+class MuiguiElement extends HTMLElement {
+  constructor() {
+    super();
+    this.shadow = this.attachShadow({mode: 'open'})
+  }
+}
+
+customElements.define("muigui-element", MuiguiElement);
+
+const baseStyleSheet = new CSSStyleSheet();
+baseStyleSheet.replaceSync(css);
+const userStyleSheet = new CSSStyleSheet();
+window.bss = baseStyleSheet;
+
+let newCss;
+let newCssPromise;
+
+function updateStyle() {
+  if (newCss && !newCssPromise) {
+    const css = newCss;
+    newCss = undefined;
+    newCssPromise = userStyleSheet.replace(css).then(() => {
+      newCssPromise = undefined;
+      updateStyle();
+    });
+  }
+}
+
 export class GUI extends GUIFolder {
   static converters = converters;
   static mapRange = mapRange;
   static makeRangeConverters = makeRangeConverters;
   static makeRangeOptions = makeRangeOptions;
+  #localStyleSheet = new CSSStyleSheet();
 
   constructor(options = {}) {
     super('Controls', 'muigui-root');
@@ -70,16 +96,11 @@ export class GUI extends GUIFolder {
       autoPlace = true,
       width,
       title = 'Controls',
-      injectStyles = true,
     } = options;
     let {
       parent,
     } = options;
-    if (injectStyles && !stylesInjected) {
-      stylesInjected = true;
-      (document.head || document.documentElement).appendChild(styleElem);
-      styleElem.textContent = css;
-    }
+    
     if (width) {
       this.domElement.style.width = /^\d+$/.test(width) ? `${width}px` : width;
     }
@@ -88,12 +109,25 @@ export class GUI extends GUIFolder {
       this.domElement.classList.add('muigui-auto-place');
     }
     if (parent) {
-      parent.appendChild(this.domElement);
+      const muiguiElement = createElem('muigui-element');
+      muiguiElement.shadowRoot.adoptedStyleSheets = [baseStyleSheet, userStyleSheet, this.#localStyleSheet];
+      muiguiElement.shadow.appendChild(this.domElement);
+      parent.appendChild(muiguiElement);
     }
     if (title) {
       this.title(title);
     }
     this.domElement.classList.add('muigui', 'muigui-colors');
+  }
+  setStyle(css) {
+    this.#localStyleSheet.replace(css);
+  }
+  static setStyles(css) {
+    newCss = css;
+    updateStyle();
+  }
+  static getStyleSheet() {
+    return baseStyleSheet;
   }
 }
 
