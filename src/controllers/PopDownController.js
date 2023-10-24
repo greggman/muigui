@@ -1,6 +1,5 @@
 import ElementView from '../views/ElementView.js';
 import ValueController from './ValueController.js';
-import CheckboxView from '../views/CheckboxView.js';
 import { copyExistingProperties } from '../libs/utils.js';
 import { createElem } from '../libs/elem.js';
 /*
@@ -26,17 +25,6 @@ pc.addBottom
 
 
 */
-
-function makeSetter(object, property) {
-  return {
-    setValue(v) {
-      object[property] = v;
-    },
-    setFinalValue(v) {
-      this.setValue(v);
-    },
-  };
-}
 
 export default class PopDownController extends ValueController {
   #top;

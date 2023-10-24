@@ -29,9 +29,9 @@ export function addTouchEvents(elem, {onDown = noop, onMove = noop, onUp = noop}
     elem.releasePointerCapture(event.pointerId);
     elem.removeEventListener('pointermove', pointerMove);
     elem.removeEventListener('pointerup', pointerUp);
- 
+
     document.body.style.backgroundColor = '';
- 
+
     onUp('up');
   };
 

@@ -1,4 +1,3 @@
-import GridView from '../views/GridView.js';
 import NumberView from '../views/NumberView.js';
 import Vec2View from '../views/Vec2View.js';
 import PopDownController from './PopDownController.js';

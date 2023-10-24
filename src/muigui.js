@@ -55,11 +55,11 @@ export class GUIFolder extends Folder {
 class MuiguiElement extends HTMLElement {
   constructor() {
     super();
-    this.shadow = this.attachShadow({mode: 'open'})
+    this.shadow = this.attachShadow({mode: 'open'});
   }
 }
 
-customElements.define("muigui-element", MuiguiElement);
+customElements.define('muigui-element', MuiguiElement);
 
 const baseStyleSheet = new CSSStyleSheet();
 baseStyleSheet.replaceSync(css);
@@ -100,7 +100,7 @@ export class GUI extends GUIFolder {
     let {
       parent,
     } = options;
-    
+
     if (width) {
       this.domElement.style.width = /^\d+$/.test(width) ? `${width}px` : width;
     }

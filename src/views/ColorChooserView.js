@@ -3,14 +3,10 @@ import { addTouchEvents } from '../libs/touch.js';
 import { clamp } from '../libs/utils.js';
 import EditView from './EditView.js';
 import {
-  hexToUint8RGB,
   hexToFloatRGB,
-  hslToRgbUint8,
   hsv01ToRGBFloat,
   rgbFloatToHSV01,
-  rgbUint8ToHsl,
   floatRGBToHex,
-  uint8RGBToHex,
 } from '../libs/color-utils.js';
 
 const svg = `

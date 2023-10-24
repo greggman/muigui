@@ -14,7 +14,7 @@ import ColorChooser from '../../src/controllers/ColorChooser.js';
 import RadioGrid from '../../src/controllers/RadioGrid.js';
 import Slider from '../../src/controllers/Slider.js';
 import Select from '../../src/controllers/Select.js';
-import Range from '../../src/controllers/Range.js';
+// import Range from '../../src/controllers/Range.js';
 import TextNumber from '../../src/controllers/TextNumber.js';
 
 const uiElem = document.querySelector('#ui');
@@ -45,6 +45,7 @@ const updateUIColors = (() => {
 })();
 updateUIColors();
 
+// eslint-disable-next-line no-constant-condition
 if (false) {
   const s = {
     speed: 0.5,
@@ -57,6 +58,7 @@ if (false) {
   gui.addColor(s, 'color');
 }
 
+// eslint-disable-next-line no-constant-condition
 if (true) {
 {
   const s = {
@@ -130,7 +132,7 @@ if (true) {
       unitSize: 30,
       ticksPerUnit: 15,
       thicksColor: 'transparent',
-    }));
+  }));
 
 
     gui.addDivider();
@@ -158,18 +160,20 @@ if (true) {
     f.add(s, 'hobby').onFinishChange(e => log(new Date(), e.value));
     f.add(s, 'propertyWithLongName', ['longNamedEnumThatWillPushSizeTooFar']);
     f.addController(new Direction(s, 'direction')).listen();
-    f.addController(new Direction(s, 'hour', {step: 360 / 12, conversion: {
-      to: v => {
-        const newV = (v - 3) * 360 / 12;
-        console.log('to:', v, newV);
-        return newV;
+    f.addController(new Direction(s, 'hour', {
+      step: 360 / 12, conversion: {
+        to: v => {
+          const newV = (v - 3) * 360 / 12;
+          console.log('to:', v, newV);
+          return newV;
+        },
+        from: v => {
+          const newV = v * 12 / 360 + 3;
+          console.log('from:', v, newV);
+          return [true, newV];
+        },
       },
-      from: v => {
-        const newV = v * 12 / 360 + 3;
-        console.log('from:', v, newV);
-        return [true, newV];
-      },
-    }})).listen();
+    })).listen();
     f.addController(new Vec2(s, 'vec', {range: 100})).listen();
     f.addController(new ColorChooser(s, 'c2')).listen();
 
@@ -185,7 +189,7 @@ if (true) {
       lTime2 += elapsedTime * s.period2;
       const res = 2;
       resizeCanvasToDisplaySize(ctx.canvas, res);
-      
+
       const width = ctx.canvas.width;
       const height = ctx.canvas.height;
       if (width && height) {
@@ -488,12 +492,6 @@ if (true) {
 }
 
 const updateAppearance = function() {
-
-  const themeElem = document.createElement('style');
-  document.head.appendChild(themeElem);
-  const styleElem = document.createElement('style');
-  document.head.appendChild(styleElem);
-
   const themes = {
     default: '',
     'default-mono': `
@@ -577,8 +575,9 @@ const updateAppearance = function() {
   uiElem.appendChild(div);
   const gui = new GUI(div).name('Appearance');
   gui.addController(new Select({theme: 'default'}, 'theme', {keyValues: [...Object.keys(themes)]})).onChange(v => {
-    themeElem.textContent = themes[v];
-    styleElem.textContent = '';
+//    themeElem.textContent = themes[v];
+//    styleElem.textContent = '';
+    GUI.setStyles(themes[v]);
     updateAppearance();
   });
 
@@ -594,16 +593,16 @@ const updateAppearance = function() {
   };
 
   const folder = gui.addFolder('Style');
-  const rule = getCSSRulesBySelector('.muigui')[0];  // assuming the first one
+  const rule = getCSSRulesBySelector('.muigui', GUI.getStyleSheet())[0];  // assuming the first one
   const varNames = Object.values(rule.style).filter(s => s.startsWith('--'));
   const obj = {};
   const controllersByKey = {};
 
   const updateStyles = () => {
-    styleElem.textContent = `.muigui {\n${
+    GUI.setStyles(`.muigui {\n${
       [...Object.entries(obj)].map(([key, value]) => {
         return `${key}: ${value};`;
-      }).join('\n')}\n}`;
+      }).join('\n')}\n}`);
     updateUIColors();
   };
 
@@ -626,7 +625,7 @@ const updateAppearance = function() {
 
   return function() {
     const map = new Map();
-    for (const rule of getCSSRulesBySelector('.muigui')) {
+    for (const rule of getCSSRulesBySelector('.muigui', GUI.getStyleSheet())) {
       const varNames = Object.values(rule.style).filter(s => s.startsWith('--'));
       for (const key of varNames) {
         const value = rule.style.getPropertyValue(key).trim();

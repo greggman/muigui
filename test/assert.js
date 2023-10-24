@@ -1,6 +1,6 @@
 export const config = {};
 
-const isArrayLike = v => Array.isArray(v) || 
+const isArrayLike = v => Array.isArray(v) ||
     (v.buffer instanceof ArrayBuffer && typeof v.length === 'number' && v.byteLength === 'number');
 
 export function setConfig(options) {
