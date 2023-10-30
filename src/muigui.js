@@ -126,8 +126,11 @@ export class GUI extends GUIFolder {
     newCss = css;
     updateStyle();
   }
-  static getStyleSheet() {
+  static getBaseStyleSheet() {
     return baseStyleSheet;
+  }
+  static getUserStyleSheet() {
+    return userStyleSheet;
   }
 }
 
