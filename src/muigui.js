@@ -64,21 +64,31 @@ customElements.define('muigui-element', MuiguiElement);
 const baseStyleSheet = new CSSStyleSheet();
 baseStyleSheet.replaceSync(css);
 const userStyleSheet = new CSSStyleSheet();
-window.bss = baseStyleSheet;
 
-let newCss;
-let newCssPromise;
+function makeStyleSheetUpdater(styleSheet) {
+  let newCss;
+  let newCssPromise;
 
-function updateStyle() {
-  if (newCss && !newCssPromise) {
-    const css = newCss;
-    newCss = undefined;
-    newCssPromise = userStyleSheet.replace(css).then(() => {
-      newCssPromise = undefined;
-      updateStyle();
-    });
+  function updateStyle() {
+    if (newCss && !newCssPromise) {
+      const s = newCss;
+      newCss = undefined;
+      newCssPromise = styleSheet.replace(s).then(() => {
+  console.log(s);
+        newCssPromise = undefined;
+        updateStyle();
+      });
+    }
   }
+
+  return function updateStyleSheet(css) {
+    newCss = css;
+    updateStyle();
+  };
 }
+
+const updateBaseStyle = makeStyleSheetUpdater(baseStyleSheet);
+const updateUserStyle = makeStyleSheetUpdater(userStyleSheet);
 
 export class GUI extends GUIFolder {
   static converters = converters;
@@ -122,12 +132,14 @@ export class GUI extends GUIFolder {
   setStyle(css) {
     this.#localStyleSheet.replace(css);
   }
-  static setStyles(css) {
-    newCss = css;
-    updateStyle();
+  static setBaseStyles(css) {
+    updateBaseStyle(css);
   }
   static getBaseStyleSheet() {
     return baseStyleSheet;
+  }
+  static setUserStyles(css) {
+    updateUserStyle(css);
   }
   static getUserStyleSheet() {
     return userStyleSheet;

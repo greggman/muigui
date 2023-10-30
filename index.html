@@ -47,6 +47,17 @@
       body {
         font-family: sans-serif;
       }
+      #log {
+        height: 50px;
+        overflow: auto;
+        background: var(--log-bg-color);
+        margin-bottom: 10px;
+      }
+      #log pre {
+        margin: 0;
+      }
+    </style>
+    <style id="theme">
       #ui-helper {
         display: grid;
         grid-template-columns: repeat(auto-fit, 250px); /* as as column width */
@@ -63,15 +74,6 @@
         break-inside: avoid-column;
         margin-bottom: 1em;
         display: inline-block;
-      }
-      #log {
-        height: 50px;
-        overflow: auto;
-        background: var(--log-bg-color);
-        margin-bottom: 10px;
-      }
-      #log pre {
-        margin: 0;
       }
     </style>
     <style id="media-query">
