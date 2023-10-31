@@ -1,7 +1,9 @@
-export default `
+export default {
+  default: `
 .muigui {
   --bg-color: #ddd;
   --color: #222;
+  --contrast-color: #eee;
   --value-color: #145 ;
   --value-bg-color: #eeee;
   --disabled-color: #999;
@@ -27,6 +29,7 @@ export default `
   .muigui {
     --bg-color: #222222;
     --color: #dddddd;
+    --contrast-color: #000;
     --value-color: #43e5f7;
     --value-bg-color: #444444;
     --disabled-color: #666666;
@@ -678,5 +681,64 @@ export default `
   z-index: 100001;
 }
 
-`;
+`,
+themes: {
+  default: '',
+  float: `
+  :root {
+    color-scheme: light dark,
+  }
 
+  .muigui {
+    --width: 400px;
+    --bg-color: initial;
+    --label-width: 25%;
+  }
+
+  input,
+  .muigui-label-controller>label {
+      text-shadow:
+       -1px -1px 0 var(--contrast-color),
+        1px -1px 0 var(--contrast-color),
+       -1px  1px 0 var(--contrast-color),
+        1px  1px 0 var(--contrast-color);
+  }
+
+  .muigui-controller > label:nth-child(1) {
+      place-content: center end;
+      margin-right: 1em;
+  }
+
+  .muigui-value > :nth-child(2) {
+      margin-left: 1em;
+  }
+
+  .muigui-root>*:nth-child(1) {
+      display: none;
+  }
+
+  .muigui-range input[type=range]::-webkit-slider-thumb {
+    border-radius: 1em;
+  }
+
+  .muigui-range input[type=range]::-webkit-slider-runnable-track {
+    -webkit-appearance: initial;
+    appearance: none;
+    border: 1px solid rgba(0, 0, 0, 0.25);
+    height: 2px;
+  }
+
+  .muigui-colors {
+    --value-color: var(--color  );
+    --value-bg-color: rgba(0, 0, 0, 0.1);
+    --disabled-color: #cccccc;
+    --menu-bg-color: rgba(0, 0, 0, 0.1);
+    --menu-sep-color: #bbbbbb;
+    --hover-bg-color: rgba(0, 0, 0, 0);
+    --invalid-color: #FF0000;
+    --selected-color: rgba(0, 0, 0, 0.3);
+    --range-color: rgba(0, 0, 0, 0.125);
+  }
+`,
+},
+};

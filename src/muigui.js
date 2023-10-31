@@ -63,7 +63,7 @@ class MuiguiElement extends HTMLElement {
 customElements.define('muigui-element', MuiguiElement);
 
 const baseStyleSheet = new CSSStyleSheet();
-baseStyleSheet.replaceSync(css);
+baseStyleSheet.replaceSync(css.default);
 const userStyleSheet = new CSSStyleSheet();
 
 function makeStyleSheetUpdater(styleSheet) {
@@ -145,6 +145,9 @@ export class GUI extends GUIFolder {
   }
   static getUserStyleSheet() {
     return userStyleSheet;
+  }
+  static setTheme(name) {
+    GUI.setBaseStyles(`${css.default}\n${css.themes[name] || ''}`);
   }
 }
 
