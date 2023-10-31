@@ -34,31 +34,39 @@ export default class ValueController extends LabelController {
     return view;
   }
   #setValueImpl(v, ignoreCache) {
+    let isDifferent = false;
     if (typeof v === 'object') {
       const dst = this.#object[this.#property];
       // don't replace objects, just their values.
-      if (Array.isArray(v)) {
+      if (Array.isArray(v) || isTypedArray(v)) {
         for (let i = 0; i < v.length; ++i) {
+          isDifferent ||= dst[i] !== v[i];
           dst[i] = v[i];
         }
-      } else if (isTypedArray(v)) {
-        dst.set(v);
       } else {
+        for (const key of Object.keys(v)) {
+          isDifferent ||= dst[key] !== v[key];
+        }
         Object.assign(dst, v);
       }
     } else {
+      isDifferent = this.#object[this.#property] !== v;
       this.#object[this.#property] = v;
     }
     this.updateDisplay(ignoreCache);
-    this.emitChange(this.getValue(), this.#object, this.#property);
-    return this;
+    if (isDifferent) {
+      this.emitChange(this.getValue(), this.#object, this.#property);
+    }
+    return isDifferent;
   }
   setValue(v) {
     this.#setValueImpl(v);
   }
   setFinalValue(v) {
-    this.#setValueImpl(v, true);
-    this.emitFinalChange(this.getValue(), this.#object, this.#property);
+    const isDifferent = this.#setValueImpl(v, true);
+    if (isDifferent) {
+      this.emitFinalChange(this.getValue(), this.#object, this.#property);
+    }
     return this;
   }
   updateDisplay(ignoreCache) {

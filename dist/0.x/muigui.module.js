@@ -861,30 +861,27 @@ function makeMinMaxPair(gui, properties, minPropName, maxPropName, options) {
   const { min, max } = options;
   const guiMinRange = options.minRange || 0;
   const valueMinRange = from(guiMinRange)[1];
-  console.log('guiMinRange', guiMinRange);
-  console.log('valueMinRange', valueMinRange);
-  return [
-    gui
-        .add(properties, minPropName, {
-          ...options,
-          min,
-          max: max - guiMinRange,
-        })
-        .listen()
-        .onChange(v => {
-          properties[maxPropName] = Math.min(max, Math.max(v + valueMinRange, properties[maxPropName]));
-        }),
-    gui
-        .add(properties, maxPropName, {
-          ...options,
-          min: min + guiMinRange,
-          max,
-        })
-        .listen()
-        .onChange(v => {
-          properties[minPropName] = Math.max(min, Math.min(v - valueMinRange, properties[minPropName]));
-        }),
-  ];
+  const minGui = gui
+    .add(properties, minPropName, {
+      ...options,
+      min,
+      max: max - guiMinRange,
+    })
+//        .listen()
+    .onChange(v => {
+      maxGui.setValue(Math.min(max, Math.max(v + valueMinRange, properties[maxPropName])));
+    });
+  const maxGui = gui
+    .add(properties, maxPropName, {
+      ...options,
+      min: min + guiMinRange,
+      max,
+    })
+//        .listen()
+    .onChange(v => {
+      minGui.setValue(Math.max(min, Math.min(v - valueMinRange, properties[minPropName])));
+    });
+  return [ minGui, maxGui ];
 }
 
 class View {
@@ -1352,31 +1349,39 @@ class ValueController extends LabelController {
     return view;
   }
   #setValueImpl(v, ignoreCache) {
+    let isDifferent = false;
     if (typeof v === 'object') {
       const dst = this.#object[this.#property];
       // don't replace objects, just their values.
-      if (Array.isArray(v)) {
+      if (Array.isArray(v) || isTypedArray(v)) {
         for (let i = 0; i < v.length; ++i) {
+          isDifferent ||= dst[i] !== v[i];
           dst[i] = v[i];
         }
-      } else if (isTypedArray(v)) {
-        dst.set(v);
       } else {
+        for (const key of Object.keys(v)) {
+          isDifferent ||= dst[key] !== v[key];
+        }
         Object.assign(dst, v);
       }
     } else {
+      isDifferent = this.#object[this.#property] !== v;
       this.#object[this.#property] = v;
     }
     this.updateDisplay(ignoreCache);
-    this.emitChange(this.getValue(), this.#object, this.#property);
-    return this;
+    if (isDifferent) {
+      this.emitChange(this.getValue(), this.#object, this.#property);
+    }
+    return isDifferent;
   }
   setValue(v) {
     this.#setValueImpl(v);
   }
   setFinalValue(v) {
-    this.#setValueImpl(v, true);
-    this.emitFinalChange(this.getValue(), this.#object, this.#property);
+    const isDifferent = this.#setValueImpl(v, true);
+    if (isDifferent) {
+      this.emitFinalChange(this.getValue(), this.#object, this.#property);
+    }
     return this;
   }
   updateDisplay(ignoreCache) {

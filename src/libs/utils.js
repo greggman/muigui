@@ -82,29 +82,24 @@ export function makeMinMaxPair(gui, properties, minPropName, maxPropName, option
   const { min, max } = options;
   const guiMinRange = options.minRange || 0;
   const valueMinRange = from(guiMinRange)[1];
-  console.log('guiMinRange', guiMinRange);
-  console.log('valueMinRange', valueMinRange);
-  return [
-    gui
-        .add(properties, minPropName, {
-          ...options,
-          min,
-          max: max - guiMinRange,
-        })
-        .listen()
-        .onChange(v => {
-          properties[maxPropName] = Math.min(max, Math.max(v + valueMinRange, properties[maxPropName]));
-        }),
-    gui
-        .add(properties, maxPropName, {
-          ...options,
-          min: min + guiMinRange,
-          max,
-        })
-        .listen()
-        .onChange(v => {
-          properties[minPropName] = Math.max(min, Math.min(v - valueMinRange, properties[minPropName]));
-        }),
-  ];
+  const minGui = gui
+    .add(properties, minPropName, {
+      ...options,
+      min,
+      max: max - guiMinRange,
+    })
+    .onChange(v => {
+      maxGui.setValue(Math.min(max, Math.max(v + valueMinRange, properties[maxPropName])));
+    });
+  const maxGui = gui
+    .add(properties, maxPropName, {
+      ...options,
+      min: min + guiMinRange,
+      max,
+    })
+    .onChange(v => {
+      minGui.setValue(Math.max(min, Math.min(v - valueMinRange, properties[minPropName])));
+    });
+  return [ minGui, maxGui ];
 }
 
