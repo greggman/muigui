@@ -1,5 +1,5 @@
 export default `
-.muigui-colors {
+.muigui {
   --bg-color: #ddd;
   --color: #222;
   --value-color: #145 ;
@@ -24,7 +24,7 @@ export default `
 }
 
 @media (prefers-color-scheme: dark) {
-  .muigui-colors {
+  .muigui {
     --bg-color: #222222;
     --color: #dddddd;
     --value-color: #43e5f7;

@@ -739,22 +739,17 @@ if (showUI) {
     // --------------- [ make a GUI for each CSS variable that affects GUI ] -----------------
     const obj = {};
 
-    const folder = gui.addFolder('Style');
-    for (const {vars} of varNamesBySelector) {
-      for (const {key, rule} of vars) {
-        const value = rule.style.getPropertyValue(key).trim();
-        if (looksLikeCSSColor(value)) {
-          obj[key] = cssStringToHexColor(value);
-          controllersByKey[key] = folder.addColor(obj, key).onChange(updateMuiguiCSSStyles);
-        } else if (!value.startsWith('var')){
-          obj[key] = value;
-          controllersByKey[key] = folder.add(obj, key).onChange(v => {
-            const fn = fns[key];
-            if (fn) {
-              fn(v);
-            }
-            updateMuiguiCSSStyles();
-          });
+  for (const {name: key, rule} of varNames) {
+    const value = rule.style.getPropertyValue(key).trim();
+    if (value.startsWith('#')) {
+      obj[key] = cssStringToHexColor(value);
+      controllersByKey[key] = folder.addColor(obj, key).onChange(updateStyles);
+    } else if (!value.startsWith('var')){
+      obj[key] = value;
+      controllersByKey[key] = folder.add(obj, key).onChange(v => {
+        const fn = fns[key];
+        if (fn) {
+          fn(v);
         }
       }
     }

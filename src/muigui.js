@@ -5,6 +5,7 @@ import {
   mapRange,
   makeRangeConverters,
   makeRangeOptions,
+  makeMinMaxPair,
 } from './libs/utils.js';
 import {
   converters
@@ -95,6 +96,7 @@ export class GUI extends GUIFolder {
   static mapRange = mapRange;
   static makeRangeConverters = makeRangeConverters;
   static makeRangeOptions = makeRangeOptions;
+  static makeMinMaxPair = makeMinMaxPair;
   #localStyleSheet = new CSSStyleSheet();
 
   constructor(options = {}) {

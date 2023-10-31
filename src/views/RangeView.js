@@ -22,16 +22,22 @@ export default class RangeView extends EditView {
       type: 'range',
       onInput: () => {
         this.#skipUpdate = true;
-        const [valid, v] = this.#from(parseFloat(this.domElement.value));
+        const {min, max, step} = this.#options;
+        const v = parseFloat(this.domElement.value);
+        const newV = clamp(stepify(v, v => v, step), min, max);
+        const [valid, validV] = this.#from(newV);
         if (valid) {
-          setter.setValue(v);
+          setter.setValue(validV);
         }
       },
       onChange: () => {
         this.#skipUpdate = true;
-        const [valid, v] = this.#from(parseFloat(this.domElement.value));
+        const {min, max, step} = this.#options;
+        const v = parseFloat(this.domElement.value);
+        const newV = clamp(stepify(v, v => v, step), min, max);
+        const [valid, validV] = this.#from(newV);
         if (valid) {
-          setter.setFinalValue(v);
+          setter.setFinalValue(validV);
         }
       },
       onWheel: e => {

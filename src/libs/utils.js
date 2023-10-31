@@ -72,3 +72,39 @@ export const makeRangeOptions = ({from, to, step}) => {
   };
 };
 
+// TODO: remove an use one in conversions. Move makeRangeConverters there?
+export const identity = {
+  to: v => v,
+  from: v => [true, v],
+};
+export function makeMinMaxPair(gui, properties, minPropName, maxPropName, options) {
+  const { converters: { from } = identity } = options;
+  const { min, max } = options;
+  const guiMinRange = options.minRange || 0;
+  const valueMinRange = from(guiMinRange)[1];
+  console.log('guiMinRange', guiMinRange);
+  console.log('valueMinRange', valueMinRange);
+  return [
+    gui
+        .add(properties, minPropName, {
+          ...options,
+          min,
+          max: max - guiMinRange,
+        })
+        .listen()
+        .onChange(v => {
+          properties[maxPropName] = Math.min(max, Math.max(v + valueMinRange, properties[maxPropName]));
+        }),
+    gui
+        .add(properties, maxPropName, {
+          ...options,
+          min: min + guiMinRange,
+          max,
+        })
+        .listen()
+        .onChange(v => {
+          properties[minPropName] = Math.max(min, Math.min(v - valueMinRange, properties[minPropName]));
+        }),
+  ];
+}
+
