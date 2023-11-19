@@ -1,4 +1,4 @@
-/* muigui@0.0.7, license MIT */
+/* muigui@0.0.10, license MIT */
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
@@ -700,6 +700,7 @@
     --width: 400px;
     --bg-color: initial;
     --label-width: 25%;
+    --number-width: 20%;
   }
 
   input,
@@ -873,7 +874,6 @@
         min,
         max: max - guiMinRange,
       })
-  //        .listen()
       .onChange(v => {
         maxGui.setValue(Math.min(max, Math.max(v + valueMinRange, properties[maxPropName])));
       });
@@ -883,7 +883,6 @@
         min: min + guiMinRange,
         max,
       })
-  //        .listen()
       .onChange(v => {
         minGui.setValue(Math.max(min, Math.min(v - valueMinRange, properties[minPropName])));
       });
@@ -1056,6 +1055,9 @@
         }
       }
     }
+    updateDisplay() {
+      // placeholder. override
+    }
     getColors() {
       const toCamelCase = s => s.replace(/-([a-z])/g, (m, m1) => m1.toUpperCase());
       const keys = [
@@ -1208,6 +1210,7 @@
   }
 
   class CheckboxView extends EditView {
+    #checkboxElem;
     constructor(setter, id) {
       const checkboxElem = createElem('input', {
         type: 'checkbox',
@@ -1220,9 +1223,10 @@
         },
       });
       super(createElem('label', {}, [checkboxElem]));
+      this.#checkboxElem = checkboxElem;
     }
     updateDisplay(v) {
-      this.domElement.checked = v;
+      this.#checkboxElem.checked = v;
     }
   }
 
@@ -1787,27 +1791,6 @@
     }
   }
 
-  class ElementView extends View {
-    constructor(tag, className) {
-      super(createElem(tag, {className}));
-    }
-  }
-
-  // TODO: remove this? Should just be user side
-  class Canvas extends LabelController {
-    #canvasElem;
-
-    constructor() {
-      super('muigui-canvas');
-      this.#canvasElem = this.add(
-        new ElementView('canvas', 'muigui-canvas'),
-      ).domElement;
-    }
-    get canvas() {
-      return this.#canvasElem;
-    }
-  }
-
   const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
   const lerp = (a, b, t) => a + (b - a) * t;
   const fract = v => v >= 0 ? v % 1 : 1 - (v % 1);
@@ -1844,12 +1827,14 @@
     const m = cssRGBRegex.exec(v);
     return uint8RGBToHex([m[1], m[2], m[3]].map(v => parseInt(v)));
   };
+  const cssRGBARegex = /^\s*rgba\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*$/;
 
   const hexToCssHSL = v => {
     const hsl = rgbUint8ToHsl(hexToUint8RGB(v)).map(v => f0(v));
     return `hsl(${hsl[0]}, ${hsl[1]}%, ${hsl[2]}%)`;
   };
   const cssHSLRegex = /^\s*hsl\(\s*(\d+)(?:deg|)\s*,\s*(\d+)%\s*,\s*(\d+)%\s*\)\s*$/;
+  const cssHSLARegex = /^\s*hsl\(\s*(\d+)(?:deg|)\s*,\s*(\d+)%\s*,\s*(\d+)%\s*,\s*(\d+)%\s*\)\s*$/;
 
   const hex3DigitTo6Digit = v => `${v[0]}${v[0]}${v[1]}${v[1]}${v[2]}${v[2]}`;
   const cssHSLToHex = v => {
@@ -1931,13 +1916,20 @@
   window.hsv01ToRGBFloat = hsv01ToRGBFloat;
   window.rgbFloatToHSV01 = rgbFloatToHSV01;
 
+  // Yea, meh!
+  const hasAlpha = format => format.endsWith('a') || format.startsWith('hex8');
+
   const cssStringFormats = [
     { re: /^#(?:[0-9a-f]){6}$/i, format: 'hex6' },
     { re: /^(?:[0-9a-f]){6}$/i, format: 'hex6-no-hash' },
+    { re: /^#(?:[0-9a-f]){8}$/i, format: 'hex8' },
+    { re: /^(?:[0-9a-f]){8}$/i, format: 'hex8-no-hash' },
     { re: /^#(?:[0-9a-f]){3}$/i, format: 'hex3' },
     { re: /^(?:[0-9a-f]){3}$/i, format: 'hex3-no-hash' },
     { re: cssRGBRegex, format: 'css-rgb' },
     { re: cssHSLRegex, format: 'css-hsl' },
+    { re: cssRGBARegex, format: 'css-rgba' },
+    { re: cssHSLARegex, format: 'css-hsla' },
   ];
 
   function guessStringColorFormat(v) {
@@ -1952,7 +1944,8 @@
   function guessFormat(v) {
     switch (typeof v) {
       case 'number':
-        return 'uint32-rgb';
+        console.warn('can not reliably guess format based on a number. You should pass in a format like {format: "uint32-rgb"} or {format: "uint32-rgb"}');
+        return v <= 0xFFFFFF ? 'uint32-rgb' : 'uint32-rgba';
       case 'string': {
         const formatInfo = guessStringColorFormat(v.trim());
         if (formatInfo) {
@@ -1964,18 +1957,28 @@
         if (v instanceof Uint8Array || v instanceof Uint8ClampedArray) {
           if (v.length === 3) {
             return 'uint8-rgb';
+          } else if (v.length === 4) {
+            return 'uint8-rgba';
           }
         } else if (v instanceof Float32Array) {
           if (v.length === 3) {
             return 'float-rgb';
+          } else if (v.length === 4) {
+            return 'float-rgba';
           }
         } else if (Array.isArray(v)) {
           if (v.length === 3) {
             return 'float-rgb';
+          } else if (v.length === 4) {
+            return 'float-rgba';
           }
         } else {
           if ('r' in v && 'g' in v && 'b' in v) {
-            return 'object-rgb';
+            if ('a' in v) {
+              return 'object-rgba';
+            } else {
+              return 'object-rgb';
+            }
           }
         }
     }
@@ -2215,6 +2218,27 @@
     },
   };
 
+  class ElementView extends View {
+    constructor(tag, className) {
+      super(createElem(tag, {className}));
+    }
+  }
+
+  // TODO: remove this? Should just be user side
+  class Canvas extends LabelController {
+    #canvasElem;
+
+    constructor() {
+      super('muigui-canvas');
+      this.#canvasElem = this.add(
+        new ElementView('canvas', 'muigui-canvas'),
+      ).domElement;
+    }
+    get canvas() {
+      return this.#canvasElem;
+    }
+  }
+
   class ColorView extends EditView {
     #to;
     #from;
@@ -2319,6 +2343,12 @@
       }
       return this;
     }
+    updateDisplay() {
+      for (const controller of this.#controllers) {
+        controller.updateDisplay();
+      }
+      return this;
+    }
     remove(controller) {
       const ndx = this.#controllers.indexOf(controller);
       if (ndx >= 0) {
@@ -2395,201 +2425,6 @@
     text(text) {
       this.domElement.textContent = text;
       return this;
-    }
-  }
-
-  function showCSS(ob) {
-    if (ob.prototype.css) {
-      console.log(ob.prototype.css);
-      showCSS(ob.prototype);
-    }
-  }
-
-  class Layout extends View {
-    static css = 'bar';
-    constructor(tag, className) {
-      super(createElem(tag, {className}));
-
-      showCSS(this);
-    }
-  }
-
-  /*
-  class ValueController ?? {
-    const row = this.add(new Row());
-    const label = row.add(new Label());
-    const div = row.add(new Div());
-    const row = div.add(new Row());
-  }
-  */
-
-  /*
-  class MyCustomThing extends ValueController {
-    constructor(object, property, options) {
-      const topRow = this.add(new Row());
-      const bottomRow = this.add(new Row());
-      topRow.add(new NumberView());
-      topRow.add(new NumberView());
-      topRow.add(new NumberView());
-      topRow.add(new NumberView());
-      bottomRow.add(new DirectionView());
-      bottomRow.add(new DirectionView());
-      bottomRow.add(new DirectionView());
-      bottomRow.add(new DirectionView());
-    }
-  }
-    new Grid([
-      [new
-    ]
-    */
-
-  class Column extends Layout {
-    constructor() {
-      super('div', 'muigui-row');
-    }
-  }
-
-  class Frame extends Layout {
-    static css = 'foo';
-    constructor() {
-      super('div', 'muigui-frame');
-    }
-    static get foo() {
-      return 'boo';
-    }
-  }
-
-  class Grid extends Layout {
-    constructor() {
-      super('div', 'muigui-grid');
-    }
-  }
-
-  class Row extends Layout {
-    constructor() {
-      super('div', 'muigui-row');
-    }
-  }
-
-  class GUIFolder extends Folder {
-    add(object, property, ...args) {
-      const controller = object instanceof Controller
-          ? object
-          : createController(object, property, ...args);
-      return this.addController(controller);
-    }
-    addCanvas(name) {
-      return this.addController(new Canvas(name));
-    }
-    addColor(object, property, ...args) {
-      return this.addController(new Color(object, property, ...args));
-    }
-    addDivider() {
-      return this.addController(new Divider());
-    }
-    addFolder(name) {
-      return this.addController(new GUIFolder(name));
-    }
-    addLabel(text) {
-      return this.addController(new Label(text));
-    }
-  }
-
-  class MuiguiElement extends HTMLElement {
-    constructor() {
-      super();
-      this.shadow = this.attachShadow({mode: 'open'});
-    }
-  }
-
-  customElements.define('muigui-element', MuiguiElement);
-
-  const baseStyleSheet = new CSSStyleSheet();
-  baseStyleSheet.replaceSync(css.default);
-  const userStyleSheet = new CSSStyleSheet();
-
-  function makeStyleSheetUpdater(styleSheet) {
-    let newCss;
-    let newCssPromise;
-
-    function updateStyle() {
-      if (newCss && !newCssPromise) {
-        const s = newCss;
-        newCss = undefined;
-        newCssPromise = styleSheet.replace(s).then(() => {
-    console.log(s);
-          newCssPromise = undefined;
-          updateStyle();
-        });
-      }
-    }
-
-    return function updateStyleSheet(css) {
-      newCss = css;
-      updateStyle();
-    };
-  }
-
-  const updateBaseStyle = makeStyleSheetUpdater(baseStyleSheet);
-  const updateUserStyle = makeStyleSheetUpdater(userStyleSheet);
-
-  class GUI extends GUIFolder {
-    static converters = converters;
-    static mapRange = mapRange;
-    static makeRangeConverters = makeRangeConverters;
-    static makeRangeOptions = makeRangeOptions;
-    static makeMinMaxPair = makeMinMaxPair;
-    #localStyleSheet = new CSSStyleSheet();
-
-    constructor(options = {}) {
-      super('Controls', 'muigui-root');
-      if (options instanceof HTMLElement) {
-        options = {parent: options};
-      }
-      const {
-        autoPlace = true,
-        width,
-        title = 'Controls',
-      } = options;
-      let {
-        parent,
-      } = options;
-
-      if (width) {
-        this.domElement.style.width = /^\d+$/.test(width) ? `${width}px` : width;
-      }
-      if (parent === undefined && autoPlace) {
-        parent = document.body;
-        this.domElement.classList.add('muigui-auto-place');
-      }
-      if (parent) {
-        const muiguiElement = createElem('muigui-element');
-        muiguiElement.shadowRoot.adoptedStyleSheets = [baseStyleSheet, userStyleSheet, this.#localStyleSheet];
-        muiguiElement.shadow.appendChild(this.domElement);
-        parent.appendChild(muiguiElement);
-      }
-      if (title) {
-        this.title(title);
-      }
-      this.domElement.classList.add('muigui', 'muigui-colors');
-    }
-    setStyle(css) {
-      this.#localStyleSheet.replace(css);
-    }
-    static setBaseStyles(css) {
-      updateBaseStyle(css);
-    }
-    static getBaseStyleSheet() {
-      return baseStyleSheet;
-    }
-    static setUserStyles(css) {
-      updateUserStyle(css);
-    }
-    static getUserStyleSheet() {
-      return userStyleSheet;
-    }
-    static setTheme(name) {
-      GUI.setBaseStyles(`${css.default}\n${css.themes[name] || ''}`);
     }
   }
 
@@ -2836,6 +2671,204 @@
       this.addTop(new TextView(this));
       this.addBottom(new ColorChooserView(this));
       this.updateDisplay();
+    }
+  }
+
+  function showCSS(ob) {
+    if (ob.prototype.css) {
+      showCSS(ob.prototype);
+    }
+  }
+
+  class Layout extends View {
+    static css = 'bar';
+    constructor(tag, className) {
+      super(createElem(tag, {className}));
+
+      showCSS(this);
+    }
+  }
+
+  /*
+  class ValueController ?? {
+    const row = this.add(new Row());
+    const label = row.add(new Label());
+    const div = row.add(new Div());
+    const row = div.add(new Row());
+  }
+  */
+
+  /*
+  class MyCustomThing extends ValueController {
+    constructor(object, property, options) {
+      const topRow = this.add(new Row());
+      const bottomRow = this.add(new Row());
+      topRow.add(new NumberView());
+      topRow.add(new NumberView());
+      topRow.add(new NumberView());
+      topRow.add(new NumberView());
+      bottomRow.add(new DirectionView());
+      bottomRow.add(new DirectionView());
+      bottomRow.add(new DirectionView());
+      bottomRow.add(new DirectionView());
+    }
+  }
+    new Grid([
+      [new
+    ]
+    */
+
+  class Column extends Layout {
+    constructor() {
+      super('div', 'muigui-row');
+    }
+  }
+
+  class Frame extends Layout {
+    static css = 'foo';
+    constructor() {
+      super('div', 'muigui-frame');
+    }
+    static get foo() {
+      return 'boo';
+    }
+  }
+
+  class Grid extends Layout {
+    constructor() {
+      super('div', 'muigui-grid');
+    }
+  }
+
+  class Row extends Layout {
+    constructor() {
+      super('div', 'muigui-row');
+    }
+  }
+
+  class GUIFolder extends Folder {
+    add(object, property, ...args) {
+      const controller = object instanceof Controller
+          ? object
+          : createController(object, property, ...args);
+      return this.addController(controller);
+    }
+    addCanvas(name) {
+      return this.addController(new Canvas(name));
+    }
+    addColor(object, property, options = {}) {
+      const value = object[property];
+      if (hasAlpha(options.format || guessFormat(value))) {
+        return this.addController(new ColorChooser(object, property, options));
+      } else {
+        return this.addController(new Color(object, property, options));
+      }
+    }
+    addDivider() {
+      return this.addController(new Divider());
+    }
+    addFolder(name) {
+      return this.addController(new GUIFolder(name));
+    }
+    addLabel(text) {
+      return this.addController(new Label(text));
+    }
+  }
+
+  class MuiguiElement extends HTMLElement {
+    constructor() {
+      super();
+      this.shadow = this.attachShadow({mode: 'open'});
+    }
+  }
+
+  customElements.define('muigui-element', MuiguiElement);
+
+  const baseStyleSheet = new CSSStyleSheet();
+  baseStyleSheet.replaceSync(css.default);
+  const userStyleSheet = new CSSStyleSheet();
+
+  function makeStyleSheetUpdater(styleSheet) {
+    let newCss;
+    let newCssPromise;
+
+    function updateStyle() {
+      if (newCss && !newCssPromise) {
+        const s = newCss;
+        newCss = undefined;
+        newCssPromise = styleSheet.replace(s).then(() => {
+          newCssPromise = undefined;
+          updateStyle();
+        });
+      }
+    }
+
+    return function updateStyleSheet(css) {
+      newCss = css;
+      updateStyle();
+    };
+  }
+
+  const updateBaseStyle = makeStyleSheetUpdater(baseStyleSheet);
+  const updateUserStyle = makeStyleSheetUpdater(userStyleSheet);
+
+  class GUI extends GUIFolder {
+    static converters = converters;
+    static mapRange = mapRange;
+    static makeRangeConverters = makeRangeConverters;
+    static makeRangeOptions = makeRangeOptions;
+    static makeMinMaxPair = makeMinMaxPair;
+    #localStyleSheet = new CSSStyleSheet();
+
+    constructor(options = {}) {
+      super('Controls', 'muigui-root');
+      if (options instanceof HTMLElement) {
+        options = {parent: options};
+      }
+      const {
+        autoPlace = true,
+        width,
+        title = 'Controls',
+      } = options;
+      let {
+        parent,
+      } = options;
+
+      if (width) {
+        this.domElement.style.width = /^\d+$/.test(width) ? `${width}px` : width;
+      }
+      if (parent === undefined && autoPlace) {
+        parent = document.body;
+        this.domElement.classList.add('muigui-auto-place');
+      }
+      if (parent) {
+        const muiguiElement = createElem('muigui-element');
+        muiguiElement.shadowRoot.adoptedStyleSheets = [baseStyleSheet, userStyleSheet, this.#localStyleSheet];
+        muiguiElement.shadow.appendChild(this.domElement);
+        parent.appendChild(muiguiElement);
+      }
+      if (title) {
+        this.title(title);
+      }
+      this.domElement.classList.add('muigui', 'muigui-colors');
+    }
+    setStyle(css) {
+      this.#localStyleSheet.replace(css);
+    }
+    static setBaseStyles(css) {
+      updateBaseStyle(css);
+    }
+    static getBaseStyleSheet() {
+      return baseStyleSheet;
+    }
+    static setUserStyles(css) {
+      updateUserStyle(css);
+    }
+    static getUserStyleSheet() {
+      return userStyleSheet;
+    }
+    static setTheme(name) {
+      GUI.setBaseStyles(`${css.default}\n${css.themes[name] || ''}`);
     }
   }
 
