@@ -693,6 +693,7 @@ themes: {
     --width: 400px;
     --bg-color: initial;
     --label-width: 25%;
+    --number-width: 20%;
   }
 
   input,
