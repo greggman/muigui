@@ -2,6 +2,7 @@ import { createElem } from '../libs/elem.js';
 import EditView from './EditView.js';
 
 export default class CheckboxView extends EditView {
+  #checkboxElem;
   constructor(setter, id) {
     const checkboxElem = createElem('input', {
       type: 'checkbox',
@@ -14,8 +15,9 @@ export default class CheckboxView extends EditView {
       },
     });
     super(createElem('label', {}, [checkboxElem]));
+    this.#checkboxElem = checkboxElem;
   }
   updateDisplay(v) {
-    this.domElement.checked = v;
+    this.#checkboxElem.checked = v;
   }
 }
