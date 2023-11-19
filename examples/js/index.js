@@ -145,6 +145,7 @@ if (showUI) {
       document.body.style.backgroundColor = v;
     }).listen();
     gui.add(s, 'show', {name: 'Show Current Values'});
+    gui.add({updateDisplay: () => gui.updateDisplay()}, 'updateDisplay');
 
     if (i === 2) {
       gui.name('Disabled');
@@ -345,7 +346,7 @@ if (showUI) {
   addColor('"RGB"', '8F8');
   addColor('"rgb(r, g, b)"', 'rgb(170,68,240)');
   addColor('"hsl(h, s, l)"', 'hsl(170,100%,50%)');
-  addColor('0xRRGGBB', 0xFEA956, undefined, v => `0x${v.toString(16).padStart(6, '0')}`);
+  addColor('0xRRGGBB', 0xFEA956, 'uint32-rgb', v => `0x${v.toString(16).padStart(6, '0')}`);
   addColor('[r(u8), b(u8), c(u8)]', [255, 192, 255], 'uint8-rgb');
   addColor('Uint8Array(3)', new Uint8Array([75, 150, 225]), undefined, v => `[${v.join(', ')}]`);
   // note: Because it's Float32Array, if we just use  map  it won't work because
@@ -354,6 +355,11 @@ if (showUI) {
   addColor('Float32Array(3)', new Float32Array([0.9, 0.7, 0.5]), undefined, v => `[${Array.from(v).map(v => f3(v)).join(', ')}]`);
   addColor('[r(f), g(f), b(f)]', [0.2, 0.9, 0.5], undefined, v => `[${v.map(v => f3(v))}]`);
   addColor('{r, g, b}',  {r: 0, g: 0, b: 1}, undefined, v => `{r: ${f3(v.r)}, g: ${f3(v.g)}, b: ${f3(v.b)}}`);
+  //gui.addLabel('rgba');
+  //addColor('#RRGGBBAA', '#9A56EF80');
+  //addColor('0xRRGGBBAA', 0xEF569A80);
+  //addColor('rgba(r, g, b, a)', 'rgba(64, 128, 255, 0.25)');
+  //addColor('hsla(h, s, l, a)', 'hsla(15, 100%, 50%, 0.75)');
   logger.setController(gui.addLabel(''));
 }
 

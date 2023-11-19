@@ -10,12 +10,17 @@ import {
 import {
   converters
 } from './libs/conversions.js';
+import {
+  hasAlpha,
+  guessFormat,
+} from './libs/color-utils.js';
 import Canvas from './controllers/Canvas.js';
 import Color from './controllers/Color.js';
 import Divider from './controllers/Divider.js';
 import Folder from './controllers/Folder.js';
 import Label from './controllers/Label.js';
 import Controller from './controllers/Controller.js';
+import ColorChooser from './controllers/ColorChooser.js';
 
 import Column from './layout/Column.js';
 import Frame from './layout/Frame.js';
@@ -39,8 +44,13 @@ export class GUIFolder extends Folder {
   addCanvas(name) {
     return this.addController(new Canvas(name));
   }
-  addColor(object, property, ...args) {
-    return this.addController(new Color(object, property, ...args));
+  addColor(object, property, options = {}) {
+    const value = object[property];
+    if (hasAlpha(options.format || guessFormat(value))) {
+      return this.addController(new ColorChooser(object, property, options));
+    } else {
+      return this.addController(new Color(object, property, options));
+    }
   }
   addDivider() {
     return this.addController(new Divider());

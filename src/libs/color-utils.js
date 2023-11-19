@@ -34,12 +34,14 @@ const cssRGBToHex = v => {
   const m = cssRGBRegex.exec(v);
   return uint8RGBToHex([m[1], m[2], m[3]].map(v => parseInt(v)));
 };
+const cssRGBARegex = /^\s*rgba\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*$/;
 
 const hexToCssHSL = v => {
   const hsl = rgbUint8ToHsl(hexToUint8RGB(v)).map(v => f0(v));
   return `hsl(${hsl[0]}, ${hsl[1]}%, ${hsl[2]}%)`;
 };
 const cssHSLRegex = /^\s*hsl\(\s*(\d+)(?:deg|)\s*,\s*(\d+)%\s*,\s*(\d+)%\s*\)\s*$/;
+const cssHSLARegex = /^\s*hsl\(\s*(\d+)(?:deg|)\s*,\s*(\d+)%\s*,\s*(\d+)%\s*,\s*(\d+)%\s*\)\s*$/;
 
 const hex3DigitTo6Digit = v => `${v[0]}${v[0]}${v[1]}${v[1]}${v[2]}${v[2]}`;
 const cssHSLToHex = v => {
@@ -121,13 +123,20 @@ export function rgbFloatToHSV01([r, g, b]) {
 window.hsv01ToRGBFloat = hsv01ToRGBFloat;
 window.rgbFloatToHSV01 = rgbFloatToHSV01;
 
+// Yea, meh!
+export const hasAlpha = format => format.endsWith('a') || format.startsWith('hex8');
+
 const cssStringFormats = [
   { re: /^#(?:[0-9a-f]){6}$/i, format: 'hex6' },
   { re: /^(?:[0-9a-f]){6}$/i, format: 'hex6-no-hash' },
+  { re: /^#(?:[0-9a-f]){8}$/i, format: 'hex8' },
+  { re: /^(?:[0-9a-f]){8}$/i, format: 'hex8-no-hash' },
   { re: /^#(?:[0-9a-f]){3}$/i, format: 'hex3' },
   { re: /^(?:[0-9a-f]){3}$/i, format: 'hex3-no-hash' },
   { re: cssRGBRegex, format: 'css-rgb' },
   { re: cssHSLRegex, format: 'css-hsl' },
+  { re: cssRGBARegex, format: 'css-rgba' },
+  { re: cssHSLARegex, format: 'css-hsla' },
 ];
 
 function guessStringColorFormat(v) {
@@ -142,7 +151,8 @@ function guessStringColorFormat(v) {
 export function guessFormat(v) {
   switch (typeof v) {
     case 'number':
-      return 'uint32-rgb';
+      console.warn('can not reliably guess format based on a number. You should pass in a format like {format: "uint32-rgb"} or {format: "uint32-rgb"}');
+      return v <= 0xFFFFFF ? 'uint32-rgb' : 'uint32-rgba';
     case 'string': {
       const formatInfo = guessStringColorFormat(v.trim());
       if (formatInfo) {
@@ -154,18 +164,28 @@ export function guessFormat(v) {
       if (v instanceof Uint8Array || v instanceof Uint8ClampedArray) {
         if (v.length === 3) {
           return 'uint8-rgb';
+        } else if (v.length === 4) {
+          return 'uint8-rgba';
         }
       } else if (v instanceof Float32Array) {
         if (v.length === 3) {
           return 'float-rgb';
+        } else if (v.length === 4) {
+          return 'float-rgba';
         }
       } else if (Array.isArray(v)) {
         if (v.length === 3) {
           return 'float-rgb';
+        } else if (v.length === 4) {
+          return 'float-rgba';
         }
       } else {
         if ('r' in v && 'g' in v && 'b' in v) {
-          return 'object-rgb';
+          if ('a' in v) {
+            return 'object-rgba';
+          } else {
+            return 'object-rgb';
+          }
         }
       }
   }
