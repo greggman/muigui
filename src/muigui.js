@@ -75,7 +75,6 @@ function makeStyleSheetUpdater(styleSheet) {
       const s = newCss;
       newCss = undefined;
       newCssPromise = styleSheet.replace(s).then(() => {
-  console.log(s);
         newCssPromise = undefined;
         updateStyle();
       });

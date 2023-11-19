@@ -3,7 +3,6 @@ import View from '../views/View.js';
 
 function showCSS(ob) {
   if (ob.prototype.css) {
-    console.log(ob.prototype.css);
     showCSS(ob.prototype);
   }
 }
