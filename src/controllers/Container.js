@@ -26,6 +26,12 @@ export default class Container extends Controller {
     }
     return this;
   }
+  updateDisplay() {
+    for (const controller of this.#controllers) {
+      controller.updateDisplay();
+    }
+    return this;
+  }
   remove(controller) {
     const ndx = this.#controllers.indexOf(controller);
     if (ndx >= 0) {

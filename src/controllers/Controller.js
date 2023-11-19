@@ -113,6 +113,9 @@ export default class Controller extends View {
       }
     }
   }
+  updateDisplay() {
+    // placeholder. override
+  }
   getColors() {
     const toCamelCase = s => s.replace(/-([a-z])/g, (m, m1) => m1.toUpperCase());
     const keys = [
