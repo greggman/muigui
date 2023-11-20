@@ -30,3 +30,8 @@ export function addElem(tag, parent, attrs = {}, children = []) {
   parent.appendChild(elem);
   return elem;
 }
+
+let nextId = 0;
+export function getNewId() {
+  return `muigui-id-${nextId++}`;
+}

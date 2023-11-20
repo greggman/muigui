@@ -81,14 +81,14 @@ export function assertStrictNotEqual(actual, expected, msg = '') {
   }
 }
 
-export function assertArrayEqual(actual, expected, msg = '') {
+export function assertArrayEqualApproximately(actual, expected, maxDiff = Number.EPSILON, msg = '') {
   if (actual.length !== expected.length) {
     throw new Error(`${formatMsg(msg)}expected: array.length ${expected.length} to equal actual.length: ${actual.length}`);
   }
   const errors = [];
   for (let i = 0; i < actual.length && errors.length < 10; ++i) {
     try {
-      assertEqual(actual[i], expected[i]);
+      assertEqualApproximately(actual[i], expected[i], maxDiff);
     } catch (e) {
       errors.push(`${formatMsg(msg)}expected: expected[${i}] ${expected[i]} to equal actual[${i}]: ${actual[i]}`);
     }
@@ -96,6 +96,10 @@ export function assertArrayEqual(actual, expected, msg = '') {
   if (errors.length > 0) {
     throw new Error(errors.join('\n'));
   }
+}
+
+export function assertArrayEqual(actual, expected, msg = '') {
+  assertArrayEqualApproximately(actual, expected, 0, msg);
 }
 
 export function assertThrowsWith(func, expectations, msg = '') {

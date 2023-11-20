@@ -9,6 +9,11 @@ const hexToUint32RGB = v => (parseInt(v.substring(1, 3), 16) << 16) |
                             (parseInt(v.substring(3, 5), 16) << 8 ) |
                             (parseInt(v.substring(5, 7), 16)      );
 const uint32RGBToHex = v => `#${(Math.round(v)).toString(16).padStart(6, '0')}`;
+const hexToUint32RGBA = v => (parseInt(v.substring(1, 3), 16) * 2 ** 24) +
+                             (parseInt(v.substring(3, 5), 16) * 2 ** 16) +
+                             (parseInt(v.substring(5, 7), 16) * 2 **  8) +
+                             (parseInt(v.substring(7, 9), 16)      );
+const uint32RGBAToHex = v => `#${(Math.round(v)).toString(16).padStart(8, '0')}`;
 
 export const hexToUint8RGB = v => [
     parseInt(v.substring(1, 3), 16),
@@ -17,16 +22,35 @@ export const hexToUint8RGB = v => [
 ];
 export const uint8RGBToHex = v => `#${Array.from(v).map(v => v.toString(16).padStart(2, '0')).join('')}`;
 
+export const hexToUint8RGBA = v => [
+    parseInt(v.substring(1, 3), 16),
+    parseInt(v.substring(3, 5), 16),
+    parseInt(v.substring(5, 7), 16),
+    parseInt(v.substring(7, 9), 16),
+];
+export const uint8RGBAToHex = v => `#${Array.from(v).map(v => v.toString(16).padStart(2, '0')).join('')}`;
+
 export const hexToFloatRGB = v => hexToUint8RGB(v).map(v => f3(v / 255));
 export const floatRGBToHex = v => uint8RGBToHex(Array.from(v).map(v => Math.round(clamp(v * 255, 0, 255))));
+
+export const hexToFloatRGBA = v => hexToUint8RGBA(v).map(v => f3(v / 255));
+export const floatRGBAToHex = v => uint8RGBAToHex(Array.from(v).map(v => Math.round(clamp(v * 255, 0, 255))));
+
+const scaleAndClamp = v => clamp(Math.round(v * 255), 0, 255).toString(16).padStart(2, '0');
 
 const hexToObjectRGB = v => ({
   r: parseInt(v.substring(1, 3), 16) / 255,
   g: parseInt(v.substring(3, 5), 16) / 255,
   b: parseInt(v.substring(5, 7), 16) / 255,
 });
-const scaleAndClamp = v => clamp(Math.round(v * 255), 0, 255).toString(16).padStart(2, '0');
 const objectRGBToHex = v => `#${scaleAndClamp(v.r)}${scaleAndClamp(v.g)}${scaleAndClamp(v.b)}`;
+const hexToObjectRGBA = v => ({
+  r: parseInt(v.substring(1, 3), 16) / 255,
+  g: parseInt(v.substring(3, 5), 16) / 255,
+  b: parseInt(v.substring(5, 7), 16) / 255,
+  a: parseInt(v.substring(7, 9), 16) / 255,
+});
+const objectRGBAToHex = v => `#${scaleAndClamp(v.r)}${scaleAndClamp(v.g)}${scaleAndClamp(v.b)}${scaleAndClamp(v.a)}`;
 
 const hexToCssRGB = v => `rgb(${hexToUint8RGB(v).join(', ')})`;
 const cssRGBRegex = /^\s*rgb\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*$/;
@@ -34,20 +58,34 @@ const cssRGBToHex = v => {
   const m = cssRGBRegex.exec(v);
   return uint8RGBToHex([m[1], m[2], m[3]].map(v => parseInt(v)));
 };
-const cssRGBARegex = /^\s*rgba\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*$/;
+const hexToCssRGBA = v => `rgba(${hexToUint8RGBA(v).map((v, i) => i === 3 ? v / 255 : v).join(', ')})`;
+const cssRGBARegex = /^\s*rgba\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+\.\d+|\d+)\s*\)\s*$/;
+const cssRGBAToHex = v => {
+  const m = cssRGBARegex.exec(v);
+  return uint8RGBAToHex([m[1], m[2], m[3], m[4]].map((v, i) => i === 3 ? (parseFloat(v) * 255 | 0) : parseInt(v)));
+};
 
 const hexToCssHSL = v => {
   const hsl = rgbUint8ToHsl(hexToUint8RGB(v)).map(v => f0(v));
   return `hsl(${hsl[0]}, ${hsl[1]}%, ${hsl[2]}%)`;
 };
-const cssHSLRegex = /^\s*hsl\(\s*(\d+)(?:deg|)\s*,\s*(\d+)%\s*,\s*(\d+)%\s*\)\s*$/;
-const cssHSLARegex = /^\s*hsl\(\s*(\d+)(?:deg|)\s*,\s*(\d+)%\s*,\s*(\d+)%\s*,\s*(\d+)%\s*\)\s*$/;
+const hexToCssHSLA = v => {
+  const hsla = rgbaUint8ToHsla(hexToUint8RGBA(v)).map((v, i) => i === 3 ? f3(v) : f0(v));
+  return `hsl(${hsla[0]} ${hsla[1]}% ${hsla[2]}% / ${hsla[3]})`;
+};
+const cssHSLRegex = /^\s*hsl\(\s*(\d+)(?:deg|)\s*(?:,|)\s*(\d+)%\s*(?:,|)\s*(\d+)%\s*\)\s*$/;
+const cssHSLARegex = /^\s*hsl\(\s*(\d+)(?:deg|)\s*(?:,|)\s*(\d+)%\s*(?:,|)\s*(\d+)%\s*\/\s*(\d+\.\d+|\d+)\s*\)\s*$/;
 
 const hex3DigitTo6Digit = v => `${v[0]}${v[0]}${v[1]}${v[1]}${v[2]}${v[2]}`;
 const cssHSLToHex = v => {
   const m = cssHSLRegex.exec(v);
   const rgb = hslToRgbUint8([m[1], m[2], m[3]].map(v => parseFloat(v)));
   return uint8RGBToHex(rgb);
+};
+const cssHSLAToHex = v => {
+  const m = cssHSLARegex.exec(v);
+  const rgba = hslaToRgbaUint8([m[1], m[2], m[3], m[4]].map(v => parseFloat(v)));
+  return uint8RGBAToHex(rgba);
 };
 
 const euclideanModulo = (v, n) => ((v % n) + n) % n;
@@ -65,6 +103,11 @@ export function hslToRgbUint8([h, s, l]) {
   }
 
   return [f(0), f(8), f(4)].map(v => Math.round(v * 255));
+}
+
+export function hslaToRgbaUint8([h, s, l, a]) {
+  const rgb = hslToRgbUint8([h, s, l]);
+  return [...rgb, a * 255 | 0];
 }
 
 export function rgbFloatToHsl01([r, g, b]) {
@@ -90,9 +133,19 @@ export function rgbFloatToHsl01([r, g, b]) {
   return [h / 6, s, l];
 }
 
+export function rgbaFloatToHsla01([r, g, b, a]) {
+  const hsl = rgbFloatToHsl01([r, g, b]);
+ return [...hsl, a];
+}
+
 export const rgbUint8ToHsl = (rgb) => {
   const [h, s, l] = rgbFloatToHsl01(rgb.map(v => v / 255));
   return [h * 360, s * 100, l * 100];
+};
+
+export const rgbaUint8ToHsla = (rgba) => {
+  const [h, s, l, a] = rgbaFloatToHsla01(rgba.map(v => v / 255));
+  return [h * 360, s * 100, l * 100, a];
 };
 
 export function hsv01ToRGBFloat([hue, sat, val]) {
@@ -101,6 +154,11 @@ export function hsv01ToRGBFloat([hue, sat, val]) {
   return [hue, hue + 2 / 3, hue + 1 / 3].map(
       v => lerp(1, clamp(Math.abs(fract(v) * 6 - 3.0) - 1, 0, 1), sat) * val
   );
+}
+
+export function hsva01ToRGBAFloat([hue, sat, val, alpha]) {
+  const rgb = hsv01ToRGBFloat([hue, sat, val]);
+  return [...rgb, alpha];
 }
 
 const round3 = v => Math.round(v * 1000) / 1000;
@@ -120,8 +178,13 @@ export function rgbFloatToHSV01([r, g, b]) {
   ].map(round3);
 }
 
-window.hsv01ToRGBFloat = hsv01ToRGBFloat;
-window.rgbFloatToHSV01 = rgbFloatToHSV01;
+export function rgbaFloatToHSVA01([r, g, b, a]) {
+  const hsv = rgbFloatToHSV01([r, g, b]);
+  return [...hsv, a];
+}
+
+// window.hsv01ToRGBFloat = hsv01ToRGBFloat;
+// window.rgbFloatToHSV01 = rgbFloatToHSV01;
 
 // Yea, meh!
 export const hasAlpha = format => format.endsWith('a') || format.startsWith('hex8');
@@ -199,6 +262,13 @@ function fixHex6(v) {
   //return fix(v.trim());
 }
 
+function fixHex8(v) {
+  return v.trim(v);
+  //const formatInfo = guessStringColorFormat(v.trim());
+  //const fix = formatInfo ? formatInfo.fix : v => v;
+  //return fix(v.trim());
+}
+
 function hex6ToHex3(hex6) {
   return (hex6[1] === hex6[2] &&
           hex6[3] === hex6[4] &&
@@ -234,6 +304,19 @@ const strToRGBObject = (s) => {
   }
 };
 
+const strToRGBAObject = (s) => {
+  try {
+    const json = s.replace(/([a-z])/g, '"$1"');
+    const rgba = JSON.parse(json);
+    if (Number.isNaN(rgba.r) || Number.isNaN(rgba.g) || Number.isNaN(rgba.b) || Number.isNaN(rgba.a)) {
+      throw new Error('not {r, g, b, a}');
+    }
+    return [true, rgba];
+  } catch (e) {
+    return [false];
+  }
+};
+
 const strToCssRGB = s => {
   const m = cssRGBRegex.exec(s);
   if (!m) {
@@ -242,6 +325,16 @@ const strToCssRGB = s => {
   const v = [m[1], m[2], m[3]].map(v => parseInt(v));
   const outOfRange = v.find(v => v > 255);
   return [!outOfRange, `rgb(${v.join(', ')})`];
+};
+
+const strToCssRGBA = s => {
+  const m = cssRGBARegex.exec(s);
+  if (!m) {
+    return [false];
+  }
+  const v = [m[1], m[2], m[3], m[4]].map((v, i) => i === 3 ? parseFloat(v) : parseInt(v));
+  const outOfRange = v.find(v => v > 255);
+  return [!outOfRange, `rgba(${v.join(', ')})`];
 };
 
 const strToCssHSL = s => {
@@ -254,8 +347,21 @@ const strToCssHSL = s => {
   return [!outOfRange, `hsl(${v[0]}, ${v[1]}%, ${v[2]}%)`];
 };
 
+const strToCssHSLA = s => {
+  const m = cssHSLARegex.exec(s);
+  if (!m) {
+    return [false];
+  }
+  const v = [m[1], m[2], m[3], m[4]].map(v => parseFloat(v));
+  const outOfRange = v.find(v => Number.isNaN(v));
+  return [!outOfRange, `hsl(${v[0]} ${v[1]}% ${v[2]}% / ${v[3]})`];
+};
+
 const rgbObjectToStr = rgb => {
   return `{r:${f3(rgb.r)}, g:${f3(rgb.g)}, b:${f3(rgb.b)}}`;
+};
+const rgbaObjectToStr = rgba => {
+  return `{r:${f3(rgba.r)}, g:${f3(rgba.g)}, b:${f3(rgba.b)}}, a:${f3(rgba.a)}}`;
 };
 
 const strTo3IntsRE = /^\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*$/;
@@ -269,10 +375,32 @@ const strTo3Ints = s => {
   return [!outOfRange, v];
 };
 
+const strTo4IntsRE = /^\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*$/;
+const strTo4Ints = s => {
+  const m = strTo4IntsRE.exec(s);
+  if (!m) {
+    return [false];
+  }
+  const v = [m[1], m[2], m[3], m[4]].map(v => parseInt(v));
+  const outOfRange = v.find(v => v > 255);
+  return [!outOfRange, v];
+};
+
 const strTo3Floats = s => {
   const numbers = s.split(',').map(s => s.trim());
   const v = numbers.map(v => parseFloat(v));
   if (v.length !== 3) {
+    return [false];
+  }
+  // Note: using isNaN not Number.isNaN
+  const badNdx = numbers.findIndex(v => isNaN(v));
+  return [badNdx < 0, v.map(v => f3(v))];
+};
+
+const strTo4Floats = s => {
+  const numbers = s.split(',').map(s => s.trim());
+  const v = numbers.map(v => parseFloat(v));
+  if (v.length !== 4) {
     return [false];
   }
   // Note: using isNaN not Number.isNaN
@@ -289,8 +417,19 @@ const strToUint32RGB = s => {
   return [true, parseInt(m[1], 16)];
 };
 
-const hexRE = /^\s*#[a-f0-9]{6}\s*$|^\s*#[a-f0-9]{3}\s*$/i;
-const hexNoHashRE = /^\s*[a-f0-9]{6}\s*$/i;
+const strToUint32RGBARegex = /^\s*(?:0x){0,1}([0-9a-z]{1,8})\s*$/i;
+const strToUint32RGBA = s => {
+  const m = strToUint32RGBARegex.exec(s);
+  if (!m) {
+    return [false];
+  }
+  return [true, parseInt(m[1], 16)];
+};
+
+const hex6RE = /^\s*#[a-f0-9]{6}\s*$|^\s*#[a-f0-9]{3}\s*$/i;
+const hexNoHash6RE = /^\s*[a-f0-9]{6}\s*$/i;
+const hex8RE = /^\s*#[a-f0-9]{8}\s*$/i;
+const hexNoHash8RE = /^\s*[a-f0-9]{8}\s*$/i;
 
 // For each format converter
 //
@@ -328,7 +467,17 @@ export const colorFormatConverters = {
       to: fixHex6,
     },
     text: {
-      from: v => [hexRE.test(v), v.trim()],
+      from: v => [hex6RE.test(v), v.trim()],
+      to: v => v,
+    },
+  },
+  'hex8': {
+    color: {
+      from: v => [true, v],
+      to: fixHex8,
+    },
+    text: {
+      from: v => [hex8RE.test(v), v.trim()],
       to: v => v,
     },
   },
@@ -338,7 +487,7 @@ export const colorFormatConverters = {
       to: hex3ToHex6,
     },
     text: {
-      from: v => [hexRE.test(v), hex6ToHex3(v.trim())],
+      from: v => [hex6RE.test(v), hex6ToHex3(v.trim())],
       to: v => v,
     },
   },
@@ -348,7 +497,17 @@ export const colorFormatConverters = {
       to: v => `#${fixHex6(v)}`,
     },
     text: {
-      from: v => [hexNoHashRE.test(v), v.trim()],
+      from: v => [hexNoHash6RE.test(v), v.trim()],
+      to: v => v,
+    },
+  },
+  'hex8-no-hash': {
+    color: {
+      from: v => [true, v.substring(1)],
+      to: v => `#${fixHex8(v)}`,
+    },
+    text: {
+      from: v => [hexNoHash8RE.test(v), v.trim()],
       to: v => v,
     },
   },
@@ -358,7 +517,7 @@ export const colorFormatConverters = {
       to: hex3ToHex6,
     },
     text: {
-      from: v => [hexNoHashRE.test(v), hex6ToHex3(v.trim())],
+      from: v => [hexNoHash6RE.test(v), hex6ToHex3(v.trim())],
       to: v => v,
     },
   },
@@ -372,6 +531,16 @@ export const colorFormatConverters = {
       to: v => `0x${v.toString(16).padStart(6, '0')}`,
     },
   },
+  'uint32-rgba': {
+    color: {
+      from: v => [true, hexToUint32RGBA(v)],
+      to: uint32RGBAToHex,
+    },
+    text: {
+      from: v => strToUint32RGBA(v),
+      to: v => `0x${v.toString(16).padStart(8, '0')}`,
+    },
+  },
   'uint8-rgb': {
     color: {
       from: v => [true, hexToUint8RGB(v)],
@@ -379,6 +548,16 @@ export const colorFormatConverters = {
     },
     text: {
       from: strTo3Ints,
+      to: v => v.join(', '),
+    },
+  },
+  'uint8-rgba': {
+    color: {
+      from: v => [true, hexToUint8RGBA(v)],
+      to: uint8RGBAToHex,
+    },
+    text: {
+      from: strTo4Ints,
       to: v => v.join(', '),
     },
   },
@@ -393,6 +572,17 @@ export const colorFormatConverters = {
       to: v => Array.from(v).map(v => f3(v)).join(', '),
     },
   },
+  'float-rgba': {
+    color: {
+      from: v => [true, hexToFloatRGBA(v)],
+      to: floatRGBAToHex,
+    },
+    text: {
+      from: strTo4Floats,
+      // need Array.from because map of Float32Array makes a Float32Array
+      to: v => Array.from(v).map(v => f3(v)).join(', '),
+    },
+  },
   'object-rgb': {
     color: {
       from: v => [true, hexToObjectRGB(v)],
@@ -401,6 +591,16 @@ export const colorFormatConverters = {
     text: {
       from: strToRGBObject,
       to: rgbObjectToStr,
+    },
+  },
+  'object-rgba': {
+    color: {
+      from: v => [true, hexToObjectRGBA(v)],
+      to: objectRGBAToHex,
+    },
+    text: {
+      from: strToRGBAObject,
+      to: rgbaObjectToStr,
     },
   },
   'css-rgb': {
@@ -413,6 +613,16 @@ export const colorFormatConverters = {
       to: v => strToCssRGB(v)[1],
     },
   },
+  'css-rgba': {
+    color: {
+      from: v => [true, hexToCssRGBA(v)],
+      to: cssRGBAToHex,
+    },
+    text: {
+      from: strToCssRGBA,
+      to: v => strToCssRGBA(v)[1],
+    },
+  },
   'css-hsl': {
     color: {
       from: v => [true, hexToCssHSL(v)],
@@ -421,6 +631,16 @@ export const colorFormatConverters = {
     text: {
       from: strToCssHSL,
       to: v => strToCssHSL(v)[1],
+    },
+  },
+  'css-hsla': {
+    color: {
+      from: v => [true, hexToCssHSLA(v)],
+      to: cssHSLAToHex,
+    },
+    text: {
+      from: strToCssHSLA,
+      to: v => strToCssHSLA(v)[1],
     },
   },
 };

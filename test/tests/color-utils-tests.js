@@ -1,10 +1,13 @@
 import {describe, it} from '../mocha-support.js';
 import {
+  assertArrayEqualApproximately,
   assertEqual,
 } from '../assert.js';
 import {
   colorFormatConverters,
   guessFormat,
+  hsv01ToRGBFloat,
+  rgbFloatToHSV01,
 } from '../../src/libs/color-utils.js';
 
 describe('color-utils tests', () => {
@@ -94,6 +97,18 @@ describe('color-utils tests', () => {
     assertEqual(fromStr('0.10 , 12.2301, 1.00f'), [false, [0.1, 12.23, 1]]);
     assertEqual(toStr([0.12, 0.34, 5.67]), '0.12, 0.34, 5.67');
     assertEqual(toStr(new Float32Array([0.2, 0.9, 0.5])), '0.2, 0.9, 0.5');
+  });
+
+  it('converts from/too hsv01/rgbFloat', () => {
+    assertArrayEqualApproximately(rgbFloatToHSV01([1, 0, 0]), [0, 1, 1], 0.001);
+    assertArrayEqualApproximately(rgbFloatToHSV01([0, 1, 0]), [1 / 3, 1, 1], 0.001);
+    assertArrayEqualApproximately(rgbFloatToHSV01([0, 0, 1]), [2 / 3, 1, 1], 0.001);
+    assertArrayEqualApproximately(hsv01ToRGBFloat([0, 1, 1]), [1, 0, 0], 0.0);
+    assertArrayEqualApproximately(hsv01ToRGBFloat([1 / 3, 1, 1]), [0, 1, 0], 0.0);
+    assertArrayEqualApproximately(hsv01ToRGBFloat([2 / 3, 1, 1]), [0, 0, 1], 0.00001);
+    assertArrayEqualApproximately(hsv01ToRGBFloat([1 / 6, 1, 1]), [1, 1, 0], 0.0);
+    assertArrayEqualApproximately(hsv01ToRGBFloat([3 / 6, 1, 1]), [0, 1, 1], 0.0);
+    assertArrayEqualApproximately(hsv01ToRGBFloat([5 / 6, 1, 1]), [1, 0, 1], 0.00001);
   });
 
 });

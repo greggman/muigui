@@ -175,7 +175,7 @@ if (showUI) {
       },
     })).listen();
     f.addController(new Vec2(s, 'vec', {range: 100})).listen();
-    f.addController(new ColorChooser(s, 'c2')).listen();
+    f.addController(new ColorChooser(s, 'c2'));//.listen();
 
     const ctx = c.canvas.getContext('2d');
     let lastY = 0;
@@ -355,11 +355,11 @@ if (showUI) {
   addColor('Float32Array(3)', new Float32Array([0.9, 0.7, 0.5]), undefined, v => `[${Array.from(v).map(v => f3(v)).join(', ')}]`);
   addColor('[r(f), g(f), b(f)]', [0.2, 0.9, 0.5], undefined, v => `[${v.map(v => f3(v))}]`);
   addColor('{r, g, b}',  {r: 0, g: 0, b: 1}, undefined, v => `{r: ${f3(v.r)}, g: ${f3(v.g)}, b: ${f3(v.b)}}`);
-  //gui.addLabel('rgba');
-  //addColor('#RRGGBBAA', '#9A56EF80');
-  //addColor('0xRRGGBBAA', 0xEF569A80);
-  //addColor('rgba(r, g, b, a)', 'rgba(64, 128, 255, 0.25)');
-  //addColor('hsla(h, s, l, a)', 'hsla(15, 100%, 50%, 0.75)');
+  gui.addLabel('rgba');
+  addColor('#RRGGBBAA', '#5438a180');
+  addColor('0xRRGGBBAA', 0xEF569A80, 'uint32-rgba');
+  addColor('rgba(r, g, b, a)', 'rgba(64, 128, 255, 0.25)');
+  addColor('hsl(h, s, l / a)', 'hsl(180 100% 50% / 0.75)');
   logger.setController(gui.addLabel(''));
 }
 

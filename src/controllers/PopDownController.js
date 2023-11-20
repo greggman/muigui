@@ -46,6 +46,7 @@ export default class PopDownController extends ValueController {
       type: 'checkbox',
       onChange: () => {
         this.#options.open = checkboxElem.checked;
+        this.updateDisplay();
       },
     }));
     this.#valuesView = this.#top.add(new ElementView('div', 'muigui-pop-down-values'));
