@@ -3,6 +3,7 @@
     "Accum",
     "elems",
     "muigui",
-    "stepify"
+    "stepify",
+    "treeshake"
   ]
 }

@@ -3,14 +3,10 @@
   "compilerOptions": {
     "target": "ESNext",
     "module": "NodeNext",
-    "outDir": "out/src",
+    "outDir": "dist/0.x",
     "moduleResolution": "NodeNext",
     "declaration": true,
     "allowJs": true,
-    // "typeRoots": [
-    //   "./node_modules/@webgpu/types",
-    //   "./node_modules/@types",
-    // ],
   },
   "include": [
     "src/**/*.ts",

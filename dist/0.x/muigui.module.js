@@ -671,6 +671,17 @@ var css = {
 }
 */
 
+.muigui-checkered-background {
+  background-color: #404040;
+  background-image:
+     linear-gradient(45deg, #808080 25%, transparent 25%),
+     linear-gradient(-45deg, #808080 25%, transparent 25%),
+     linear-gradient(45deg, transparent 75%, #808080 75%),
+     linear-gradient(-45deg, transparent 75%, #808080 75%);
+  background-size: 16px 16px;
+  background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
+}
+
 /* ---------------------------------------------------------- */
 
 /* needs to be at bottom to take precedence */
@@ -776,6 +787,11 @@ function addElem(tag, parent, attrs = {}, children = []) {
   const elem = createElem(tag, attrs, children);
   parent.appendChild(elem);
   return elem;
+}
+
+let nextId = 0;
+function getNewId() {
+  return `muigui-id-${nextId++}`;
 }
 
 function removeArrayElem(array, value) {
@@ -1796,6 +1812,11 @@ const hexToUint32RGB = v => (parseInt(v.substring(1, 3), 16) << 16) |
                             (parseInt(v.substring(3, 5), 16) << 8 ) |
                             (parseInt(v.substring(5, 7), 16)      );
 const uint32RGBToHex = v => `#${(Math.round(v)).toString(16).padStart(6, '0')}`;
+const hexToUint32RGBA = v => (parseInt(v.substring(1, 3), 16) * 2 ** 24) +
+                             (parseInt(v.substring(3, 5), 16) * 2 ** 16) +
+                             (parseInt(v.substring(5, 7), 16) * 2 **  8) +
+                             (parseInt(v.substring(7, 9), 16)      );
+const uint32RGBAToHex = v => `#${(Math.round(v)).toString(16).padStart(8, '0')}`;
 
 const hexToUint8RGB = v => [
     parseInt(v.substring(1, 3), 16),
@@ -1804,16 +1825,35 @@ const hexToUint8RGB = v => [
 ];
 const uint8RGBToHex = v => `#${Array.from(v).map(v => v.toString(16).padStart(2, '0')).join('')}`;
 
+const hexToUint8RGBA = v => [
+    parseInt(v.substring(1, 3), 16),
+    parseInt(v.substring(3, 5), 16),
+    parseInt(v.substring(5, 7), 16),
+    parseInt(v.substring(7, 9), 16),
+];
+const uint8RGBAToHex = v => `#${Array.from(v).map(v => v.toString(16).padStart(2, '0')).join('')}`;
+
 const hexToFloatRGB = v => hexToUint8RGB(v).map(v => f3(v / 255));
 const floatRGBToHex = v => uint8RGBToHex(Array.from(v).map(v => Math.round(clamp(v * 255, 0, 255))));
+
+const hexToFloatRGBA = v => hexToUint8RGBA(v).map(v => f3(v / 255));
+const floatRGBAToHex = v => uint8RGBAToHex(Array.from(v).map(v => Math.round(clamp(v * 255, 0, 255))));
+
+const scaleAndClamp = v => clamp(Math.round(v * 255), 0, 255).toString(16).padStart(2, '0');
 
 const hexToObjectRGB = v => ({
   r: parseInt(v.substring(1, 3), 16) / 255,
   g: parseInt(v.substring(3, 5), 16) / 255,
   b: parseInt(v.substring(5, 7), 16) / 255,
 });
-const scaleAndClamp = v => clamp(Math.round(v * 255), 0, 255).toString(16).padStart(2, '0');
 const objectRGBToHex = v => `#${scaleAndClamp(v.r)}${scaleAndClamp(v.g)}${scaleAndClamp(v.b)}`;
+const hexToObjectRGBA = v => ({
+  r: parseInt(v.substring(1, 3), 16) / 255,
+  g: parseInt(v.substring(3, 5), 16) / 255,
+  b: parseInt(v.substring(5, 7), 16) / 255,
+  a: parseInt(v.substring(7, 9), 16) / 255,
+});
+const objectRGBAToHex = v => `#${scaleAndClamp(v.r)}${scaleAndClamp(v.g)}${scaleAndClamp(v.b)}${scaleAndClamp(v.a)}`;
 
 const hexToCssRGB = v => `rgb(${hexToUint8RGB(v).join(', ')})`;
 const cssRGBRegex = /^\s*rgb\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*$/;
@@ -1821,20 +1861,34 @@ const cssRGBToHex = v => {
   const m = cssRGBRegex.exec(v);
   return uint8RGBToHex([m[1], m[2], m[3]].map(v => parseInt(v)));
 };
-const cssRGBARegex = /^\s*rgba\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*$/;
+const hexToCssRGBA = v => `rgba(${hexToUint8RGBA(v).map((v, i) => i === 3 ? v / 255 : v).join(', ')})`;
+const cssRGBARegex = /^\s*rgba\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+\.\d+|\d+)\s*\)\s*$/;
+const cssRGBAToHex = v => {
+  const m = cssRGBARegex.exec(v);
+  return uint8RGBAToHex([m[1], m[2], m[3], m[4]].map((v, i) => i === 3 ? (parseFloat(v) * 255 | 0) : parseInt(v)));
+};
 
 const hexToCssHSL = v => {
   const hsl = rgbUint8ToHsl(hexToUint8RGB(v)).map(v => f0(v));
   return `hsl(${hsl[0]}, ${hsl[1]}%, ${hsl[2]}%)`;
 };
-const cssHSLRegex = /^\s*hsl\(\s*(\d+)(?:deg|)\s*,\s*(\d+)%\s*,\s*(\d+)%\s*\)\s*$/;
-const cssHSLARegex = /^\s*hsl\(\s*(\d+)(?:deg|)\s*,\s*(\d+)%\s*,\s*(\d+)%\s*,\s*(\d+)%\s*\)\s*$/;
+const hexToCssHSLA = v => {
+  const hsla = rgbaUint8ToHsla(hexToUint8RGBA(v)).map((v, i) => i === 3 ? f3(v) : f0(v));
+  return `hsl(${hsla[0]} ${hsla[1]}% ${hsla[2]}% / ${hsla[3]})`;
+};
+const cssHSLRegex = /^\s*hsl\(\s*(\d+)(?:deg|)\s*(?:,|)\s*(\d+)%\s*(?:,|)\s*(\d+)%\s*\)\s*$/;
+const cssHSLARegex = /^\s*hsl\(\s*(\d+)(?:deg|)\s*(?:,|)\s*(\d+)%\s*(?:,|)\s*(\d+)%\s*\/\s*(\d+\.\d+|\d+)\s*\)\s*$/;
 
 const hex3DigitTo6Digit = v => `${v[0]}${v[0]}${v[1]}${v[1]}${v[2]}${v[2]}`;
 const cssHSLToHex = v => {
   const m = cssHSLRegex.exec(v);
   const rgb = hslToRgbUint8([m[1], m[2], m[3]].map(v => parseFloat(v)));
   return uint8RGBToHex(rgb);
+};
+const cssHSLAToHex = v => {
+  const m = cssHSLARegex.exec(v);
+  const rgba = hslaToRgbaUint8([m[1], m[2], m[3], m[4]].map(v => parseFloat(v)));
+  return uint8RGBAToHex(rgba);
 };
 
 const euclideanModulo = (v, n) => ((v % n) + n) % n;
@@ -1852,6 +1906,11 @@ function hslToRgbUint8([h, s, l]) {
   }
 
   return [f(0), f(8), f(4)].map(v => Math.round(v * 255));
+}
+
+function hslaToRgbaUint8([h, s, l, a]) {
+  const rgb = hslToRgbUint8([h, s, l]);
+  return [...rgb, a * 255 | 0];
 }
 
 function rgbFloatToHsl01([r, g, b]) {
@@ -1877,9 +1936,19 @@ function rgbFloatToHsl01([r, g, b]) {
   return [h / 6, s, l];
 }
 
+function rgbaFloatToHsla01([r, g, b, a]) {
+  const hsl = rgbFloatToHsl01([r, g, b]);
+ return [...hsl, a];
+}
+
 const rgbUint8ToHsl = (rgb) => {
   const [h, s, l] = rgbFloatToHsl01(rgb.map(v => v / 255));
   return [h * 360, s * 100, l * 100];
+};
+
+const rgbaUint8ToHsla = (rgba) => {
+  const [h, s, l, a] = rgbaFloatToHsla01(rgba.map(v => v / 255));
+  return [h * 360, s * 100, l * 100, a];
 };
 
 function hsv01ToRGBFloat([hue, sat, val]) {
@@ -1888,6 +1957,11 @@ function hsv01ToRGBFloat([hue, sat, val]) {
   return [hue, hue + 2 / 3, hue + 1 / 3].map(
       v => lerp(1, clamp(Math.abs(fract(v) * 6 - 3.0) - 1, 0, 1), sat) * val
   );
+}
+
+function hsva01ToRGBAFloat([hue, sat, val, alpha]) {
+  const rgb = hsv01ToRGBFloat([hue, sat, val]);
+  return [...rgb, alpha];
 }
 
 const round3 = v => Math.round(v * 1000) / 1000;
@@ -1907,8 +1981,13 @@ function rgbFloatToHSV01([r, g, b]) {
   ].map(round3);
 }
 
-window.hsv01ToRGBFloat = hsv01ToRGBFloat;
-window.rgbFloatToHSV01 = rgbFloatToHSV01;
+function rgbaFloatToHSVA01([r, g, b, a]) {
+  const hsv = rgbFloatToHSV01([r, g, b]);
+  return [...hsv, a];
+}
+
+// window.hsv01ToRGBFloat = hsv01ToRGBFloat;
+// window.rgbFloatToHSV01 = rgbFloatToHSV01;
 
 // Yea, meh!
 const hasAlpha = format => format.endsWith('a') || format.startsWith('hex8');
@@ -1986,6 +2065,13 @@ function fixHex6(v) {
   //return fix(v.trim());
 }
 
+function fixHex8(v) {
+  return v.trim(v);
+  //const formatInfo = guessStringColorFormat(v.trim());
+  //const fix = formatInfo ? formatInfo.fix : v => v;
+  //return fix(v.trim());
+}
+
 function hex6ToHex3(hex6) {
   return (hex6[1] === hex6[2] &&
           hex6[3] === hex6[4] &&
@@ -2021,6 +2107,19 @@ const strToRGBObject = (s) => {
   }
 };
 
+const strToRGBAObject = (s) => {
+  try {
+    const json = s.replace(/([a-z])/g, '"$1"');
+    const rgba = JSON.parse(json);
+    if (Number.isNaN(rgba.r) || Number.isNaN(rgba.g) || Number.isNaN(rgba.b) || Number.isNaN(rgba.a)) {
+      throw new Error('not {r, g, b, a}');
+    }
+    return [true, rgba];
+  } catch (e) {
+    return [false];
+  }
+};
+
 const strToCssRGB = s => {
   const m = cssRGBRegex.exec(s);
   if (!m) {
@@ -2029,6 +2128,16 @@ const strToCssRGB = s => {
   const v = [m[1], m[2], m[3]].map(v => parseInt(v));
   const outOfRange = v.find(v => v > 255);
   return [!outOfRange, `rgb(${v.join(', ')})`];
+};
+
+const strToCssRGBA = s => {
+  const m = cssRGBARegex.exec(s);
+  if (!m) {
+    return [false];
+  }
+  const v = [m[1], m[2], m[3], m[4]].map((v, i) => i === 3 ? parseFloat(v) : parseInt(v));
+  const outOfRange = v.find(v => v > 255);
+  return [!outOfRange, `rgba(${v.join(', ')})`];
 };
 
 const strToCssHSL = s => {
@@ -2041,8 +2150,21 @@ const strToCssHSL = s => {
   return [!outOfRange, `hsl(${v[0]}, ${v[1]}%, ${v[2]}%)`];
 };
 
+const strToCssHSLA = s => {
+  const m = cssHSLARegex.exec(s);
+  if (!m) {
+    return [false];
+  }
+  const v = [m[1], m[2], m[3], m[4]].map(v => parseFloat(v));
+  const outOfRange = v.find(v => Number.isNaN(v));
+  return [!outOfRange, `hsl(${v[0]} ${v[1]}% ${v[2]}% / ${v[3]})`];
+};
+
 const rgbObjectToStr = rgb => {
   return `{r:${f3(rgb.r)}, g:${f3(rgb.g)}, b:${f3(rgb.b)}}`;
+};
+const rgbaObjectToStr = rgba => {
+  return `{r:${f3(rgba.r)}, g:${f3(rgba.g)}, b:${f3(rgba.b)}}, a:${f3(rgba.a)}}`;
 };
 
 const strTo3IntsRE = /^\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*$/;
@@ -2056,10 +2178,32 @@ const strTo3Ints = s => {
   return [!outOfRange, v];
 };
 
+const strTo4IntsRE = /^\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*$/;
+const strTo4Ints = s => {
+  const m = strTo4IntsRE.exec(s);
+  if (!m) {
+    return [false];
+  }
+  const v = [m[1], m[2], m[3], m[4]].map(v => parseInt(v));
+  const outOfRange = v.find(v => v > 255);
+  return [!outOfRange, v];
+};
+
 const strTo3Floats = s => {
   const numbers = s.split(',').map(s => s.trim());
   const v = numbers.map(v => parseFloat(v));
   if (v.length !== 3) {
+    return [false];
+  }
+  // Note: using isNaN not Number.isNaN
+  const badNdx = numbers.findIndex(v => isNaN(v));
+  return [badNdx < 0, v.map(v => f3(v))];
+};
+
+const strTo4Floats = s => {
+  const numbers = s.split(',').map(s => s.trim());
+  const v = numbers.map(v => parseFloat(v));
+  if (v.length !== 4) {
     return [false];
   }
   // Note: using isNaN not Number.isNaN
@@ -2076,8 +2220,19 @@ const strToUint32RGB = s => {
   return [true, parseInt(m[1], 16)];
 };
 
-const hexRE = /^\s*#[a-f0-9]{6}\s*$|^\s*#[a-f0-9]{3}\s*$/i;
-const hexNoHashRE = /^\s*[a-f0-9]{6}\s*$/i;
+const strToUint32RGBARegex = /^\s*(?:0x){0,1}([0-9a-z]{1,8})\s*$/i;
+const strToUint32RGBA = s => {
+  const m = strToUint32RGBARegex.exec(s);
+  if (!m) {
+    return [false];
+  }
+  return [true, parseInt(m[1], 16)];
+};
+
+const hex6RE = /^\s*#[a-f0-9]{6}\s*$|^\s*#[a-f0-9]{3}\s*$/i;
+const hexNoHash6RE = /^\s*[a-f0-9]{6}\s*$/i;
+const hex8RE = /^\s*#[a-f0-9]{8}\s*$/i;
+const hexNoHash8RE = /^\s*[a-f0-9]{8}\s*$/i;
 
 // For each format converter
 //
@@ -2115,7 +2270,17 @@ const colorFormatConverters = {
       to: fixHex6,
     },
     text: {
-      from: v => [hexRE.test(v), v.trim()],
+      from: v => [hex6RE.test(v), v.trim()],
+      to: v => v,
+    },
+  },
+  'hex8': {
+    color: {
+      from: v => [true, v],
+      to: fixHex8,
+    },
+    text: {
+      from: v => [hex8RE.test(v), v.trim()],
       to: v => v,
     },
   },
@@ -2125,7 +2290,7 @@ const colorFormatConverters = {
       to: hex3ToHex6,
     },
     text: {
-      from: v => [hexRE.test(v), hex6ToHex3(v.trim())],
+      from: v => [hex6RE.test(v), hex6ToHex3(v.trim())],
       to: v => v,
     },
   },
@@ -2135,7 +2300,17 @@ const colorFormatConverters = {
       to: v => `#${fixHex6(v)}`,
     },
     text: {
-      from: v => [hexNoHashRE.test(v), v.trim()],
+      from: v => [hexNoHash6RE.test(v), v.trim()],
+      to: v => v,
+    },
+  },
+  'hex8-no-hash': {
+    color: {
+      from: v => [true, v.substring(1)],
+      to: v => `#${fixHex8(v)}`,
+    },
+    text: {
+      from: v => [hexNoHash8RE.test(v), v.trim()],
       to: v => v,
     },
   },
@@ -2145,7 +2320,7 @@ const colorFormatConverters = {
       to: hex3ToHex6,
     },
     text: {
-      from: v => [hexNoHashRE.test(v), hex6ToHex3(v.trim())],
+      from: v => [hexNoHash6RE.test(v), hex6ToHex3(v.trim())],
       to: v => v,
     },
   },
@@ -2159,6 +2334,16 @@ const colorFormatConverters = {
       to: v => `0x${v.toString(16).padStart(6, '0')}`,
     },
   },
+  'uint32-rgba': {
+    color: {
+      from: v => [true, hexToUint32RGBA(v)],
+      to: uint32RGBAToHex,
+    },
+    text: {
+      from: v => strToUint32RGBA(v),
+      to: v => `0x${v.toString(16).padStart(8, '0')}`,
+    },
+  },
   'uint8-rgb': {
     color: {
       from: v => [true, hexToUint8RGB(v)],
@@ -2166,6 +2351,16 @@ const colorFormatConverters = {
     },
     text: {
       from: strTo3Ints,
+      to: v => v.join(', '),
+    },
+  },
+  'uint8-rgba': {
+    color: {
+      from: v => [true, hexToUint8RGBA(v)],
+      to: uint8RGBAToHex,
+    },
+    text: {
+      from: strTo4Ints,
       to: v => v.join(', '),
     },
   },
@@ -2180,6 +2375,17 @@ const colorFormatConverters = {
       to: v => Array.from(v).map(v => f3(v)).join(', '),
     },
   },
+  'float-rgba': {
+    color: {
+      from: v => [true, hexToFloatRGBA(v)],
+      to: floatRGBAToHex,
+    },
+    text: {
+      from: strTo4Floats,
+      // need Array.from because map of Float32Array makes a Float32Array
+      to: v => Array.from(v).map(v => f3(v)).join(', '),
+    },
+  },
   'object-rgb': {
     color: {
       from: v => [true, hexToObjectRGB(v)],
@@ -2188,6 +2394,16 @@ const colorFormatConverters = {
     text: {
       from: strToRGBObject,
       to: rgbObjectToStr,
+    },
+  },
+  'object-rgba': {
+    color: {
+      from: v => [true, hexToObjectRGBA(v)],
+      to: objectRGBAToHex,
+    },
+    text: {
+      from: strToRGBAObject,
+      to: rgbaObjectToStr,
     },
   },
   'css-rgb': {
@@ -2200,6 +2416,16 @@ const colorFormatConverters = {
       to: v => strToCssRGB(v)[1],
     },
   },
+  'css-rgba': {
+    color: {
+      from: v => [true, hexToCssRGBA(v)],
+      to: cssRGBAToHex,
+    },
+    text: {
+      from: strToCssRGBA,
+      to: v => strToCssRGBA(v)[1],
+    },
+  },
   'css-hsl': {
     color: {
       from: v => [true, hexToCssHSL(v)],
@@ -2208,6 +2434,16 @@ const colorFormatConverters = {
     text: {
       from: strToCssHSL,
       to: v => strToCssHSL(v)[1],
+    },
+  },
+  'css-hsla': {
+    color: {
+      from: v => [true, hexToCssHSLA(v)],
+      to: cssHSLAToHex,
+    },
+    text: {
+      from: strToCssHSLA,
+      to: v => strToCssHSLA(v)[1],
     },
   },
 };
@@ -2480,23 +2716,22 @@ function addTouchEvents(elem, {onDown = noop$1, onMove = noop$1, onUp = noop$1})
 }
 
 const svg$3 = `
-
-<svg tabindex="0" viewBox="0 0 64 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;">
-    <linearGradient id="muigui-color-chooser-light-dark" x1="0" x2="0" y1="0" y2="1">
+<svg class="muigui-checkered-background" tabindex="0" viewBox="0 0 64 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;">
+    <linearGradient data-src="muigui-color-chooser-light-dark" x1="0" x2="0" y1="0" y2="1">
       <stop stop-color="rgba(0,0,0,0)" offset="0%"/>
       <stop stop-color="#000" offset="100%"/>
     </linearGradient>
-    <linearGradient id="muigui-color-chooser-hue">
-      <stop stop-color="hsl(60, 0%, 100%)" offset="0%"/>
-      <stop stop-color="hsl(60, 100%, 50%)" offset="100%"/>
+    <linearGradient data-src="muigui-color-chooser-hue">
+      <stop stop-color="hsl(60 0% 100% / 1)" offset="0%"/>
+      <stop stop-color="hsl(60 100% 50% / 1)" offset="100%"/>
     </linearGradient>
 
-    <rect width="64" height="48" fill="url(#muigui-color-chooser-hue)"/>
-    <rect width="64" height="48" fill="url(#muigui-color-chooser-light-dark)"/>
+    <rect width="64" height="48" data-target="muigui-color-chooser-hue"/>
+    <rect width="64" height="48" data-target="muigui-color-chooser-light-dark"/>
     <circle r="4" class="muigui-color-chooser-circle"/>
 </svg>
 <svg tabindex="0" viewBox="0 0 64 6" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;">
-    <linearGradient id="muigui-color-chooser-hues" x1="0" x2="1" y1="0" y2="0">
+    <linearGradient data-src="muigui-color-chooser-hues" x1="0" x2="1" y1="0" y2="0">
       <stop stop-color="hsl(0,100%,50%)" offset="0%"/>
       <stop stop-color="hsl(60,100%,50%)" offset="16.666%"/>
       <stop stop-color="hsl(120,100%,50%)" offset="33.333%"/>
@@ -2505,48 +2740,108 @@ const svg$3 = `
       <stop stop-color="hsl(300,100%,50%)" offset="83.333%"/>
       <stop stop-color="hsl(360,100%,50%)" offset="100%"/>
     </linearGradient>
-    <rect y="1" width="64" height="4" fill="url('#muigui-color-chooser-hues')"/>
-    <g class="muigui-color-chooser-cursor">
+    <rect y="1" width="64" height="4" data-target="muigui-color-chooser-hues"/>
+    <g class="muigui-color-chooser-hue-cursor">
+      <rect x="-3" width="6" height="6" />
+    </g>
+</svg>
+<svg class="muigui-checkered-background" tabindex="0" viewBox="0 0 64 6" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;">
+    <linearGradient data-src="muigui-color-chooser-alpha" x1="0" x2="1" y1="0" y2="0">
+      <stop stop-color="hsla(0,100%,100%,0)" offset="0%"/>
+      <stop stop-color="hsla(0,100%,100%,1)" offset="100%"/>
+    </linearGradient>
+    <rect y="1" width="64" height="4" data-target="muigui-color-chooser-alpha"/>
+    <g class="muigui-color-chooser-alpha-cursor">
       <rect x="-3" width="6" height="6" />
     </g>
 </svg>
 `;
 
+function connectFillTargets(elem) {
+  elem.querySelectorAll('[data-src]').forEach(srcElem => {
+    const id = getNewId();
+    srcElem.id = id;
+    elem.querySelectorAll(`[data-target=${srcElem.dataset.src}]`).forEach(targetElem => {
+      targetElem.setAttribute('fill', `url(#${id})`);
+    });
+  });
+  return elem;
+}
+
+// Was originally going to make alpha an option. Issue is
+// hard coded conversions?
 class ColorChooserView extends EditView {
+  #to;
+  #from;
   #satLevelElem;
-  #hueUIElem;
   #circleElem;
+  #hueUIElem;
   #hueElem;
   #hueCursorElem;
-  #hsv;
+  #alphaUIElem;
+  #alphaElem;
+  #alphaCursorElem;
+  #hsva;
   #skipHueUpdate;
   #skipSatLevelUpdate;
+  #skipAlphaUpdate;
+  #options = {
+    converters: identity,
+    alpha: false,
+  };
+  #convertInternalToHex;
+  #convertHexToInternal;
 
-  constructor(setter) {
+  constructor(setter, options) {
     super(createElem('div', {
       innerHTML: svg$3,
       className: 'muigui-no-scroll',
     }));
     this.#satLevelElem = this.domElement.children[0];
     this.#hueUIElem = this.domElement.children[1];
+    this.#alphaUIElem = this.domElement.children[2];
+    connectFillTargets(this.#satLevelElem);
+    connectFillTargets(this.#hueUIElem);
+    connectFillTargets(this.#alphaUIElem);
     this.#circleElem = this.$('.muigui-color-chooser-circle');
-    this.#hueElem = this.$('#muigui-color-chooser-hue');
-    this.#hueCursorElem = this.$('.muigui-color-chooser-cursor');
+    this.#hueElem = this.$('[data-src=muigui-color-chooser-hue]');
+    this.#hueCursorElem = this.$('.muigui-color-chooser-hue-cursor');
+    this.#alphaElem = this.$('[data-src=muigui-color-chooser-alpha]');
+    this.#alphaCursorElem = this.$('.muigui-color-chooser-alpha-cursor');
 
     const handleSatLevelChange = (e) => {
       const s = clamp$1(e.nx, 0, 1);
       const v = clamp$1(e.ny, 0, 1);
-      this.#hsv[1] = s;
-      this.#hsv[2] = (1 - v);
+      this.#hsva[1] = s;
+      this.#hsva[2] = (1 - v);
       this.#skipHueUpdate = true;
-      setter.setValue(floatRGBToHex(hsv01ToRGBFloat(this.#hsv)));
+      this.#skipAlphaUpdate = true;
+      const [valid, newV] = this.#from(this.#convertInternalToHex(this.#hsva));
+      if (valid) {
+        setter.setValue(newV);
+      }
     };
 
     const handleHueChange = (e) => {
       const h = clamp$1(e.nx, 0, 1);
-      this.#hsv[0] = h;
+      this.#hsva[0] = h;
       this.#skipSatLevelUpdate = true;
-      setter.setValue(floatRGBToHex(hsv01ToRGBFloat(this.#hsv)));
+      this.#skipAlphaUpdate = true;
+      const [valid, newV] = this.#from(this.#convertInternalToHex(this.#hsva));
+      if (valid) {
+        setter.setValue(newV);
+      }
+    };
+
+    const handleAlphaChange = (e) => {
+      const a = clamp$1(e.nx, 0, 1);
+      this.#hsva[3] = a;
+      this.#skipHueUpdate = true;
+      this.#skipSatLevelUpdate = true;
+      const [valid, newV] = this.#from(this.#convertInternalToHex(this.#hsva));
+      if (valid) {
+        setter.setValue(newV);
+      }
     };
 
     addTouchEvents(this.#satLevelElem, {
@@ -2557,29 +2852,45 @@ class ColorChooserView extends EditView {
       onDown: handleHueChange,
       onMove: handleHueChange,
     });
+    addTouchEvents(this.#alphaUIElem, {
+      onDown: handleAlphaChange,
+      onMove: handleAlphaChange,
+    });
+    this.setOptions(options);
   }
   updateDisplay(newV) {
-    if (!this.#hsv) {
-      this.#hsv = rgbFloatToHSV01(hexToFloatRGB(newV));
+    if (!this.#hsva) {
+      this.#hsva = this.#convertHexToInternal(this.#to(newV));
     }
     {
-      const [h, s, v] = rgbFloatToHSV01(hexToFloatRGB(newV));
+      const [h, s, v, a = 1] = this.#convertHexToInternal(this.#to(newV));
       // Don't copy the hue if it was un-computable.
       if (!this.#skipHueUpdate) {
-        this.#hsv[0] = s > 0.001 && v > 0.001 ? h : this.#hsv[0];
+        this.#hsva[0] = s > 0.001 && v > 0.001 ? h : this.#hsva[0];
       }
       if (!this.#skipSatLevelUpdate) {
-        this.#hsv[1] = s;
-        this.#hsv[2] = v;
+        this.#hsva[1] = s;
+        this.#hsva[2] = v;
+      }
+      if (!this.#skipAlphaUpdate) {
+        this.#hsva[3] = a;
       }
     }
     {
-      const [h, s, v] = this.#hsv;
+      const [h, s, v, a] = this.#hsva;
+      const [hue, sat, lum] = rgbaFloatToHsla01(hsva01ToRGBAFloat(this.#hsva));
+
       if (!this.#skipHueUpdate) {
         this.#hueCursorElem.setAttribute('transform', `translate(${h * 64}, 0)`);
-        this.#hueElem.children[0].setAttribute('stop-color', `hsl(${h * 360}, 0%, 100%)`);
-        this.#hueElem.children[1].setAttribute('stop-color', `hsl(${h * 360}, 100%, 50%)`);
       }
+      this.#hueElem.children[0].setAttribute('stop-color', `hsl(${hue * 360} 0% 100% / ${a})`);
+      this.#hueElem.children[1].setAttribute('stop-color', `hsl(${hue * 360} 100% 50% / ${a})`);
+      if (!this.#skipAlphaUpdate) {
+        this.#alphaCursorElem.setAttribute('transform', `translate(${a * 64}, 0)`);
+      }
+      this.#alphaElem.children[0].setAttribute('stop-color', `hsl(${hue * 360} ${sat * 100}% ${lum * 100}% / 0)`);
+      this.#alphaElem.children[1].setAttribute('stop-color', `hsl(${hue * 360} ${sat * 100}% ${lum * 100}% / 1)`);
+
       if (!this.#skipSatLevelUpdate) {
         this.#circleElem.setAttribute('cx', `${s * 64}`);
         this.#circleElem.setAttribute('cy', `${(1 - v) * 48}`);
@@ -2587,6 +2898,21 @@ class ColorChooserView extends EditView {
     }
     this.#skipHueUpdate = false;
     this.#skipSatLevelUpdate = false;
+    this.#skipAlphaUpdate = false;
+  }
+  setOptions(options) {
+    copyExistingProperties(this.#options, options);
+    const {converters: {to, from}, alpha} = this.#options;
+    this.#alphaUIElem.style.display = alpha ? '' : 'none';
+    this.#convertInternalToHex = alpha
+       ? v => floatRGBAToHex(hsva01ToRGBAFloat(v))
+       : v => floatRGBToHex(hsv01ToRGBFloat(v));
+    this.#convertHexToInternal = alpha
+       ? v => rgbaFloatToHSVA01(hexToFloatRGBA(v))
+       : v => rgbFloatToHSV01(hexToFloatRGB(v));
+    this.#to = to;
+    this.#from = from;
+    return this;
   }
 }
 
@@ -2617,8 +2943,11 @@ pc.addBottom
 class PopDownController extends ValueController {
   #top;
   #valuesView;
+  #checkboxElem;
   #bottom;
-  #options = {open: false};
+  #options = {
+    open: false,
+  };
 
   constructor(object, property, options = {}) {
     super(object, property, 'muigui-pop-down-controller');
@@ -2634,11 +2963,21 @@ class PopDownController extends ValueController {
       type: 'checkbox',
       onChange: () => {
         this.#options.open = checkboxElem.checked;
+        this.updateDisplay();
       },
     }));
+    this.#checkboxElem = checkboxElem;
     this.#valuesView = this.#top.add(new ElementView('div', 'muigui-pop-down-values'));
     this.#bottom = this.add(new ElementView('div', 'muigui-pop-down-bottom'));
     this.setOptions(options);
+  }
+  setKnobColor(bgCssColor/*, fgCssColor*/) {
+    if (this.#checkboxElem) {
+      this.#checkboxElem.style = `
+        --range-color: ${bgCssColor};
+        --value-bg-color: ${bgCssColor};
+      `;
+    }
   }
   updateDisplay() {
     super.updateDisplay();
@@ -2660,11 +2999,40 @@ class PopDownController extends ValueController {
 }
 
 class ColorChooser extends PopDownController {
-  constructor(object, property) {
+  #colorView;
+  #textView;
+  #to;
+
+  constructor(object, property, options = {}) {
     super(object, property, 'muigui-color-chooser');
-    this.addTop(new TextView(this));
-    this.addBottom(new ColorChooserView(this));
+    const format = options.format || guessFormat(this.getValue());
+    const {color, text} = colorFormatConverters[format];
+    this.#to = color.to;
+    this.#textView = new TextView(this, {converters: text, alpha: hasAlpha(format)});
+    this.#colorView = new ColorChooserView(this, {converters: color, alpha: hasAlpha(format)});
+    this.addTop(this.#textView);
+    this.addBottom(this.#colorView);
+    // WTF! FIX!
+    this.__setKnobHelper = () => {
+      if (this.#to) {
+        const hex6Or8 = this.#to(this.getValue());
+        const hsl = rgbUint8ToHsl(hexToUint8RGB(hex6Or8));
+        hsl[2] = (hsl[2] + 50) % 100;
+        const hex = uint8RGBToHex(hslToRgbUint8(hsl));
+        this.setKnobColor(`${hex6Or8.substring(0, 7)}FF`, hex);
+      }
+    };
     this.updateDisplay();
+  }
+  updateDisplay() {
+    super.updateDisplay();
+    if (this.__setKnobHelper) {
+      this.__setKnobHelper();
+    }
+  }
+  setOptions(options) {
+    super.setOptions(options);
+    return this;
   }
 }
 
@@ -3443,3 +3811,4 @@ class Vec2 extends PopDownController {
 }
 
 export { ColorChooser, Direction, RadioGrid, Range, Select, Slider, TextNumber, Vec2, GUI as default };
+//# sourceMappingURL=muigui.module.js.map

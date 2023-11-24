@@ -1,3 +1,4 @@
+import typescript from '@rollup/plugin-typescript';
 import resolve from '@rollup/plugin-node-resolve';
 import terser from '@rollup/plugin-terser';
 import fs from 'fs';
@@ -5,32 +6,32 @@ import fs from 'fs';
 const pkg = JSON.parse(fs.readFileSync('package.json', {encoding: 'utf8'}));
 const banner = `/* muigui@${pkg.version}, license MIT */`;
 
+const plugins = [
+    typescript({ tsconfig: './tsconfig.json' }),
+    resolve({
+      modulesOnly: true,
+    }),
+];
+
 export default [
   {
-    input: 'src/esm.js',
+    input: 'src/esm.ts',
     treeshake: false,
-    plugins: [
-      resolve({
-        modulesOnly: true,
-      }),
-    ],
+    plugins,
     output: [
       {
         format: 'es',
         file: 'dist/0.x/muigui.module.js',
         indent: '  ',
         banner,
+        sourcemap: true,
       },
     ],
   },
   {
     input: 'src/umd.js',
     treeshake: false,
-    plugins: [
-      resolve({
-        modulesOnly: true,
-      }),
-    ],
+    plugins,
     output: [
       {
         format: 'umd',
@@ -38,16 +39,15 @@ export default [
         indent: '  ',
         banner,
         name: 'GUI',
+        sourcemap: true,
       },
     ],
   },
   {
-    input: 'src/esm.js',
+    input: 'src/esm.ts',
     treeshake: false,
     plugins: [
-      resolve({
-        modulesOnly: true,
-      }),
+      ...plugins,
       terser(),
     ],
     output: [
@@ -56,6 +56,7 @@ export default [
         file: 'dist/0.x/muigui.module.min.js',
         indent: '  ',
         banner,
+        sourcemap: true,
       },
     ],
   },
@@ -63,9 +64,7 @@ export default [
     input: 'src/umd.js',
     treeshake: false,
     plugins: [
-      resolve({
-        modulesOnly: true,
-      }),
+      ...plugins,
       terser(),
     ],
     output: [
@@ -75,6 +74,7 @@ export default [
         indent: '  ',
         banner,
         name: 'GUI',
+        sourcemap: true,
       },
     ],
   },
