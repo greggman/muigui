@@ -1,0 +1,26 @@
+{
+  "extends": "@tsconfig/recommended/tsconfig.json",
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "NodeNext",
+    "outDir": "dist/0.x",
+    "moduleResolution": "NodeNext",
+    "declaration": true,
+    "allowJs": true,
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.js",
+    "build/**/*.js",
+    //"examples/**/*.js",
+    "test/**/*.js",
+    //"build/**/*.js",
+    //".eslintrc.cjs",
+    "*.js",
+    //"test/tests/**/*.html",
+  ],
+  "exclude": [
+    "examples/**/*.js",
+    "test/mocha.js",
+  ],
+}

@@ -1,0 +1,7 @@
+test/js
+test/mocha.js
+/webgl-lint.js
+dist
+examples/3rdParty
+out
+examples/**/*.js

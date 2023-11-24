@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1,minimum-scale=1,maximum-scale=1">
+    <title>muigui</title>
+
+    <link rel="icon" type="image/png"  href="images/muigui-icon.png">
+
+    <meta name="description" content="muigui: A Small Simple JS GUI" />
+    <meta name="keywords" content="javascript gui ui muigui" />
+    <meta name="thumbnail" content="https://greggman.github.io/muigui/images/muigui.png" />
+
+    <meta property="og:title" content="muigui" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://greggman.github.io/muigui/images/muigui.png" />
+    <meta property="og:description" content="muigui: A Small Simple JS GUI" />
+    <meta property="og:url" content="https://greggman.github.io/muigui/">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@greggman">
+    <meta name="twitter:creator" content="@greggman">
+    <meta name="twitter:domain" content="greggman.github.io">
+    <meta name="twitter:title" content="muigui">
+    <meta name="twitter:url" content="https://greggman.github.io/muigui/">
+    <meta name="twitter:description" content="muigui: A Small Simple JS GUI" />
+    <meta name="twitter:image:src" content="https://greggman.github.io/muigui/images/muigui.png">
+
+    <!--
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.0/showdown.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/languages/javascript.min.js"></script>
+    -->
+    <style>
+      :root {
+        color-scheme: light dark;
+        --log-bg-color: #eee;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --log-bg-color: #222;
+        }
+        body {
+          background: #333;
+        }
+      }
+      body {
+        font-family: sans-serif;
+      }
+      #ui-helper {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, 250px); /* as as column width */
+        gap: 10px; /* same as column gap */
+      }
+      #ui {
+        columns: 250px;
+        column-gap: 10px;
+        orphans: 1;
+        widows: 1;
+        grid-column: 1 / -1; /* take all the columns of the grid*/
+      }
+      #ui>div {
+        break-inside: avoid-column;
+        margin-bottom: 1em;
+        display: inline-block;
+      }
+      #log {
+        height: 50px;
+        overflow: auto;
+        background: var(--log-bg-color);
+        margin-bottom: 10px;
+      }
+      #log pre {
+        margin: 0;
+      }
+    </style>
+    <style id="media-query">
+    </style>
+<body>
+
+<h1>muigui</h1>
+<div id="log"></div>
+<div id="ui-helper">
+  <div id="ui"></div>
+</div>
+</body>
+<!-- needed for three.js, not! for muigui -->
+<script async src="https://unpkg.com/es-module-shims@1.3.6/dist/es-module-shims.js"></script>
+<script type="importmap">
+{
+  "imports": {
+    "three": "./examples/3rdParty/threejs/build/three.module.js"
+  }
+}
+</script>
+<script src="/dist/0.x/muigui.js"></script>
+<script type="module" src="examples/js/index-umd.js"></script>
+</html>
