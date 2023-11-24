@@ -107,7 +107,7 @@ export function assertThrowsWith(func, expectations, msg = '') {
   if (config.throwOnError === false) {
     const origFn = console.error;
     const errors = [];
-    console.error = function(...args) {
+    console.error = function (...args) {
       errors.push(args.join(' '));
     };
     func();
@@ -140,7 +140,7 @@ export function assertIfThrowsItThrowsWith(func, expectations, msg = '') {
   if (config.throwOnError === false) {
     const origFn = console.error;
     const errors = [];
-    console.error = function(...args) {
+    console.error = function (...args) {
       errors.push(args.join(' '));
     };
     func();
@@ -184,7 +184,7 @@ function assertStringMatchesREs(actual, expectations, msg) {
 export function assertWarnsWith(func, expectations, msg = '') {
   const warnings = [];
   const origWarnFn = console.warn;
-  console.warn = function(...args) {
+  console.warn = function (...args) {
     origWarnFn.call(this, ...args);
     warnings.push(args.join(' '));
   };

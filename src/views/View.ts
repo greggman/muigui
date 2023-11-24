@@ -1,56 +1,58 @@
 import { removeArrayElem } from '../libs/utils.js';
 
 export default class View {
-  #childDestElem;
-  #views = [];
+  domElement: HTMLElement;
 
-  constructor(elem) {
+  #childDestElem: HTMLElement;
+  #views: View[] = [];
+
+  constructor(elem: HTMLElement) {
     this.domElement = elem;
     this.#childDestElem = elem;
   }
-  addElem(elem) {
+  addElem(elem: HTMLElement) {
     this.#childDestElem.appendChild(elem);
     return elem;
   }
-  removeElem(elem) {
+  removeElem(elem: HTMLElement) {
     this.#childDestElem.removeChild(elem);
     return elem;
   }
-  pushSubElem(elem) {
+  pushSubElem(elem: HTMLElement) {
     this.#childDestElem.appendChild(elem);
     this.#childDestElem = elem;
   }
   popSubElem() {
-    this.#childDestElem = this.#childDestElem.parentElement;
+    this.#childDestElem = this.#childDestElem.parentElement!;
   }
-  add(view) {
+  add(view: View) {
     this.#views.push(view);
     this.addElem(view.domElement);
     return view;
   }
-  remove(view) {
+  remove(view: View) {
     this.removeElem(view.domElement);
     removeArrayElem(this.#views, view);
     return view;
   }
-  pushSubView(view) {
+  pushSubView(view: View) {
     this.pushSubElem(view.domElement);
   }
   popSubView() {
     this.popSubElem();
   }
-  setOptions(options) {
+  setOptions(options: any) {
     for (const view of this.#views) {
       view.setOptions(options);
     }
   }
-  updateDisplayIfNeeded(newV, ignoreCache) {
+  updateDisplayIfNeeded(newV: any, ignoreCache?: boolean) {
     for (const view of this.#views) {
       view.updateDisplayIfNeeded(newV, ignoreCache);
     }
     return this;
   }
-  $(selector) {
+  $(selector: string) {
     return this.domElement.querySelector(selector);
   }
 }

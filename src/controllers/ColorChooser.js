@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import {
   colorFormatConverters,
   guessFormat,
@@ -15,6 +16,7 @@ export default class ColorChooser extends PopDownController {
   #colorView;
   #textView;
   #to;
+  #setKnobHelper;
 
   constructor(object, property, options = {}) {
     super(object, property, 'muigui-color-chooser');
@@ -26,7 +28,7 @@ export default class ColorChooser extends PopDownController {
     this.addTop(this.#textView);
     this.addBottom(this.#colorView);
     // WTF! FIX!
-    this.__setKnobHelper = () => {
+    this.#setKnobHelper = () => {
       if (this.#to) {
         const hex6Or8 = this.#to(this.getValue());
         const hsl = rgbUint8ToHsl(hexToUint8RGB(hex6Or8));
@@ -39,8 +41,8 @@ export default class ColorChooser extends PopDownController {
   }
   updateDisplay() {
     super.updateDisplay();
-    if (this.__setKnobHelper) {
-      this.__setKnobHelper();
+    if (this.#setKnobHelper) {
+      this.#setKnobHelper();
     }
   }
   setOptions(options) {

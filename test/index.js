@@ -1,6 +1,4 @@
 /* global mocha */
-/* global URLSearchParams */
-/* global window */
 
 import './tests/muigui-tests.js';
 import './tests/color-utils-tests.js';

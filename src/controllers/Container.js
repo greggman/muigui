@@ -43,14 +43,14 @@ export default class Container extends Controller {
     }
     return this;
   }
-  _addControllerImpl(controller) {
+  #addControllerImpl(controller) {
     this.domElement.appendChild(controller.domElement);
     this.#controllers.push(controller);
     controller.setParent(this);
     return controller;
   }
   addController(controller) {
-    return this.#childDestController._addControllerImpl(controller);
+    return this.#childDestController.#addControllerImpl(controller);
   }
   pushContainer(container) {
     this.addController(container);

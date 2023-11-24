@@ -17,7 +17,7 @@ export function computeRelativePosition(elem, event, start) {
 
 export function addTouchEvents(elem, {onDown = noop, onMove = noop, onUp = noop}) {
   let start;
-  const pointerMove = function(event) {
+  const pointerMove = function (event) {
     const e = {
       type: 'move',
       ...computeRelativePosition(elem, event, start),
@@ -25,7 +25,7 @@ export function addTouchEvents(elem, {onDown = noop, onMove = noop, onUp = noop}
     onMove(e);
   };
 
-  const pointerUp = function(event) {
+  const pointerUp = function (event) {
     elem.releasePointerCapture(event.pointerId);
     elem.removeEventListener('pointermove', pointerMove);
     elem.removeEventListener('pointerup', pointerUp);
@@ -35,7 +35,7 @@ export function addTouchEvents(elem, {onDown = noop, onMove = noop, onUp = noop}
     onUp('up');
   };
 
-  const pointerDown = function(event) {
+  const pointerDown = function (event) {
     elem.addEventListener('pointermove', pointerMove);
     elem.addEventListener('pointerup', pointerUp);
     elem.setPointerCapture(event.pointerId);
@@ -50,7 +50,7 @@ export function addTouchEvents(elem, {onDown = noop, onMove = noop, onUp = noop}
 
   elem.addEventListener('pointerdown', pointerDown);
 
-  return function() {
+  return function () {
     elem.removeEventListener('pointerdown', pointerDown);
   };
 }

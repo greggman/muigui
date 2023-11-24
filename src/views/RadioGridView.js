@@ -15,7 +15,7 @@ export default class RadioGridView extends EditView {
           type: 'radio',
           name,
           value: ndx,
-          onChange: function() {
+          onChange: function () {
             if (this.checked) {
               setter.setFinalValue(that.#values[this.value]);
             }
@@ -24,12 +24,13 @@ export default class RadioGridView extends EditView {
         createElem('button', {
           type: 'button',
           textContent: key,
-          onClick: function() {
+          onClick: function () {
             this.previousElementSibling.click();
           },
         }),
       ]);
     })));
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const that = this;
     this.#values = values;
     this.cols(cols);

@@ -22,6 +22,7 @@ const ignoreFns = [
   fn => fn.startsWith('build'),
   fn => fn.startsWith('out'),
   fn => fn.startsWith('src'),
+  fn => fn.startsWith('dist'),
   fn => fn.startsWith('.'),
 ];
 

@@ -10,7 +10,7 @@ const keyDirections = {
 
 // This probably needs to be global
 export function addKeyboardEvents(elem, {onDown = noop, onUp = noop}) {
-  const keyDown = function(event) {
+  const keyDown = function (event) {
     const mult = event.shiftKey ? 10 : 1;
     const [dx, dy] = (keyDirections[event.key] || [0, 0]).map(v => v * mult);
     const fn = event.type === 'keydown' ? onDown : onUp;
@@ -25,7 +25,7 @@ export function addKeyboardEvents(elem, {onDown = noop, onUp = noop}) {
   elem.addEventListener('keydown', keyDown);
   elem.addEventListener('keyup', keyDown);
 
-  return function() {
+  return function () {
     elem.removeEventListener('keydown', keyDown);
     elem.removeEventListener('keyup', keyDown);
   };
