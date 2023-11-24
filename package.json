@@ -6,15 +6,17 @@
   "module": "src/muigui.js",
   "type": "module",
   "scripts": {
-    "start": "node build/serve.js",
-    "watch": "npm run start",
     "build": "npm run build-normal",
+    "build-ci": "npm run build && node build/prep-for-deploy.js",
     "build-normal": "rollup -c",
     "build-min": "rollup -c",
+    "check-ci": "npm run pre-push",
     "eslint": "eslint \"**/*.js\"",
     "fix": "eslint --fix",
     "pre-push": "npm run eslint && npm run test",
-    "test": "node test/puppeteer.js"
+    "start": "node build/serve.js",
+    "test": "node test/puppeteer.js",
+    "watch": "npm run start"
   },
   "repository": {
     "type": "git",
@@ -52,6 +54,6 @@
     "rollup": "^3.20.2",
     "servez": "^2.1.2",
     "tslib": "^2.6.2",
-    "typescript": "^5.3.2"
+    "typescript": "5.2"
   }
 }
