@@ -19,7 +19,8 @@ describe('color-utils tests', () => {
     assertEqual(guessFormat('8F8'), 'hex3-no-hash');
     assertEqual(guessFormat('rgb(170,68,240)'), 'css-rgb');
     assertEqual(guessFormat('hsl(170,68%,80%)'), 'css-hsl');
-    assertEqual(guessFormat(0xFEA956), 'uint32-rgb');
+    // can no longer guess numbers as they could alpha or not
+    //assertEqual(guessFormat(0xFEA956), 'uint32-rgb');
     assertEqual(guessFormat([255, 192, 255]), 'float-rgb'); // we can't really distinguish between [u8, u8, u8] and [float, float, float]
     assertEqual(guessFormat([0.2, 0.9, 0.5]), 'float-rgb');
     assertEqual(guessFormat(new Float32Array([0.2, 0.9, 0.5])), 'float-rgb');
