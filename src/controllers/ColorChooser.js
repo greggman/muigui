@@ -16,7 +16,6 @@ export default class ColorChooser extends PopDownController {
   #colorView;
   #textView;
   #to;
-  #setKnobHelper;
 
   constructor(object, property, options = {}) {
     super(object, property, 'muigui-color-chooser');
@@ -28,20 +27,22 @@ export default class ColorChooser extends PopDownController {
     this.addTop(this.#textView);
     this.addBottom(this.#colorView);
     // WTF! FIX!
-    this.#setKnobHelper = () => {
-      if (this.#to) {
-        const hex6Or8 = this.#to(this.getValue());
-        const hsl = rgbUint8ToHsl(hexToUint8RGB(hex6Or8));
-        hsl[2] = (hsl[2] + 50) % 100;
-        const hex = uint8RGBToHex(hslToRgbUint8(hsl));
-        this.setKnobColor(`${hex6Or8.substring(0, 7)}FF`, hex);
-      }
-    };
+    this.___setKnobHelper = true;
     this.updateDisplay();
+  }
+  #setKnobHelper() {
+    if (this.#to) {
+      const hex6Or8 = this.#to(this.getValue());
+      const alpha = hex6Or8.length === 9 ? hex6Or8.substring(7, 9) : 'FF';
+      const hsl = rgbUint8ToHsl(hexToUint8RGB(hex6Or8));
+      hsl[2] = (hsl[2] + 50) % 100;
+      const hex = uint8RGBToHex(hslToRgbUint8(hsl));
+      this.setKnobColor(`${hex6Or8.substring(0, 7)}${alpha}`, hex);
+    }
   }
   updateDisplay() {
     super.updateDisplay();
-    if (this.#setKnobHelper) {
+    if (this.___setKnobHelper) {
       this.#setKnobHelper();
     }
   }

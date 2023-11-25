@@ -1,4 +1,5 @@
 /* global module */
+/* global __dirname */
 
 module.exports = {
   parser: '@typescript-eslint/parser',

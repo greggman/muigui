@@ -1,5 +1,6 @@
-
-import {cube} from './cube.js';
+/* eslint-disable no-constant-condition */
+/* global GUI */
+import {model} from './model.js';
 import Logger from './logger.js';
 import {
   getCSSRulesBySelector,
@@ -13,8 +14,10 @@ const ColorChooser = GUI.ColorChooser; // from '../../src/controllers/ColorChoos
 const RadioGrid = GUI.RadioGrid; // from '../../src/controllers/RadioGrid.js';
 const Slider = GUI.Slider; // from '../../src/controllers/Slider.js';
 const Select = GUI.Select; // from '../../src/controllers/Select.js';
-const Range = GUI.Range; // from '../../src/controllers/Range.js';
+//const Range = GUI.Range; // from '../../src/controllers/Range.js';
 const TextNumber = GUI.TextNumber; // from '../../src/controllers/TextNumber.js';
+
+/* cut-here */
 
 const uiElem = document.querySelector('#ui');
 
@@ -33,17 +36,18 @@ const log = (...args) => logImpl('inherit', ...args);
 // Using an invisible GUI to get the colors
 // In a real app we'd just use the GUI we created
 // but I don't want to clutter the other examples.
-let uiColors;
-const updateUIColors = (() => {
+let uiCSSColorVariableNames;
+const getListOfUIColorCSSVariableNames = (() => {
   const div = document.createElement('div');
   uiElem.appendChild(div);
   const gui = new GUI(div).hide();
   return function updateUIColors() {
-    uiColors = gui.getColors();
+    uiCSSColorVariableNames = gui.getColors();
   };
 })();
-updateUIColors();
+getListOfUIColorCSSVariableNames();
 
+// eslint-disable-next-line no-constant-condition
 if (false) {
   const s = {
     speed: 0.5,
@@ -56,8 +60,9 @@ if (false) {
   gui.addColor(s, 'color');
 }
 
-if (true) {
-{
+// eslint-disable-next-line no-constant-condition
+const showUI = true;
+if (showUI) {
   const s = {
     speed: 0.5,
     direction: 45,
@@ -131,7 +136,6 @@ if (true) {
       thicksColor: 'transparent',
     }));
 
-
     gui.addDivider();
     gui.add(s, 'run');
     gui.addLabel('Pet');
@@ -143,6 +147,7 @@ if (true) {
       document.body.style.backgroundColor = v;
     }).listen();
     gui.add(s, 'show', {name: 'Show Current Values'});
+    gui.add({updateDisplay: () => gui.updateDisplay()}, 'updateDisplay');
 
     if (i === 2) {
       gui.name('Disabled');
@@ -157,34 +162,37 @@ if (true) {
     f.add(s, 'hobby').onFinishChange(e => log(new Date(), e.value));
     f.add(s, 'propertyWithLongName', ['longNamedEnumThatWillPushSizeTooFar']);
     f.addController(new Direction(s, 'direction')).listen();
-    f.addController(new Direction(s, 'hour', {step: 360 / 12, conversion: {
-      to: v => {
-        const newV = (v - 3) * 360 / 12;
-        console.log('to:', v, newV);
-        return newV;
+    f.addController(new Direction(s, 'hour', {
+      step: 360 / 12, conversion: {
+        to: v => {
+          const newV = (v - 3) * 360 / 12;
+          console.log('to:', v, newV);
+          return newV;
+        },
+        from: v => {
+          const newV = v * 12 / 360 + 3;
+          console.log('from:', v, newV);
+          return [true, newV];
+        },
       },
-      from: v => {
-        const newV = v * 12 / 360 + 3;
-        console.log('from:', v, newV);
-        return [true, newV];
-      },
-    }})).listen();
+    })).listen();
     f.addController(new Vec2(s, 'vec', {range: 100})).listen();
-    f.addController(new ColorChooser(s, 'c2')).listen();
+    f.addController(new ColorChooser(s, 'c2'));//.listen();
 
     const ctx = c.canvas.getContext('2d');
     let lastY = 0;
     let lTime1 = 0;
     let lTime2 = 0;
     let then = 0;
-    function draw(now) {
+    // eslint-disable-next-line no-loop-func
+    const draw = (now) => {
       const elapsedTime = now - then;
       then = now;
       lTime1 += elapsedTime * s.period1;
       lTime2 += elapsedTime * s.period2;
       const res = 2;
       resizeCanvasToDisplaySize(ctx.canvas, res);
-      
+
       const width = ctx.canvas.width;
       const height = ctx.canvas.height;
       if (width && height) {
@@ -196,7 +204,7 @@ if (true) {
             0, 0, width - res, height);
         ctx.clearRect(width - res, 0, res, height);
         ctx.globalCompositeOperation = 'source-over';
-        ctx.strokeStyle = uiColors.color;
+        ctx.strokeStyle = uiCSSColorVariableNames.color;
         const s1 = Math.sin(lTime1 * 0.01);
         const s2 = Math.sin(lTime2 * 0.01);
         const newY = height / 2 + (s1 + s2) * (height - 1) / 4;
@@ -207,13 +215,13 @@ if (true) {
         lastY = newY;
       }
       requestAnimationFrame(draw);
-    }
+    };
     requestAnimationFrame(draw);
   }
 }
 
 // Using Sliders
-{
+if (showUI) {
   const div = document.createElement('div');
   uiElem.appendChild(div);
   const gui = new GUI({parent: div, title: 'Sliders'});
@@ -254,7 +262,7 @@ if (true) {
 }
 
 // Using TextNumber
-{
+if (showUI) {
   const div = document.createElement('div');
   uiElem.appendChild(div);
   const gui = new GUI({parent: div, title: 'Numbers'});
@@ -296,7 +304,7 @@ if (true) {
   logger.setController(gui.addLabel(''));
 }
 
-{
+if (showUI) {
   const div = document.createElement('div');
   uiElem.appendChild(div);
   const gui = new GUI({parent: div, title: 'Callbacks'});
@@ -319,7 +327,7 @@ if (true) {
   gui.add({func() {}}, 'func').onChange(change).onFinishChange(finishChange);
 }
 
-{
+if (showUI) {
   const div = document.createElement('div');
   uiElem.appendChild(div);
   const gui = new GUI(div).name('Colors');
@@ -341,7 +349,7 @@ if (true) {
   addColor('"RGB"', '8F8');
   addColor('"rgb(r, g, b)"', 'rgb(170,68,240)');
   addColor('"hsl(h, s, l)"', 'hsl(170,100%,50%)');
-  addColor('0xRRGGBB', 0xFEA956, undefined, v => `0x${v.toString(16).padStart(6, '0')}`);
+  addColor('0xRRGGBB', 0xFEA956, 'uint32-rgb', v => `0x${v.toString(16).padStart(6, '0')}`);
   addColor('[r(u8), b(u8), c(u8)]', [255, 192, 255], 'uint8-rgb');
   addColor('Uint8Array(3)', new Uint8Array([75, 150, 225]), undefined, v => `[${v.join(', ')}]`);
   // note: Because it's Float32Array, if we just use  map  it won't work because
@@ -350,15 +358,20 @@ if (true) {
   addColor('Float32Array(3)', new Float32Array([0.9, 0.7, 0.5]), undefined, v => `[${Array.from(v).map(v => f3(v)).join(', ')}]`);
   addColor('[r(f), g(f), b(f)]', [0.2, 0.9, 0.5], undefined, v => `[${v.map(v => f3(v))}]`);
   addColor('{r, g, b}',  {r: 0, g: 0, b: 1}, undefined, v => `{r: ${f3(v.r)}, g: ${f3(v.g)}, b: ${f3(v.b)}}`);
+  gui.addLabel('rgba');
+  addColor('#RRGGBBAA', '#5438a180');
+  addColor('0xRRGGBBAA', 0xEF569A80, 'uint32-rgba');
+  addColor('rgba(r, g, b, a)', 'rgba(64, 128, 255, 0.25)');
+  addColor('hsl(h, s, l / a)', 'hsl(180 100% 50% / 0.75)');
   logger.setController(gui.addLabel(''));
 }
 
-{
+if (showUI) {
   const div = document.createElement('div');
   uiElem.appendChild(div);
   const gui = new GUI(div).name('Material');
 
-  const s = cube(gui.addCanvas('canvas').canvas);
+  const s = model(gui.addCanvas('canvas').canvas);
   gui.addColor(s.material, 'color').name('material color');
   gui.add(s.material, 'shininess', {min: 0, max: 300});
   gui.addColor(s.light, 'color').name('light color');
@@ -366,7 +379,7 @@ if (true) {
   gui.add(s.camera, 'fov', {min: 1, max: 179}).name('field of view');
 }
 
-{
+if (showUI) {
   const div = document.createElement('div');
   uiElem.appendChild(div);
   const gui = new GUI({parent: div, title: 'Add/Remove'});
@@ -374,19 +387,19 @@ if (true) {
   const controllers = [];
   const periods = [];
 
-  function addRow() {
+  const addRow = () => {
     const id = controllers.length;
     periods.push(Math.random() * 2.5 + 0.5);
     controllers.push(gui.add(periods, id, 0, 3).name(`input ${id + 1}`));
-  }
+  };
 
-  function delRow() {
+  const delRow = () => {
     const row = controllers.pop();
     if (row) {
       periods.pop();
       gui.remove(row);
     }
-  }
+  };
 
   const s = {separate: true};
   gui.add(s, 'separate');
@@ -402,7 +415,7 @@ if (true) {
   const lastYs = [];
   const times = [];
 
-  function draw(now) {
+  const draw = (now) => {
     ++ticks;
     const elapsedTime = now - then;
     then = now;
@@ -426,9 +439,9 @@ if (true) {
           0, 0, width - res, height);
       ctx.globalCompositeOperation = 'source-over';
       const x = width - res;
-      ctx.fillStyle = ticks % 16 === 0 ? uiColors.menuSepColor : uiColors.menuBgColor;
+      ctx.fillStyle = ticks % 16 === 0 ? uiCSSColorVariableNames.menuSepColor : uiCSSColorVariableNames.menuBgColor;
       ctx.fillRect(x, 0, res, height);
-      ctx.fillStyle = uiColors.menuSepColor;
+      ctx.fillStyle = uiCSSColorVariableNames.menuSepColor;
       for (let y = 8; y < height; y += 16) {
         ctx.fillRect(x, y, 1, 1);
       }
@@ -457,18 +470,18 @@ if (true) {
       }
     }
     requestAnimationFrame(draw);
-  }
+  };
   requestAnimationFrame(draw);
 }
 
-{
-  function makeGUI(title, num) {
+if (showUI) {
+  const makeGUI = (title, num) => {
     const gui = new GUI({title}).hide();
     for (let i = 0; i < num; ++i) {
       gui.add([Math.random()], '0', {min: 0, max: 1}).name(`value ${i}`);
     }
     return gui;
-  }
+  };
 
   const guis = {
     short: makeGUI('Short', 5),
@@ -486,22 +499,42 @@ if (true) {
       });
 }
 
-const updateAppearance = function() {
-
-  const themeElem = document.createElement('style');
-  document.head.appendChild(themeElem);
-  const styleElem = document.createElement('style');
-  document.head.appendChild(styleElem);
-
+{
+  const pageCSS = `
+      #ui-helper {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, 250px); /* as as column width */
+        gap: 10px; /* same as column gap */
+      }
+      #ui {
+        columns: 250px;
+        column-gap: 10px;
+        orphans: 1;
+        widows: 1;
+        grid-column: 1 / -1; /* take all the columns of the grid*/
+      }
+      #ui>div {
+        break-inside: avoid-column;
+        margin-bottom: 1em;
+        display: inline-block;
+      }
+  `;
   const themes = {
-    default: '',
-    'default-mono': `
+    default: {
+      muigui: '/* empty */',
+      page: '',
+    },
+    'default-mono': {
+      muigui: `
         .muigui {
            --font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", monospace;
         }
-    `,
-    light: `
-        .muigui {
+      `,
+      page: pageCSS,
+    },
+    light: {
+      muigui: `
+        .muigui-colors {
           --bg-color: #f6f6f6;
           --color: #3d3d3d;
           --value-color: #2b95a1;
@@ -513,9 +546,12 @@ const updateAppearance = function() {
           --invalid-color: #FF0000;
           --selected-color: rgba(0, 0, 0, 0.1);
         }
-    `,
-    'solarized-light': `
-        .muigui {
+      `,
+      page: '',
+    },
+    'solarized-light': {
+      muigui: `
+        .muigui-colors {
           --bg-color: #fdf6e3;
           --color: #657b83;
           --value-color: #2aa0f3;
@@ -527,9 +563,12 @@ const updateAppearance = function() {
           --invalid-color: #FF0000;
           --selected-color: rgba(0, 0, 0, 0.1);
         }
-    `,
-    'solarized-dark': `
-        .muigui {
+      `,
+      page: pageCSS,
+    },
+    'solarized-dark': {
+      muigui: `
+        .muigui-colors {
           --bg-color: #002b36;
           --color: #b2c2c2;
           --value-color: #5abaff;
@@ -540,13 +579,93 @@ const updateAppearance = function() {
           --hover-bg-color: #0a6277;
           --invalid-color: #FF6666;
         }
-    `,
-    'bubble-dark': `
+      `,
+      page: '',
+    },
+    'bubble-dark': {
+      muigui: `
         .muigui {
           --border-radius: 1em;
         }
-    `,
-    'form': `
+      `,
+      page: pageCSS,
+    },
+    'float': {
+      muigui: `
+        :root {
+          color-scheme: light dark,
+        }
+
+        .muigui {
+          --width: 400px;
+          --bg-color: inherit;
+          --color: inherit;
+          --label-width: 25%;
+        }
+
+        input {
+            text-shadow:
+             -1px -1px 0 #FFF,
+              1px -1px 0 #FFF,
+             -1px  1px 0 #FFF,
+              1px  1px 0 #FFF;
+        }
+        .muigui-label-controller>label {
+            text-shadow:
+             -1px -1px 0 #000,
+              1px -1px 0 #000,
+             -1px  1px 0 #000,
+              1px  1px 0 #000;
+        }
+
+        .muigui-root>*:nth-child(1) {
+            display: none;
+        }
+
+        .muigui-range input[type=range]::-webkit-slider-thumb {
+          border-radius: 1em;
+        }
+
+        .muigui-range input[type=range]::-webkit-slider-runnable-track {
+          -webkit-appearance: initial;
+          appearance: none;
+          border: 1px solid rgba(0, 0, 0, 0.25);
+          height: 2px;
+        }
+
+        .muigui-colors {
+          --value-color: #000000;
+          --value-bg-color: rgba(0, 0, 0, 0.1);
+          --disabled-color: #cccccc;
+          --menu-bg-color: rgba(0, 0, 0, 0.1);
+          --menu-sep-color: #bbbbbb;
+          --hover-bg-color: rgba(0, 0, 0, 0);
+          --invalid-color: #FF0000;
+          --selected-color: rgba(0, 0, 0, 0.3);
+          --range-color: rgba(0, 0, 0, 0.125);
+        }
+      `,
+      page: `
+      #ui-helper {
+        display: block;
+      }
+      #ui {
+        columns: none;
+      }
+      #ui>div {
+        break-inside: avoid-column;
+        margin-bottom: 1em;
+        display: block;
+      }
+
+      body {
+        background: rgb(34,193,195);
+        background: linear-gradient(209deg, rgba(34,193,195,1) 0%, rgba(253,187,45,1) 100%);
+      }
+      `,
+    },
+    'form': {
+      muigui: `
         :root {
           color-scheme: light dark,
         }
@@ -558,7 +677,9 @@ const updateAppearance = function() {
           --font-size-mono: medium;
           --bg-color: inherit;
           --color: inherit;
+        }
 
+        .muigui-colors {
           --value-color: #2b95a1;
           --value-bg-color: #e8e8e8;
           --disabled-color: #cccccc;
@@ -567,81 +688,120 @@ const updateAppearance = function() {
           --hover-bg-color: #f0f0f0;
           --invalid-color: #FF0000;
           --selected-color: rgba(0, 0, 0, 0.1);
-
         }
-    `,
+      `,
+      page: pageCSS,
+    },
   };
+
+  const cssColorRE = /^\s*(#|rgb|hsl|lab|hwb|lab|lch|oklch|oklab)/;
+  const looksLikeCSSColor = s => cssColorRE.test(s);
+
+  const cssColorToRGBA8 = (() => {
+    const canvas = document.createElement('canvas');
+    canvas.width = 1;
+    canvas.height = 1;
+    const ctx = canvas.getContext('2d', {willReadFrequently: true});
+    return cssColor => {
+      ctx.clearRect(0, 0, 1, 1);
+      ctx.fillStyle = cssColor;
+      ctx.fillRect(0, 0, 1, 1);
+      return Array.from(ctx.getImageData(0, 0, 1, 1).data);
+    };
+  })();
+
+  const cssStringToHexColor = s => `#${cssColorToRGBA8(s).slice(0, 3).map(v => v.toString(16).padStart(2, '0')).join('')}`;
+
+
+  // --------------- [ get list of CSS variables that affect GUI ] -----------------
+  const selectors = ['.muigui', '.muigui-colors'];
+  const varNamesBySelector = selectors.map(selector => ({
+    selector,
+    vars: getCSSRulesBySelector(selector, GUI.getBaseStyleSheet())
+           .map(rule => Object.values(rule.style)
+              .filter(s => s.startsWith('--') && !rule.style.getPropertyValue(s).trim().startsWith('var'))
+              .map(s => ({key: s, rule}))).flat(),
+    }));
+
+  const showStyles = false;
 
   const div = document.createElement('div');
   uiElem.appendChild(div);
   const gui = new GUI(div).name('Appearance');
   gui.addController(new Select({theme: 'default'}, 'theme', {keyValues: [...Object.keys(themes)]})).onChange(v => {
-    themeElem.textContent = themes[v];
-    styleElem.textContent = '';
-    updateAppearance();
+    GUI.setUserStyles(themes[v].muigui);
+    document.querySelector('#theme').innerText = themes[v].page;
+    if (showStyles) {
+      updateGUIValuesWithCurrentCSSValues();
+    }
   });
 
-  const cssStringToHexColor = s => s.length === 7
-     ? s
-     : `#${s[1]}${s[1]}${s[2]}${s[2]}${s[3]}${s[3]}`;
-
-  const fns = {
-    '--width': (v) => {
-      uiElem.style.columnWidth = v;
-      uiElem.parentElement.style.gridTemplateColumns = `repeat(auto-fit, ${v})`;
-    },
-  };
-
-  const folder = gui.addFolder('Style');
-  const rule = getCSSRulesBySelector('.muigui')[0];  // assuming the first one
-  const varNames = Object.values(rule.style).filter(s => s.startsWith('--'));
-  const obj = {};
   const controllersByKey = {};
+  if (showStyles) {
+    const fns = {
+      '--width': (v) => {
+        uiElem.style.columnWidth = v;
+        uiElem.parentElement.style.gridTemplateColumns = `repeat(auto-fit, ${v})`;
+      },
+    };
 
-  const updateStyles = () => {
-    styleElem.textContent = `.muigui {\n${
-      [...Object.entries(obj)].map(([key, value]) => {
-        return `${key}: ${value};`;
-      }).join('\n')}\n}`;
-    updateUIColors();
-  };
+    // --------------- [ make a GUI for each CSS variable that affects GUI ] -----------------
+    const obj = {};
 
-  for (const key of varNames) {
-    const value = rule.style.getPropertyValue(key).trim();
-    if (value.startsWith('#')) {
-      obj[key] = cssStringToHexColor(value);
-      controllersByKey[key] = folder.addColor(obj, key).onChange(updateStyles);
-    } else if (!value.startsWith('var')){
-      obj[key] = value;
-      controllersByKey[key] = folder.add(obj, key).onChange(v => {
-        const fn = fns[key];
-        if (fn) {
-          fn(v);
+    const folder = gui.addFolder('Style');
+    for (const {vars} of varNamesBySelector) {
+      for (const {key, rule} of vars) {
+        const value = rule.style.getPropertyValue(key).trim();
+        if (looksLikeCSSColor(value)) {
+          obj[key] = cssStringToHexColor(value);
+          controllersByKey[key] = folder.addColor(obj, key).onChange(updateMuiguiCSSStyles);
+        } else if (!value.startsWith('var')){
+          obj[key] = value;
+          controllersByKey[key] = folder.add(obj, key).onChange(v => {
+            const fn = fns[key];
+            if (fn) {
+              fn(v);
+            }
+            updateMuiguiCSSStyles();
+          });
         }
-        updateStyles();
-      });
+      }
     }
+
+    // --------------
+
+    const updateMuiguiCSSStyles = () => {
+      const css = varNamesBySelector.map(({selector, vars}) => `
+      ${selector} {
+        ${
+          vars.map(({key}) => `${key}: ${obj[key]};`).join('\n')
+        }
+      }
+      `).join('\n');
+      GUI.setUserStyles(css);
+    };
   }
 
-  return function() {
+  // --------------
+  const updateGUIValuesWithCurrentCSSValues = () => {
     const map = new Map();
-    for (const rule of getCSSRulesBySelector('.muigui')) {
-      const varNames = Object.values(rule.style).filter(s => s.startsWith('--'));
-      for (const key of varNames) {
-        const value = rule.style.getPropertyValue(key).trim();
-        map.set(key, value);
+    for (const selector of selectors) {
+      for (const rule of getCSSRulesBySelector(selector, GUI.getBaseStyleSheet())) {
+        const varNames = Object.values(rule.style).filter(s => s.startsWith('--'));
+        for (const key of varNames) {
+          const value = rule.style.getPropertyValue(key).trim();
+          map.set(key, value);
+        }
       }
+      map.forEach((value, key) => {
+        const controller = controllersByKey[key];
+        if (controller) {
+          controller.setValue(looksLikeCSSColor(value) ? cssStringToHexColor(value) : value);
+        } else {
+          console.warn(`no setting in this theme for: ${key}`);
+        }
+      });
     }
-    map.forEach((value, key) => {
-      const controller = controllersByKey[key];
-      if (controller) {
-        controller.setValue(value);
-      } else {
-        console.warn(`no setting in this theme for: ${key}`);
-      }
-    });
-    updateUIColors();
+    getListOfUIColorCSSVariableNames();
   };
-}();
-
 }

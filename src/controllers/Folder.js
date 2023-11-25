@@ -11,6 +11,7 @@ export default class Folder extends Container {
       type: 'button',
       onClick: () => this.toggleOpen(),
     }, [this.#labelElem]));
+    this.pushContainer(new Container('muigui-open-container'));
     this.pushContainer(new Container());
     this.name(name);
     this.open();

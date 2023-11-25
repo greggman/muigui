@@ -24,6 +24,9 @@ export function createController(object, property, ...args) {
   if (Array.isArray(arg1)) {
     return new Select(object, property, {keyValues: arg1});
   }
+  if (arg1 && arg1.keyValues) {
+    return new Select(object, property, {keyValues: arg1.keyValues});
+  }
 
   const t = typeof object[property];
   switch (t) {

@@ -26,38 +26,49 @@
     <meta name="twitter:description" content="muigui: A Small Simple JS GUI" />
     <meta name="twitter:image:src" content="https://greggman.github.io/muigui/images/muigui.png">
 
-    <!--
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/mono-blue.min.css" media="(prefers-color-scheme: light)">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" media="(prefers-color-scheme: dark)">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.0/showdown.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/languages/javascript.min.js"></script>
-    -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/javascript.min.js"></script>
+    <script type="importmap">
+    {
+      "imports": {
+        "three": "./examples/3rdParty/threejs/build/three.module.js"
+      }
+    }
+    </script>
+
     <style>
       :root {
         color-scheme: light dark;
         --log-bg-color: #eee;
+        --width: 700px;
+        --max-width: calc(100% - 50px);
+        --bg-color: #fff;
       }
       @media (prefers-color-scheme: dark) {
         :root {
           --log-bg-color: #222;
-        }
-        body {
-          background: #333;
+          --bg-color: #333;
         }
       }
-      body {
-        font-family: sans-serif;
-      }
-      #log {
-        height: 50px;
-        overflow: auto;
-        background: var(--log-bg-color);
-        margin-bottom: 10px;
-      }
-      #log pre {
+      html, body {
         margin: 0;
+        height: 100%;
+        font-family: sans-serif;
+        background-color: var(--bg-color);
       }
-    </style>
-    <style id="theme">
+      h1,
+      h2,
+      p {
+        width: var(--width);
+        max-width: var(--max-width);
+      }
+      h2 {
+        margin-top: 2em;
+        margin-bottom: 0;
+      }
       #ui-helper {
         display: grid;
         grid-template-columns: repeat(auto-fit, 250px); /* as as column width */
@@ -75,25 +86,640 @@
         margin-bottom: 1em;
         display: inline-block;
       }
+      #log {
+        height: 50px;
+        overflow: auto;
+        background: var(--log-bg-color);
+        margin-bottom: 10px;
+      }
+      #log pre {
+        margin: 0;
+      }
+      #bg {
+        position: absolute;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+      #content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      pre {
+        margin: 0;
+      }
+      .effect {
+        width: 100%;
+        height: 400px;
+      }
+      [data-section],
+      [data-example] {
+        position: relative;
+        display: block;
+        align-items: center;
+        width: var(--width);
+        max-width: var(--max-width);
+      }
+      [data-section]>*,
+      [data-example]>* {
+        /* */
+      }
+      [data-section] .ui,
+      [data-example] .ui {
+        position: absolute;
+        right: 1em;
+        top: 1em;
+      }
+      .log {
+        padding: 1em;
+        background-color: rgba(0, 0, 0, 0.3);
+      }
+      .form-example {
+        width: 50%;
+        background-color: var(--bg-color);
+        padding: 1em;        
+        width: var(--width);
+        max-width: var(--max-width);
+      }
+      .form-example .ui {
+        width: 50%;
+        background-color: var(--bg-color);
+        padding: 1em;
+        margin: 1em;
+      }
+      @media (max-width: 685px) {
+        [data-example] .ui {
+          display: flex;
+          justify-content: center;
+          position: initial;
+        }
+        .form-example {
+          width: 100%;
+          max-width: 500px;
+          border: 1px solid rgba(0, 0, 0, 0.3);
+        }
+        .form-example .ui {
+          padding: 1em;
+          position: initial;
+        }
+      }
     </style>
     <style id="media-query">
     </style>
 <body>
+<canvas id="bg"></canvas>
+<div id="content">
+  <h1>muigui<sup> ⍺</sup></h1>
 
-<h1>muigui</h1>
-<div id="log"></div>
-<div id="ui-helper">
-  <div id="ui"></div>
-</div>
-</body>
-<!-- needed for three.js, not! for muigui -->
-<script async src="https://unpkg.com/es-module-shims@1.3.6/dist/es-module-shims.js"></script>
-<script type="importmap">
-{
-  "imports": {
-    "three": "./examples/3rdParty/threejs/build/three.module.js"
+  <div data-section="basic">
+    <div class="ui"></div>
+    <div class="effect"></div>
+  </div>
+
+  <h2><a href="https://github.com/greggman/muigui">What / Why?</a></h2>
+
+  <!-- ============================================================ -->
+  <h2>Ranges:</h2>
+  <p>Like <code>&lt;input type="range"&gt;</code>, manipulates a number with optional conversions.</p>
+  <div data-example>
+    <pre><code class="language-javascript">
+const s = {
+  value1: 40,
+  value2: 50,
+  value3: 80,
+  value4: 60,
+  value5: 65,
+  angleRad: Math.PI * 0.25,
+};
+
+const gui = new GUI();
+gui.add(s, 'value1', 0, 100);     // 0 to 100
+gui.add(s, 'value2', 0, 100, 1);  // 0 to 100 by in steps of 1
+gui.add(s, 'value3', 0, 100, 5);  // 0 to 100 by steps of 5
+GUI.makeMinMaxPair(gui, s, 'value4', 'value5', {
+  min: 0, max: 100, minRange: 5,
+});
+
+const degToRad = d => d * Math.PI / 180;
+const radToDeg = r => r * 180 / Math.PI;
+
+gui.add(s, 'angleRad', {
+  min: -360, max: 360, step: 1, 
+  converters: {
+    to: radToDeg,
+    from: v => [true, degToRad(v)]},
+  });
+    </code></pre>
+  </div>
+
+  <!-- ============================================================ -->
+  <h2>Dropdowns:</h2>
+  <p>Like <code>&lt;select&gt;</code>, lets you pick one of many options.</p>
+
+  <div data-example>
+    <pre><code class="language-javascript">
+const s = {
+  byIndex: 2,
+  byString: 'dog',
+  byKeyValue: 0.5,
+  byKVArray: 2,
+};
+
+const gui = new GUI();
+gui.add(s, 'byIndex', ['apple', 'banana', 'cumquat']);
+gui.add(s, 'byString', ['bird', 'cat', 'dog']);
+gui.add(s, 'byKeyValue', [['Slow', 0.1], ['Medium', 0.5], ['Fast', 1.0]]);
+gui.add(s, 'byKVArray', {keyValues: {'Loafers': 0, 'Sandals': 1, 'Sneakers': 2}});
+    </code></pre>
+  </div>
+
+  <!-- ============================================================ -->
+  <h2>Checkbox:</h2>
+  <p>Sets a boolean</p>
+
+  <div data-example>
+    <pre><code class="language-javascript">
+const s = {
+  on: true,
+};
+
+const gui = new GUI();
+gui.add(s, 'on');
+    </code></pre>
+  </div>
+
+  <!-- ============================================================ -->
+  <h2>Colors:</h2>
+  <p>Select a color in various formats</p>
+
+  <div data-example>
+    <pre><code class="language-javascript">
+const s = {
+  byHashHex6: '#569AEF',
+  byHex6: 'EF569A',
+  byHashHex3: '#F88',
+  byHex3: '8F8',
+  byCSSRgb: 'rgb(170,68,240)',
+  byCSSHsl: 'hsl(170,100%,50%)',
+  byUint24: 0xFEA956,
+  byUint8: [255, 192, 255],
+  byUint8Array: new Uint8Array([75, 150, 225]),
+  byFloat32Array: new Float32Array([0.9, 0.7, 0.5]),
+  byNumberArray: [0.2, 0.9, 0.5],
+  byRGBObject: {r: 0, g: 0, b: 1},
+  byHashHex8: '#5438a180',
+  byUint32: 0xEF569A80,
+  byCSSRgba: 'rgba(64, 128, 255, 0.25)',
+  byCSSHslAlpha: 'hsl(180 100% 50% / 0.75)',
+};
+
+const gui = new GUI();
+gui.addColor(s, 'byHashHex6');
+gui.addColor(s, 'byHex6');
+gui.addColor(s, 'byHashHex3');
+gui.addColor(s, 'byHex3');
+gui.addColor(s, 'byCSSRgb');
+gui.addColor(s, 'byCSSHsl');
+gui.addColor(s, 'byUint24', {format: 'uint32-rgb'});
+gui.addColor(s, 'byUint8', {format: 'uint8-rgb'});
+gui.addColor(s, 'byUint8Array');
+gui.addColor(s, 'byFloat32Array');
+gui.addColor(s, 'byNumberArray');
+gui.addColor(s, 'byRGBObject');
+gui.addLabel('with alpha');
+gui.addColor(s, 'byHashHex8');
+gui.addColor(s, 'byUint32', {format: 'uint32-rgba'});
+gui.addColor(s, 'byCSSRgba');
+gui.addColor(s, 'byCSSHslAlpha');
+    </code></pre>
+  </div>
+
+  <!-- ============================================================ -->
+  <h2>Canvas:</h2>
+  <p>Lets you draw something</p>
+  <div data-example data-extra-code="
+const s = {
+  period1: 1,
+  period2: 4,
+};
+
+//gui.add(s, 'period1', 0, 5);
+//gui.add(s, 'period2', 0, 5);
+
+setInterval(() => {
+  waveData.shift();
+  const v = performance.now() * 0.001;
+  const s1 = Math.sin(v * s.period1);
+  const s2 = Math.sin(v * s.period2)
+  waveData.push(s1 + s2);
+}, 200);
+
+  ">
+    <pre><code class="language-javascript">
+const waveData = new Array(100).fill(0);
+
+const gui = new GUI();
+helpers.graph(
+  gui.addCanvas('wave').canvas, 
+  waveData,
+  {
+    min: -2,
+    max: +2,
+    interval: 200,
+  });
+    </code></pre>
+  </div>
+
+  <p>Returning just a canvas means you can use whatever API you want (2d, WebGL, WebGPU)
+  </p>
+
+  <div data-example>
+    <pre><code class="language-javascript">
+const hsl = (h, s, l) =>
+  `hsl(${h * 360 | 0}, ${s * 100}%, ${l * 100 | 0}%)`;
+const gui = new GUI();
+const canvas = gui.addCanvas('funky').canvas;
+const ctx = canvas.getContext('2d');
+function render(t) {
+  t *= 0.0001;
+  canvas.width = canvas.width;
+  ctx.translate(canvas.width / 2, canvas.height / 2);
+  const size = Math.max(canvas.width, canvas.height);
+  ctx.rotate(t);
+  for (let i = 0; i < 16; ++i) {
+    ctx.fillStyle = hsl(i / 48 + t * 0.2, 1, i % 2 ? 0.5 : 0.25);
+    ctx.fillRect(-size, -size, size * 2, size * 2);
+    ctx.scale(0.8, 0.8);
+    ctx.rotate(Math.sin(t * 3 + i * 0.1) * 0.2);
   }
+  requestAnimationFrame(render);
 }
-</script>
-<script type="module" src="examples/js/index.js"></script>
+requestAnimationFrame(render);
+    </code></pre>
+  </div>
+
+  <p>And you can use whatever Library (three.js, babylon.js, pixi.js) you want.
+  </p>
+
+  <div data-example>
+    <pre><code class="language-javascript">
+// three.js example
+
+
+
+
+
+import {model} from '/examples/js/model.js';
+
+const gui = new GUI();
+const s = model(gui.addCanvas('model').canvas);
+gui.addColor(s.material, 'color');
+gui.add(s.material, 'shininess', 0, 300);
+gui.addColor(s.light, 'color').name('light');
+gui.add(s.light, 'intensity', 0, 5, 0.01);
+gui.add(s.camera, 'fov', 1, 179);
+    </code></pre>
+  </div>
+
+  <!-- ============================================================ -->
+  <h2>Button:</h2>
+  <p>Like <code>&lt;button type="button"&gt;</code>, calls a function</p>
+
+  <div data-example>
+    <pre><code class="language-javascript">
+function doIt() { log('doIt'); }
+function doThat() { log('doThat'); }
+
+const s = {
+  clickMe() { log("clicked"); },
+  clickMeToo: () => { log("clicked too"); },
+  doIt,
+  doSomething: doThat,
+};
+
+const gui = new GUI();
+gui.add(s, 'clickMe');
+gui.add(s, 'clickMeToo');
+gui.add(s, 'doIt');
+gui.add(s, 'doSomething');
+gui.addButton('easy', _ => log('e-z'));
+    </code></pre>
+  </div>
+
+  <!-- ============================================================ -->
+  <h2>Label:</h2>
+  <p>Displays text. Can be used to label sections or to display info</p>
+
+  <div data-example>
+    <pre><code class="language-javascript">
+const gui = new GUI();
+gui.addLabel('Seconds:');
+const output = gui.addLabel('');
+
+setInterval(() => {
+  const secs = new Date().getSeconds();
+  const s = secs.toString().padStart(2, '0');
+  output.text(`---\n${s}\n---`);
+}, 1000);
+    </code></pre>
+  </div>
+
+  <p>A small utility to monitor a value</p>
+
+  <div data-example data-extra-code="
+const modes = ['searching', 'defending', 'attacking'];
+function doIt() {
+  s.frameCount++;
+  s.stats.speed = parseFloat((Math.sin(s.frameCount / 500) * 3 + 10).toFixed(3));
+  s.stats.mode = modes[Math.random() * modes.length | 0];
+  requestAnimationFrame(doIt);
+}
+requestAnimationFrame(doIt);
+
+">
+    <pre><code class="language-javascript">
+const s = {
+  frameCount: 0,
+  stats: {
+    mode: 'searching',
+    speed: 12,
+  },
+};
+
+const gui = new GUI();
+helpers.monitor(gui.addLabel('Seconds:'), s, 'frameCount');
+helpers.monitor(gui.addLabel('Status:'), s, 'stats');
+    </code></pre>
+  </div>
+
+  <!-- ============================================================ -->
+  <h2>Text:</h2>
+  <p>Like <code>&lt;input type="text"&gt;</code>, manipulates a string.</p>
+
+  <div data-example>
+    <pre><code class="language-javascript">
+const s = {
+  name: "Sandy",
+};
+
+const gui = new GUI();
+gui.add(s, 'name');
+    </code></pre>
+  </div>
+
+  <!-- ============================================================ -->
+  <h2>TextNumbers:</h2>
+  <p>Like <code>&lt;input type="number"&gt;</code>, manipulates a number via text editing with optional conversions.</p>
+
+  <div data-example>
+    <pre><code class="language-javascript">
+const s = {
+  value: 123,
+  angleDeg: 45,
+  angleRad: Math.PI,
+};
+
+const degToRad = d => d * Math.PI / 180;
+const radToDeg = r => r * 180 / Math.PI;
+
+const gui = new GUI();
+gui.add(new TextNumber(s, 'value'));
+gui.add(new TextNumber(s, 'angleRad', {
+  converters: {
+    to: radToDeg, 
+    from: v => [true, degToRad(v)]},
+    step: 1,
+}));
+gui.add(new TextNumber(s, 'angleDeg', {
+  converters: {
+    to: degToRad, 
+    from: v => [true, radToDeg(v)]},
+    step: 0.001,
+}));
+    </code></pre>
+  </div>
+
+  <!-- ============================================================ -->
+  <h2>Listen:</h2>
+  <p>Listens for changes.</p>
+
+  <div data-example>
+    <pre><code class="language-javascript">
+const s = {
+  amount: 5,
+  name: 'Jim',
+  pet: 'cat',
+  randomize,
+};
+
+function randomize() {
+  s.amount = Math.random() * 50;
+  s.name = randElem(['Jane', 'Lee', 'Anne']);
+  s.pet = randElem(pets);
+}
+
+const pets = ['cat', 'dog', 'bird'];
+const gui = new GUI();
+gui.add(s, 'amount', 0, 50).listen();
+gui.add(s, 'name').listen();
+gui.add(s, 'pet', pets).listen();
+gui.add(s, 'randomize');
+    </code></pre>
+  </div>
+
+  <!-- ============================================================ -->
+  <h2>updateDisplay:</h2>
+  <p>Updates the UI from current value(s).</p>
+
+  <div data-example>
+    <pre><code class="language-javascript">
+const s = {
+  amount: 5,
+  name: 'Jim',
+  pet: 'cat',
+};
+
+function randomize() {
+  s.amount = Math.random() * 50;
+  s.name = randElem(['Jane', 'Lee', 'Anne']);
+  s.pet = randElem(pets);
+}
+
+const pets = ['cat', 'dog', 'bird'];
+const gui = new GUI();
+const a = gui.add(s, 'amount', 0, 50);
+const n = gui.add(s, 'name');
+const p = gui.add(s, 'pet', pets);
+gui.addButton('randomize', randomize);
+gui.addButton('update amount', _ => a.updateDisplay());
+gui.addButton('update name', _ => n.updateDisplay());
+gui.addButton('update pet', _ => p.updateDisplay());
+gui.addButton('update all', _ => gui.updateDisplay());
+    </code></pre>
+  </div>
+
+  <!-- ============================================================ -->
+  <h2>Folder:</h2>
+  <p>A way to make collapsable sections.</p>
+
+  <div data-example>
+    <pre><code class="language-javascript">
+const position = {
+  x: 5,
+  y: 20,
+  z: -15,
+};
+const rotation = {
+  x: 45,
+  y: 90,
+  z: -15,
+};
+
+const gui = new GUI();
+const p = gui.addFolder('position');
+p.add(position, 'x', -100, 100);
+p.add(position, 'y', -100, 100);
+p.add(position, 'z', -100, 100);
+const r = gui.addFolder('rotation');
+r.add(rotation, 'x', -100, 100);
+r.add(rotation, 'y', -100, 100);
+r.add(rotation, 'z', -100, 100);
+    </code></pre>
+  </div>
+
+
+
+  <!-- ============================================================ -->
+  <h2>Float Theme:</h2>
+  <p>Useful when you want the UI over something</p>
+
+  <div data-section="float" style="height: 400px">
+    <div class="ui"></div>
+    <div class="effect"></div>
+    <pre style="
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      opacity: 80%;
+      margin: 0;
+    "><code class="language-javascript">
+const gui = new GUI();
+gui.setTheme('float');
+gui.add(settings, 'period1', 0.1, 20);
+gui.add(settings, 'period2', 0.1, 20);
+gui.add(settings, 'p1', 0.1, 20);
+gui.add(settings, 'p2', 0.1, 20);
+gui.add(settings, 'heightMult', 1, 10);
+gui.addColor(settings, 'baseColor');
+    </code>
+  </div>
+
+  <!-- ============================================================ -->
+  <h2>Form Theme:</h2>
+
+  <div data-section="form" class="form-example" style="height: 400px">
+    <div class="ui"></div>
+    <pre ><code class="language-javascript">
+const s = {
+  name: "Jane Cheng",
+  address1: "B 1, No. 5, Xuzhou R",
+  address2: "Taipei 100218",
+  email: "jane_c@notreally.notcom",
+  receipt: true,
+  currency: '$',
+};
+
+const gui = new GUI();
+gui.setTheme('form');
+gui.add(s, 'name');
+gui.add(s, 'address1');
+gui.add(s, 'address2');
+gui.add(s, 'email');
+gui.add(s, 'receipt');
+gui.add(
+  s, 'currency',
+  ['$', '¥', '€', '£', '₣']);
+gui.addButton('submit', submit);
+
+
+
+
+
+
+
+
+//
+    </code>
+  </div>
+
+</div>
+<style>
+#forkongithub {
+  pointer-events: none;
+}
+#forkongithub a {
+    background: #000;
+    color: #fff;
+    text-decoration: none;
+    font-family: arial,sans-serif;
+    text-align: center;
+    font-weight: bold;
+    padding: 5px 40px;
+    font-size: 12px;
+    line-height: 24px;
+    position: relative;
+    transition: 0.5s;
+    display: block;
+}
+#forkongithub a:hover {
+    background: #c11;
+    color: #fff;
+}
+#forkongithub a::before,#forkongithub a::after {
+    content: "";
+    width: 100%;
+    display: block;
+    position: absolute;
+    top: 1px;
+    left: 0;
+    height: 1px;
+    background: #fff;
+}
+#forkongithub a::after {
+    bottom: 1px;
+    top: auto;
+}
+
+@media screen and (min-width: 400px){
+    #forkongithub{
+        position: fixed;
+        display: block;
+        top: 0;
+        right: 0;
+        width: 200px;
+        overflow: hidden;
+        height: 200px;
+        z-index: 9999;
+    }
+    #forkongithub a{
+        width: 200px;
+        position: absolute;
+        top: 40px;
+        right: -80px;
+        transform: rotate(45deg);
+        -webkit-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        -moz-transform: rotate(45deg);
+        -o-transform: rotate(45deg);
+        box-shadow: 4px 4px 10px rgba(0,0,0,0.8);
+    }
+}
+
+</style>
+<div id="forkongithub"><a href="https://github.com/greggman/muigui">Fork me on GitHub</a></div>
+
+</body>
+<script type="module" src="examples/js/index/index.js"></script>
 </html>

@@ -54,7 +54,10 @@ export default class PopDownController extends ValueController {
     }));
     this.#checkboxElem = checkboxElem;
     this.#valuesView = this.#top.add(new ElementView('div', 'muigui-pop-down-values'));
-    this.#bottom = this.add(new ElementView('div', 'muigui-pop-down-bottom'));
+    const container = new ElementView('div', 'muigui-pop-down-bottom muigui-open-container');
+    this.#bottom = new ElementView('div');
+    container.add(this.#bottom);
+    this.add(container);
     this.setOptions(options);
   }
   setKnobColor(bgCssColor/*, fgCssColor*/) {

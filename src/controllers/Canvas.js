@@ -5,8 +5,8 @@ import LabelController from './LabelController.js';
 export default class Canvas extends LabelController {
   #canvasElem;
 
-  constructor() {
-    super('muigui-canvas');
+  constructor(name) {
+    super('muigui-canvas', name);
     this.#canvasElem = this.add(
       new ElementView('canvas', 'muigui-canvas'),
     ).domElement;

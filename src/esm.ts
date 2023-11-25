@@ -9,4 +9,12 @@ export { default as Slider } from './controllers/Slider.js';
 export { default as TextNumber } from './controllers/TextNumber.js';
 export { default as Vec2 } from './controllers/Vec2.js';
 
+import {graph} from './libs/graph.js';
+import {monitor} from './libs/monitor.js';
+
+export const helpers = {
+  graph,
+  monitor,
+};
+
 export default GUI;

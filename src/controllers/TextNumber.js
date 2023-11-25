@@ -11,7 +11,7 @@ export default class TextNumber extends ValueController {
   #step;
 
   constructor(object, property, options = {}) {
-    super(object, property, 'muigui-checkbox');
+    super(object, property, 'muigui-text-number');
     this.#textView = this.add(new NumberView(this, options));
     this.updateDisplay();
   }

@@ -5,7 +5,7 @@
     <meta name="viewport" content="initial-scale=1,minimum-scale=1,maximum-scale=1">
     <title>muigui</title>
 
-    <link rel="icon" type="image/png"  href="images/muigui-icon.png">
+    <link rel="icon" type="image/png"  href="/images/muigui-icon.png">
 
     <meta name="description" content="muigui: A Small Simple JS GUI" />
     <meta name="keywords" content="javascript gui ui muigui" />
@@ -47,6 +47,17 @@
       body {
         font-family: sans-serif;
       }
+      #log {
+        height: 50px;
+        overflow: auto;
+        background: var(--log-bg-color);
+        margin-bottom: 10px;
+      }
+      #log pre {
+        margin: 0;
+      }
+    </style>
+    <style id="theme">
       #ui-helper {
         display: grid;
         grid-template-columns: repeat(auto-fit, 250px); /* as as column width */
@@ -64,15 +75,6 @@
         margin-bottom: 1em;
         display: inline-block;
       }
-      #log {
-        height: 50px;
-        overflow: auto;
-        background: var(--log-bg-color);
-        margin-bottom: 10px;
-      }
-      #log pre {
-        margin: 0;
-      }
     </style>
     <style id="media-query">
     </style>
@@ -89,10 +91,9 @@
 <script type="importmap">
 {
   "imports": {
-    "three": "./examples/3rdParty/threejs/build/three.module.js"
+    "three": "./3rdParty/threejs/build/three.module.js"
   }
 }
 </script>
-<script src="/dist/0.x/muigui.js"></script>
-<script type="module" src="examples/js/index-umd.js"></script>
+<script type="module" src="js/lots.js"></script>
 </html>

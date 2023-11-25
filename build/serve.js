@@ -5,6 +5,7 @@ import chokidar from 'chokidar';
 
 spawn('./node_modules/.bin/tsc', [
   '--watch',
+  '--project', 'build/tsconfig-serve.json',
 ], {
   stdio: 'inherit',
 });

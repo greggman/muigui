@@ -16,8 +16,12 @@ export default class TextView extends EditView {
     const setFinalValue = setter.setFinalValue.bind(setter);
     super(createElem('input', {
       type: 'text',
-      onInput: () => this.#handleInput(setValue, true),
-      onChange: () => this.#handleInput(setFinalValue, false),
+      onInput: () => {
+        this.#handleInput(setValue, true);
+      },
+      onChange: () => {
+        this.#handleInput(setFinalValue, false);
+      },
     }));
     this.setOptions(options);
   }
