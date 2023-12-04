@@ -40,7 +40,7 @@ gui.add(s, 'someFunction');
 
 produces
 
-<img src="./images/muigui-screenshot.png" style="max-width: 250px">
+<img src="./images/muigui-screenshot.png" width="250">
 
 ## Why
 
@@ -213,6 +213,8 @@ into using tweakpane and it doesn't meet my needs as of v4.0.0. Examples below
 
   So, I thought I'd try to write a library that handled that case.
 
+## Exploration
+
 I also wanted to explore various things though many of them
 have not made it into muigui yet.
 
@@ -266,7 +268,15 @@ have not made it into muigui yet.
   gui.add(s);
   ```
 
-  At the moment that won't work. `someNumber` could only become
+  You could implement that like this
+
+  ```js
+  for (const key of Object.keys(s)) {
+     gui.add(s, key);
+  }
+  ```
+
+  But that won't work. `someNumber` could only become
   a `TextNumber` because there's no range. `someOption` would
   only become a `Text` because there's no info that it's an enum.
   `someColor` would become a `Text` because there's no info that
@@ -274,7 +284,39 @@ have not made it into muigui yet.
   having to provide more info.
 
   It's not clear in JS that adding that info would be a win
-  for keeping it simple but it sure would be nice.
+  for keeping it simple but it sure would be nice. I've thought
+  about passing a second object with options. The simplest version
+  would be something like this
+
+  ```js
+  const s = {
+    someNumber: 123,
+    someString: 'hello',
+    someOption: 'dog',
+    someColor: '#ED3281',
+    someFunction: () => console.log('called')
+  };
+  const argsByName: {
+    someNumber: [{ min: 1, max: 200 }],
+    someOption: [['cat', 'bird', 'dog']],
+    someColor: [{type: 'color'}],
+  };
+  addObject(s, argsByName) {
+    for (const key of Object.keys(s)) {
+       gui.add(s, key, ...(argsByName[key] || []);
+    }
+  }
+  ```
+
+  But that's not really what you get from a typed system.
+  In a typed system, the fact that `someOption` is an enum
+  is known from its type. Similar that `someColor` is a
+  a color is known from it's type. `someNumber` is still
+  problematic because it needs a range which is probably
+  not part of its type.
+
+  In any case, I'd be nice to find a way to get an
+  instant UI like C#/Unity does.  
 
 * ## Modularity
 
@@ -389,12 +431,15 @@ some hidden gui state like whether or not a folder is expanded.
 You still run into the issue though that the data being edited
 might not be easily serializable so you'd have to find another solution.
 
+To put it another way, it's not the responsibility of a UI library
+to serialize.
+
 ## Future
 
 I'm under sure how much time I'll continue to put into this.
 I get the feeling other people are far more motivated to make
 UIs. Maybe if I'm lucky they'll take some inspiration from
-the thoughts above and I'll find they've covered it all.
+the thoughts and ideas above and I'll find they've covered it all.
 
 ## License
 

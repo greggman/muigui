@@ -2,7 +2,7 @@ import * as twgl from '../../3rdParty/twgl-full.module.js';
 import VSAEffect from './VSAEffect.js';
 import effects from './effects.js';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import GUI, { helpers, Direction, TextNumber } from '../../../src/esm.js';
+import GUI, { helpers, Direction, TextNumber } from '/dist/0.x/muigui.module.js';
 
 const canvas = document.querySelector('#bg');
 const gl = canvas.getContext('webgl');
