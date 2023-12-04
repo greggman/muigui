@@ -12,11 +12,11 @@ fs.writeFileSync(ignoreFilename, newIgnore);
 const version = parseInt(JSON.parse(fs.readFileSync('package.json', {encoding: 'utf8'})).version);
 
 function transformJS(src) {
-  return src.replace(/'.*?'\s+\/*\s+muigui-include\s+*\//g, `dist/${version}.x/muigui.module.js`);
+  return src.replace(/'.*?';\s+\/\*\s+muigui-include\s+\*\//g, `'/dist/${version}.x/muigui.module.js';`);
 }
 
 [
-  'examples/js/index.js',
+  'examples/js/index/index.js',
 ].forEach(filename => {
   const src = fs.readFileSync(filename, {encoding: 'utf8'});
   const dst = transformJS(src);
