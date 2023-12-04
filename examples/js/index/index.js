@@ -13,6 +13,9 @@ function render(time) {
   time *= 0.001;
 
   twgl.resizeCanvasToDisplaySize(canvas);
+  gl.disable(gl.SCISSOR_TEST);
+  gl.clearColor(0, 0, 0, 0);
+  gl.clear(gl.COLOR_BUFFER_BIT);
 
   canvas.style.transform = `translateX(${window.scrollX}px) translateY(${window.scrollY}px)`;
 
