@@ -2,8 +2,8 @@
   "name": "muigui",
   "version": "0.0.14",
   "description": "A Simple GUI",
-  "main": "muigui.js",
-  "module": "src/muigui.js",
+  "main": "dist/0.x/muigui.js",
+  "module": "dist/0.x/muigui-module.js",
   "type": "module",
   "scripts": {
     "build": "npm run build-normal",
@@ -33,7 +33,7 @@
     "url": "https://github.com/greggman/muigui/issues"
   },
   "files": [
-    "muigui.js",
+    "dist/**/*",
     "src/**/*"
   ],
   "homepage": "https://github.com/greggman/muiguiy#readme",
