@@ -5,6 +5,7 @@ export class GUIFolder extends Folder {
     addDivider(): any;
     addFolder(name: any): any;
     addLabel(text: any): any;
+    addButton(name: any, fn: any): any;
 }
 export class GUI extends GUIFolder {
     static converters: {
@@ -34,6 +35,7 @@ export class GUI extends GUIFolder {
     static setTheme(name: any): void;
     constructor(options?: {});
     setStyle(css: any): void;
+    setTheme(name: any): void;
     #private;
 }
 export default GUI;

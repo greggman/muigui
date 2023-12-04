@@ -139,6 +139,26 @@ export const colorFormatConverters: {
             to: (v: any) => string;
         };
     };
+    'float-hsv': {
+        color: {
+            from: (v: any) => (boolean | number[])[];
+            to: (v: any) => number[];
+        };
+        text: {
+            from: (s: any) => any[];
+            to: (v: any) => string;
+        };
+    };
+    'float-hsva': {
+        color: {
+            from: (v: any) => (boolean | any[])[];
+            to: (v: any) => any[];
+        };
+        text: {
+            from: (s: any) => any[];
+            to: (v: any) => string;
+        };
+    };
     'object-rgb': {
         color: {
             from: (v: any) => (boolean | {

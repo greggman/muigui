@@ -7,4 +7,10 @@ export { default as Select } from './controllers/Select.js';
 export { default as Slider } from './controllers/Slider.js';
 export { default as TextNumber } from './controllers/TextNumber.js';
 export { default as Vec2 } from './controllers/Vec2.js';
+import { graph } from './libs/graph.js';
+import { monitor } from './libs/monitor.js';
+export declare const helpers: {
+    graph: typeof graph;
+    monitor: typeof monitor;
+};
 export default GUI;

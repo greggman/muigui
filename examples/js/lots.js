@@ -1,6 +1,6 @@
 
 import {GUI} from '../../src/muigui.js';
-import {cube} from './cube.js';
+import {model} from './model.js';
 import Logger from './logger.js';
 import {
   getCSSRulesBySelector,
@@ -16,6 +16,8 @@ import Slider from '../../src/controllers/Slider.js';
 import Select from '../../src/controllers/Select.js';
 // import Range from '../../src/controllers/Range.js';
 import TextNumber from '../../src/controllers/TextNumber.js';
+
+/* cut-here */
 
 const uiElem = document.querySelector('#ui');
 
@@ -182,7 +184,8 @@ if (showUI) {
     let lTime1 = 0;
     let lTime2 = 0;
     let then = 0;
-    function draw(now) {
+    // eslint-disable-next-line no-loop-func
+    const draw = (now) => {
       const elapsedTime = now - then;
       then = now;
       lTime1 += elapsedTime * s.period1;
@@ -212,7 +215,7 @@ if (showUI) {
         lastY = newY;
       }
       requestAnimationFrame(draw);
-    }
+    };
     requestAnimationFrame(draw);
   }
 }
@@ -228,6 +231,7 @@ if (showUI) {
     angleDeg: 180,
     tempC: 20,
     tempF: 72,
+    ticks: 7,
   };
   const logger = new Logger(3);
   const log = logger.log;
@@ -254,7 +258,6 @@ if (showUI) {
   gui.add(s, 'tempF', {min: 0, max: 100, step: 0.1, converters: {to: fToC, from: v => [true, cToF(v)]}})
       .name('F° ↔ C°')
       .onChange(v => log(`${v}F°`));
-
   logger.setController(gui.addLabel(''));
 }
 
@@ -308,7 +311,10 @@ if (showUI) {
 
   const changes = { onChange: 0, onFinishChange: 0 };
   const change = () => changes.onChange++;
-  const finishChange = () => changes.onFinishChange++;
+  const finishChange = () => {
+    console.log('fiinsh change');
+    changes.onFinishChange++;
+  };
 
   const folder = gui.addFolder('Counts');
   folder.add(changes, 'onChange').disable().listen();
@@ -368,7 +374,7 @@ if (showUI) {
   uiElem.appendChild(div);
   const gui = new GUI(div).name('Material');
 
-  const s = cube(gui.addCanvas('canvas').canvas);
+  const s = model(gui.addCanvas('canvas').canvas);
   gui.addColor(s.material, 'color').name('material color');
   gui.add(s.material, 'shininess', {min: 0, max: 300});
   gui.addColor(s.light, 'color').name('light color');
@@ -384,19 +390,19 @@ if (showUI) {
   const controllers = [];
   const periods = [];
 
-  function addRow() {
+  const addRow = () => {
     const id = controllers.length;
     periods.push(Math.random() * 2.5 + 0.5);
     controllers.push(gui.add(periods, id, 0, 3).name(`input ${id + 1}`));
-  }
+  };
 
-  function delRow() {
+  const delRow = () => {
     const row = controllers.pop();
     if (row) {
       periods.pop();
       gui.remove(row);
     }
-  }
+  };
 
   const s = {separate: true};
   gui.add(s, 'separate');
@@ -412,7 +418,7 @@ if (showUI) {
   const lastYs = [];
   const times = [];
 
-  function draw(now) {
+  const draw = (now) => {
     ++ticks;
     const elapsedTime = now - then;
     then = now;
@@ -467,18 +473,18 @@ if (showUI) {
       }
     }
     requestAnimationFrame(draw);
-  }
+  };
   requestAnimationFrame(draw);
 }
 
 if (showUI) {
-  function makeGUI(title, num) {
+  const makeGUI = (title, num) => {
     const gui = new GUI({title}).hide();
     for (let i = 0; i < num; ++i) {
       gui.add([Math.random()], '0', {min: 0, max: 1}).name(`value ${i}`);
     }
     return gui;
-  }
+  };
 
   const guis = {
     short: makeGUI('Short', 5),
@@ -767,7 +773,7 @@ if (showUI) {
 
     // --------------
 
-    function updateMuiguiCSSStyles() {
+    const updateMuiguiCSSStyles = () => {
       const css = varNamesBySelector.map(({selector, vars}) => `
       ${selector} {
         ${
@@ -776,11 +782,11 @@ if (showUI) {
       }
       `).join('\n');
       GUI.setUserStyles(css);
-    }
+    };
   }
 
   // --------------
-  function updateGUIValuesWithCurrentCSSValues() {
+  const updateGUIValuesWithCurrentCSSValues = () => {
     const map = new Map();
     for (const selector of selectors) {
       for (const rule of getCSSRulesBySelector(selector, GUI.getBaseStyleSheet())) {
@@ -800,5 +806,5 @@ if (showUI) {
       });
     }
     getListOfUIColorCSSVariableNames();
-  }
+  };
 }

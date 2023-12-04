@@ -10,16 +10,24 @@ export default {
   --menu-bg-color: #f8f8f8;
   --menu-sep-color: #bbb;
   --hover-bg-color: #999;
-  --focus-color: #68C;
-  --range-color: #888888;
+  --focus-color: #8BF;
+  --range-color: #AAA;
   --invalid-color: #FF0000;
   --selected-color: rgb(255, 255, 255, 0.9);
 
   --button-bg-color: var(--value-bg-color);
 
+  --image-open: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgogIDxyZWN0IHN0eWxlPSJmaWxsOiAjNDQ0OyIgeD0iMjAlIiB5PSI0NSUiIHdpZHRoPSI2MCUiIGhlaWdodD0iMTAlIj48L3JlY3Q+Cjwvc3ZnPg==);
+  --image-closed: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgogIDxyZWN0IHN0eWxlPSJmaWxsOiAjNDQ0OyIgeD0iNDUlIiB5PSIyMCUiIHdpZHRoPSIxMCUiIGhlaWdodD0iNjAlIj48L3JlY3Q+CiAgPHJlY3Qgc3R5bGU9ImZpbGw6ICM0NDQ7IiB4PSIyMCUiIHk9IjQ1JSIgd2lkdGg9IjYwJSIgaGVpZ2h0PSIxMCUiPjwvcmVjdD4KPC9zdmc+);
+  --image-checkerboard: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgogIDxyZWN0IHN0eWxlPSJmaWxsOiAjNDA0MDQwOyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSI+PC9yZWN0PgogIDxyZWN0IHN0eWxlPSJmaWxsOiAjODA4MDgwOyIgeD0iMCIgeT0iMCIgd2lkdGg9IjUwJSIgaGVpZ2h0PSI1MCUiPjwvcmVjdD4KICA8cmVjdCBzdHlsZT0iZmlsbDogIzgwODA4MDsiIHg9IjUwJSIgeT0iNTAlIiB3aWR0aD0iNTAlIiBoZWlnaHQ9IjUwJSI+PC9yZWN0Pgo8L3N2Zz4=);
+
   --range-left-color: var(--value-color);
   --range-right-color: var(--value-bg-color); 
   --range-right-hover-color: var(--hover-bg-color);
+  --button-image: 
+    linear-gradient(
+      rgba(255, 255, 255, 1), rgba(0, 0, 0, 0.2)
+    );
 
   color: var(--color);
   background-color: var(--bg-color);
@@ -36,7 +44,7 @@ export default {
     --menu-bg-color: #080808;
     --menu-sep-color: #444444;
     --hover-bg-color: #666666;
-    --focus-color: #88AAFF;
+    --focus-color: #458; /*#88AAFF*/;
     --range-color: #888888;
     --invalid-color: #FF6666;
     --selected-color: rgba(255, 255, 255, 0.3);
@@ -46,9 +54,15 @@ export default {
     --range-left-color: var(--value-color);
     --range-right-color: var(--value-bg-color); 
     --range-right-hover-color: var(--hover-bg-color);
+    --button-image: linear-gradient(
+        rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.4)
+      );
 
     color: var(--color);
     background-color: var(--bg-color);
+
+    --image-closed: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgogIDxyZWN0IHN0eWxlPSJmaWxsOiAjREREOyIgeD0iMjAlIiB5PSI0NSUiIHdpZHRoPSI2MCUiIGhlaWdodD0iMTAlIj48L3JlY3Q+Cjwvc3ZnPg==);
+    --image-open: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgogIDxyZWN0IHN0eWxlPSJmaWxsOiAjREREOyIgeD0iNDUlIiB5PSIyMCUiIHdpZHRoPSIxMCUiIGhlaWdodD0iNjAlIj48L3JlY3Q+CiAgPHJlY3Qgc3R5bGU9ImZpbGw6ICNEREQ7IiB4PSIyMCUiIHk9IjQ1JSIgd2lkdGg9IjYwJSIgaGVpZ2h0PSIxMCUiPjwvcmVjdD4KPC9zdmc+);
   }
 }
 
@@ -56,7 +70,6 @@ export default {
   --width: 250px;
   --label-width: 45%;
   --number-width: 40%;
-
 
   --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
   --font-size: 11px;
@@ -150,6 +163,9 @@ export default {
   min-width: 0;
   min-height: var(--line-height);
 }
+.muigui-root {
+  z-index: 1;
+}
 .muigui-root,
 .muigui-menu {
   display: flex;
@@ -174,8 +190,7 @@ export default {
   color: var(--color);
   background-color: var(--menu-bg-color);
   min-height: var(--line-height);
-  padding-top: 0.2em;
-  padding-bottom: 0.2em;
+  padding: 0.2em;
   cursor: pointer;
   border-radius: var(--border-radius);
 }
@@ -196,7 +211,7 @@ export default {
 .muigui-controller>*:nth-child(1) {
   flex: 1 0 var(--label-width);
   min-width: 0;
-  white-space: pre;
+  /* white-space: pre; why?? */
 }
 .muigui-controller>label:nth-child(1) {
   place-content: center start;
@@ -238,32 +253,41 @@ export default {
 /* fix! */
 .muigui-open>button>label::before,
 .muigui-closed>button>label::before {
+  content: "X";
+  color: rgba(0, 0, 0, 0);
+  background-color: var(--range-color);
+  border-radius: 0.2em;
   width: 1.25em;
-  height: var(--line-height);
+  margin-right: 0.25em;
+  height: 1.25em; /*var(--line-height);*/
   display: inline-grid;
   place-content: center start;
   pointer-events: none;
 }
 .muigui-open>button>label::before {
-  content: "ⓧ"; /*"▼";*/
+  background-image: var(--image-open);
 }
 .muigui-closed>button>label::before {
-  content: "⨁"; /*"▶";*/
-}
-.muigui-open>*:nth-child(2) {
-  transition: max-height 0.2s ease-out,
-              opacity 0.5s ease-out;
-  max-height: 100vh;
-  overflow: auto;
-  opacity: 1;
+  background-image: var(--image-closed);
 }
 
-.muigui-closed>*:nth-child(2) {
-  transition: max-height 0.2s ease-out,
-              opacity 1s;
-  max-height: 0;
-  opacity: 0;
+.muigui-open>.muigui-open-container {
+  transition: all 0.1s ease-out;
+  overflow: auto;
+  height: 100%;
+}
+.muigui-closed>.muigui-open-container {
+  transition: all 0.1s ease-out;
   overflow: hidden;
+  min-height: 0;
+}
+.muigui-open>.muigui-open-container>* {
+  transition: all 0.1s ease-out;
+  margin-top: 0px;
+}
+.muigui-closed>.muigui-open-container>* {
+  transition: all 0.1s ease-out;
+  margin-top: -100%;
 }
 
 /* ---- popdown ---- */
@@ -275,8 +299,12 @@ export default {
 .muigui-value>*:nth-child(1).muigui-pop-down-top {
   flex: 0;
 }
-.muigui-pop-down-bottom {
+.muigui-closed .muigui-pop-down-bottom {
+  max-height: 0;
+}
 
+.muigui-value .muigui-pop-down-bottom {
+  margin: 0;
 }
 
 .muigui-pop-down-values {
@@ -298,6 +326,10 @@ export default {
   width: auto;
   color: var(--value-color);
   background-color: var(--value-bg-color);
+  background-image: var(--image-checkerboard);
+  background-size: 10px 10px;
+  background-position: 0 0, 0 5px, 5px -5px, -5px 0px;
+
   cursor: pointer;
 
   display: grid;
@@ -389,14 +421,16 @@ export default {
 
 .muigui-button {
   display: grid;
-
+  padding: 2px 0 2px 0;
 }
 .muigui-button button {
   border: none;
   color: var(--value-color);
   background-color: var(--button-bg-color);
+  background-image: var(--button-image);
   cursor: pointer;
   place-content: center center;
+  height: var(--line-height);
 }
 
 /* ------ [ color ] ------ */
@@ -608,9 +642,9 @@ export default {
   border-bottom: 1px solid rgba(0,0,0,0.2);
   border-right: 1px solid rgba(0,0,0,0.2);
   background-color: var(--range-color);
-  margin-top: calc((var(--line-height) - 2px) / -2);
-  width: calc(var(--line-height) - 2px);
-  height: calc(var(--line-height) - 2px);
+  margin-top: calc((var(--line-height) - 6px) / -2);
+  width: calc(var(--line-height) - 6px);
+  height: calc(var(--line-height) - 6px);
 }
 
 .muigui-range input[type=range]::-webkit-slider-runnable-track {
@@ -694,8 +728,14 @@ export default {
 
 `,
 themes: {
-  default: '',
-  float: `
+  default: {
+    include: ['default'],
+    css: `
+    `,
+  },
+  float: {
+    include: ['default'],
+    css: `
   :root {
     color-scheme: light dark,
   }
@@ -752,5 +792,57 @@ themes: {
     --range-color: rgba(0, 0, 0, 0.125);
   }
 `,
+  },
+  form: {
+    include: [],
+    css: `
+    .muigui {
+      --width: 100%;
+      --label-width: 45%;
+      --number-width: 40%;
+    }
+    .muigui-root>button {
+      display: none;
+    }
+    .muigui-controller {
+      margin-top: 1em;
+    }
+    .muigui-label-controller {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      margin-top: 1em;
+    }
+    .muigui-label-controller:has(.muigui-checkbox) {
+      flex-direction: row;
+    }
+    .muigui-value {
+      display: flex;
+      align-items: stretch;
+    }
+    .muigui-value>* {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+    .muigui-controller>*:nth-child(1) {
+      flex: 1 0 var(--label-width);
+      min-width: 0;
+      white-space: pre;
+    }
+    .muigui-controller>label:nth-child(1) {
+      place-content: center start;
+      display: inline-grid;
+      overflow: hidden;
+    }
+    .muigui-controller>*:nth-child(2) {
+      flex: 1 1 75%;
+      min-width: 0;
+    }
+  `,
+  },
+  none: {
+    include: [],
+    css: '',
+  },
 },
 };

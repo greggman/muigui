@@ -61,6 +61,10 @@ export class GUIFolder extends Folder {
   addLabel(text) {
     return this.addController(new Label(text));
   }
+  addButton(name, fn) {
+    const o = {fn};
+    return this.add(o, 'fn').name(name);
+  }
 }
 
 class MuiguiElement extends HTMLElement {
@@ -73,7 +77,7 @@ class MuiguiElement extends HTMLElement {
 customElements.define('muigui-element', MuiguiElement);
 
 const baseStyleSheet = new CSSStyleSheet();
-baseStyleSheet.replaceSync(css.default);
+//baseStyleSheet.replaceSync(css.default);
 const userStyleSheet = new CSSStyleSheet();
 
 function makeStyleSheetUpdater(styleSheet) {
@@ -99,6 +103,11 @@ function makeStyleSheetUpdater(styleSheet) {
 
 const updateBaseStyle = makeStyleSheetUpdater(baseStyleSheet);
 const updateUserStyle = makeStyleSheetUpdater(userStyleSheet);
+
+function getTheme(name) {
+  const { include, css: cssStr } = css.themes[name];
+  return `${include.map(m => css[m]).join('\n')} : css.default}\n${cssStr || ''}`;
+}
 
 export class GUI extends GUIFolder {
   static converters = converters;
@@ -131,13 +140,14 @@ export class GUI extends GUIFolder {
     }
     if (parent) {
       const muiguiElement = createElem('muigui-element');
-      muiguiElement.shadowRoot.adoptedStyleSheets = [baseStyleSheet, userStyleSheet, this.#localStyleSheet];
+      muiguiElement.shadowRoot.adoptedStyleSheets = [this.#localStyleSheet, baseStyleSheet, userStyleSheet];
       muiguiElement.shadow.appendChild(this.domElement);
       parent.appendChild(muiguiElement);
     }
     if (title) {
       this.title(title);
     }
+    this.#localStyleSheet.replaceSync(css.default);
     this.domElement.classList.add('muigui', 'muigui-colors');
   }
   setStyle(css) {
@@ -155,8 +165,11 @@ export class GUI extends GUIFolder {
   static getUserStyleSheet() {
     return userStyleSheet;
   }
+  setTheme(name) {
+    this.setStyle(getTheme(name));
+  }
   static setTheme(name) {
-    GUI.setBaseStyles(`${css.default}\n${css.themes[name] || ''}`);
+    GUI.setBaseStyles(getTheme(name));
   }
 }
 

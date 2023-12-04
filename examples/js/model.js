@@ -1,7 +1,8 @@
+/* eslint-disable no-constant-condition */
 import * as THREE from '../3rdParty/threejs/build/three.module.js';
 import {TrackballControls} from '../3rdParty/threejs/examples/jsm/controls/TrackballControls.js';
 
-export function cube(canvas) {
+export function model(canvas) {
   const renderer = new THREE.WebGLRenderer({canvas, alpha: true});
 
   const scene = new THREE.Scene();
@@ -30,7 +31,7 @@ export function cube(canvas) {
 
   const meshes = [];
   const material = new THREE.MeshPhongMaterial({
-    color: 'red', 
+    color: 'red',
     shininess: 150,
     flatShading: true,
   });
@@ -43,7 +44,7 @@ export function cube(canvas) {
     meshes.push(mesh);
   }
 
-  if(0){
+  if (0) {
     const geometry = new THREE.SphereGeometry(0.8, 12, 6);
     const mesh = new THREE.Mesh(geometry, material);
     mesh.position.x = -1.5;
@@ -51,7 +52,7 @@ export function cube(canvas) {
     meshes.push(mesh);
   }
 
-  if(0){
+  if (0) {
     const geometry = new THREE.TorusGeometry(0.4, 0.3, 6, 12);
     const mesh = new THREE.Mesh(geometry, material);
     mesh.position.x = 1.5;
@@ -68,7 +69,7 @@ export function cube(canvas) {
     controls.handleResize();
     controls.update();
     renderer.render(scene, camera);
-  };
+  }
 
   function resizeRendererToDisplaySize(renderer, mult = 1) {
     const canvas = renderer.domElement;

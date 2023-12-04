@@ -1,4 +1,4 @@
-/* muigui@0.0.12, license MIT */
+/* muigui@0.0.13, license MIT */
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
@@ -17,16 +17,24 @@
   --menu-bg-color: #f8f8f8;
   --menu-sep-color: #bbb;
   --hover-bg-color: #999;
-  --focus-color: #68C;
-  --range-color: #888888;
+  --focus-color: #8BF;
+  --range-color: #AAA;
   --invalid-color: #FF0000;
   --selected-color: rgb(255, 255, 255, 0.9);
 
   --button-bg-color: var(--value-bg-color);
 
+  --image-open: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgogIDxyZWN0IHN0eWxlPSJmaWxsOiAjNDQ0OyIgeD0iMjAlIiB5PSI0NSUiIHdpZHRoPSI2MCUiIGhlaWdodD0iMTAlIj48L3JlY3Q+Cjwvc3ZnPg==);
+  --image-closed: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgogIDxyZWN0IHN0eWxlPSJmaWxsOiAjNDQ0OyIgeD0iNDUlIiB5PSIyMCUiIHdpZHRoPSIxMCUiIGhlaWdodD0iNjAlIj48L3JlY3Q+CiAgPHJlY3Qgc3R5bGU9ImZpbGw6ICM0NDQ7IiB4PSIyMCUiIHk9IjQ1JSIgd2lkdGg9IjYwJSIgaGVpZ2h0PSIxMCUiPjwvcmVjdD4KPC9zdmc+);
+  --image-checkerboard: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgogIDxyZWN0IHN0eWxlPSJmaWxsOiAjNDA0MDQwOyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSI+PC9yZWN0PgogIDxyZWN0IHN0eWxlPSJmaWxsOiAjODA4MDgwOyIgeD0iMCIgeT0iMCIgd2lkdGg9IjUwJSIgaGVpZ2h0PSI1MCUiPjwvcmVjdD4KICA8cmVjdCBzdHlsZT0iZmlsbDogIzgwODA4MDsiIHg9IjUwJSIgeT0iNTAlIiB3aWR0aD0iNTAlIiBoZWlnaHQ9IjUwJSI+PC9yZWN0Pgo8L3N2Zz4=);
+
   --range-left-color: var(--value-color);
   --range-right-color: var(--value-bg-color); 
   --range-right-hover-color: var(--hover-bg-color);
+  --button-image: 
+    linear-gradient(
+      rgba(255, 255, 255, 1), rgba(0, 0, 0, 0.2)
+    );
 
   color: var(--color);
   background-color: var(--bg-color);
@@ -43,7 +51,7 @@
     --menu-bg-color: #080808;
     --menu-sep-color: #444444;
     --hover-bg-color: #666666;
-    --focus-color: #88AAFF;
+    --focus-color: #458; /*#88AAFF*/;
     --range-color: #888888;
     --invalid-color: #FF6666;
     --selected-color: rgba(255, 255, 255, 0.3);
@@ -53,9 +61,15 @@
     --range-left-color: var(--value-color);
     --range-right-color: var(--value-bg-color); 
     --range-right-hover-color: var(--hover-bg-color);
+    --button-image: linear-gradient(
+        rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.4)
+      );
 
     color: var(--color);
     background-color: var(--bg-color);
+
+    --image-closed: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgogIDxyZWN0IHN0eWxlPSJmaWxsOiAjREREOyIgeD0iMjAlIiB5PSI0NSUiIHdpZHRoPSI2MCUiIGhlaWdodD0iMTAlIj48L3JlY3Q+Cjwvc3ZnPg==);
+    --image-open: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgogIDxyZWN0IHN0eWxlPSJmaWxsOiAjREREOyIgeD0iNDUlIiB5PSIyMCUiIHdpZHRoPSIxMCUiIGhlaWdodD0iNjAlIj48L3JlY3Q+CiAgPHJlY3Qgc3R5bGU9ImZpbGw6ICNEREQ7IiB4PSIyMCUiIHk9IjQ1JSIgd2lkdGg9IjYwJSIgaGVpZ2h0PSIxMCUiPjwvcmVjdD4KPC9zdmc+);
   }
 }
 
@@ -63,7 +77,6 @@
   --width: 250px;
   --label-width: 45%;
   --number-width: 40%;
-
 
   --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
   --font-size: 11px;
@@ -157,6 +170,9 @@
   min-width: 0;
   min-height: var(--line-height);
 }
+.muigui-root {
+  z-index: 1;
+}
 .muigui-root,
 .muigui-menu {
   display: flex;
@@ -181,8 +197,7 @@
   color: var(--color);
   background-color: var(--menu-bg-color);
   min-height: var(--line-height);
-  padding-top: 0.2em;
-  padding-bottom: 0.2em;
+  padding: 0.2em;
   cursor: pointer;
   border-radius: var(--border-radius);
 }
@@ -203,7 +218,7 @@
 .muigui-controller>*:nth-child(1) {
   flex: 1 0 var(--label-width);
   min-width: 0;
-  white-space: pre;
+  /* white-space: pre; why?? */
 }
 .muigui-controller>label:nth-child(1) {
   place-content: center start;
@@ -245,32 +260,41 @@
 /* fix! */
 .muigui-open>button>label::before,
 .muigui-closed>button>label::before {
+  content: "X";
+  color: rgba(0, 0, 0, 0);
+  background-color: var(--range-color);
+  border-radius: 0.2em;
   width: 1.25em;
-  height: var(--line-height);
+  margin-right: 0.25em;
+  height: 1.25em; /*var(--line-height);*/
   display: inline-grid;
   place-content: center start;
   pointer-events: none;
 }
 .muigui-open>button>label::before {
-  content: "ⓧ"; /*"▼";*/
+  background-image: var(--image-open);
 }
 .muigui-closed>button>label::before {
-  content: "⨁"; /*"▶";*/
-}
-.muigui-open>*:nth-child(2) {
-  transition: max-height 0.2s ease-out,
-              opacity 0.5s ease-out;
-  max-height: 100vh;
-  overflow: auto;
-  opacity: 1;
+  background-image: var(--image-closed);
 }
 
-.muigui-closed>*:nth-child(2) {
-  transition: max-height 0.2s ease-out,
-              opacity 1s;
-  max-height: 0;
-  opacity: 0;
+.muigui-open>.muigui-open-container {
+  transition: all 0.1s ease-out;
+  overflow: auto;
+  height: 100%;
+}
+.muigui-closed>.muigui-open-container {
+  transition: all 0.1s ease-out;
   overflow: hidden;
+  min-height: 0;
+}
+.muigui-open>.muigui-open-container>* {
+  transition: all 0.1s ease-out;
+  margin-top: 0px;
+}
+.muigui-closed>.muigui-open-container>* {
+  transition: all 0.1s ease-out;
+  margin-top: -100%;
 }
 
 /* ---- popdown ---- */
@@ -282,8 +306,12 @@
 .muigui-value>*:nth-child(1).muigui-pop-down-top {
   flex: 0;
 }
-.muigui-pop-down-bottom {
+.muigui-closed .muigui-pop-down-bottom {
+  max-height: 0;
+}
 
+.muigui-value .muigui-pop-down-bottom {
+  margin: 0;
 }
 
 .muigui-pop-down-values {
@@ -305,6 +333,10 @@
   width: auto;
   color: var(--value-color);
   background-color: var(--value-bg-color);
+  background-image: var(--image-checkerboard);
+  background-size: 10px 10px;
+  background-position: 0 0, 0 5px, 5px -5px, -5px 0px;
+
   cursor: pointer;
 
   display: grid;
@@ -396,14 +428,16 @@
 
 .muigui-button {
   display: grid;
-
+  padding: 2px 0 2px 0;
 }
 .muigui-button button {
   border: none;
   color: var(--value-color);
   background-color: var(--button-bg-color);
+  background-image: var(--button-image);
   cursor: pointer;
   place-content: center center;
+  height: var(--line-height);
 }
 
 /* ------ [ color ] ------ */
@@ -615,9 +649,9 @@
   border-bottom: 1px solid rgba(0,0,0,0.2);
   border-right: 1px solid rgba(0,0,0,0.2);
   background-color: var(--range-color);
-  margin-top: calc((var(--line-height) - 2px) / -2);
-  width: calc(var(--line-height) - 2px);
-  height: calc(var(--line-height) - 2px);
+  margin-top: calc((var(--line-height) - 6px) / -2);
+  width: calc(var(--line-height) - 6px);
+  height: calc(var(--line-height) - 6px);
 }
 
 .muigui-range input[type=range]::-webkit-slider-runnable-track {
@@ -701,8 +735,14 @@
 
 `,
   themes: {
-    default: '',
-    float: `
+    default: {
+      include: ['default'],
+      css: `
+    `,
+    },
+    float: {
+      include: ['default'],
+      css: `
   :root {
     color-scheme: light dark,
   }
@@ -759,6 +799,58 @@
     --range-color: rgba(0, 0, 0, 0.125);
   }
 `,
+    },
+    form: {
+      include: [],
+      css: `
+    .muigui {
+      --width: 100%;
+      --label-width: 45%;
+      --number-width: 40%;
+    }
+    .muigui-root>button {
+      display: none;
+    }
+    .muigui-controller {
+      margin-top: 1em;
+    }
+    .muigui-label-controller {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      margin-top: 1em;
+    }
+    .muigui-label-controller:has(.muigui-checkbox) {
+      flex-direction: row;
+    }
+    .muigui-value {
+      display: flex;
+      align-items: stretch;
+    }
+    .muigui-value>* {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+    .muigui-controller>*:nth-child(1) {
+      flex: 1 0 var(--label-width);
+      min-width: 0;
+      white-space: pre;
+    }
+    .muigui-controller>label:nth-child(1) {
+      place-content: center start;
+      display: inline-grid;
+      overflow: hidden;
+    }
+    .muigui-controller>*:nth-child(2) {
+      flex: 1 1 75%;
+      min-width: 0;
+    }
+  `,
+    },
+    none: {
+      include: [],
+      css: '',
+    },
   },
   };
 
@@ -1119,6 +1211,9 @@
             },
           }));
       this.setOptions({name: property, ...options});
+    }
+    name(name) {
+      this.#buttonElem.textContent = name;
     }
     setOptions(options) {
       copyExistingProperties(this.#options, options);
@@ -1511,15 +1606,22 @@
       const wheelHelper = createWheelHelper();
       super(createElem('input', {
         type: 'number',
-        onInput: () => this.#handleInput(setValue, true),
-        onChange: () => this.#handleInput(setFinalValue, false),
+        onInput: () => {
+          this.#handleInput(setValue, true);
+        },
+        onChange: () => {
+          this.#handleInput(setFinalValue, false);
+        },
         onWheel: e => {
           e.preventDefault();
           const {min, max, step} = this.#options;
           const delta = wheelHelper(e, step);
           const v = parseFloat(this.domElement.value);
           const newV = clamp$1(stepify(v + delta, v => v, step), min, max);
-          setter.setValue(newV);
+          const [valid, outV] = this.#from(newV);
+          if (valid) {
+            setter.setValue(outV);
+          }
         },
       }));
       this.setOptions(options);
@@ -1564,7 +1666,7 @@
     #step;
 
     constructor(object, property, options = {}) {
-      super(object, property, 'muigui-checkbox');
+      super(object, property, 'muigui-text-number');
       this.#textView = this.add(new NumberView(this, options));
       this.updateDisplay();
     }
@@ -1722,8 +1824,12 @@
       const setFinalValue = setter.setFinalValue.bind(setter);
       super(createElem('input', {
         type: 'text',
-        onInput: () => this.#handleInput(setValue, true),
-        onChange: () => this.#handleInput(setFinalValue, false),
+        onInput: () => {
+          this.#handleInput(setValue, true);
+        },
+        onChange: () => {
+          this.#handleInput(setFinalValue, false);
+        },
       }));
       this.setOptions(options);
     }
@@ -1756,7 +1862,7 @@
 
   class Text extends ValueController {
     constructor(object, property) {
-      super(object, property, 'muigui-checkbox');
+      super(object, property, 'muigui-text');
       this.add(new TextView(this));
       this.updateDisplay();
     }
@@ -1780,6 +1886,9 @@
     const [arg1] = args;
     if (Array.isArray(arg1)) {
       return new Select(object, property, {keyValues: arg1});
+    }
+    if (arg1 && arg1.keyValues) {
+      return new Select(object, property, {keyValues: arg1.keyValues});
     }
 
     const t = typeof object[property];
@@ -2392,6 +2501,50 @@
         to: v => Array.from(v).map(v => f3(v)).join(', '),
       },
     },
+    'float-hsv': {
+      color: {
+        from: v => [true, rgbFloatToHSV01(hexToFloatRGB(v))],
+        to: v => hsv01ToRGBFloat(floatRGBToHex(v)),
+      },
+      text: {
+        from: strTo3Floats,
+        // need Array.from because map of Float32Array makes a Float32Array
+        to: v => Array.from(v).map(v => f3(v)).join(', '),
+      },
+    },
+    'float-hsva': {
+      color: {
+        from: v => [true, rgbaFloatToHSVA01(hexToFloatRGB(v))],
+        to: v => hsva01ToRGBAFloat(floatRGBToHex(v)),
+      },
+      text: {
+        from: strTo4Floats,
+        // need Array.from because map of Float32Array makes a Float32Array
+        to: v => Array.from(v).map(v => f3(v)).join(', '),
+      },
+    },
+    //'float-hsl': {
+    //  color: {
+    //    from: v => [true, rgbFloatToHsl01(hexToFloatRGB(v))],
+    //    to: v => hsl01ToRGBFloat(floatRGBToHex(v)),
+    //  },
+    //  text: {
+    //    from: strTo3Floats,
+    //    // need Array.from because map of Float32Array makes a Float32Array
+    //    to: v => Array.from(v).map(v => f3(v)).join(', '),
+    //  },
+    //},
+    //'float-hsla': {
+    //  color: {
+    //    from: v => [true, hexToFloatRGBA(v)],
+    //    to: floatRGBAToHex,
+    //  },
+    //  text: {
+    //    from: strTo4Floats,
+    //    // need Array.from because map of Float32Array makes a Float32Array
+    //    to: v => Array.from(v).map(v => f3(v)).join(', '),
+    //  },
+    //},
     'object-rgb': {
       color: {
         from: v => [true, hexToObjectRGB(v)],
@@ -2464,8 +2617,8 @@
   class Canvas extends LabelController {
     #canvasElem;
 
-    constructor() {
-      super('muigui-canvas');
+    constructor(name) {
+      super('muigui-canvas', name);
       this.#canvasElem = this.add(
         new ElementView('canvas', 'muigui-canvas'),
       ).domElement;
@@ -2626,6 +2779,7 @@
         type: 'button',
         onClick: () => this.toggleOpen(),
       }, [this.#labelElem]));
+      this.pushContainer(new Container('muigui-open-container'));
       this.pushContainer(new Container());
       this.name(name);
       this.open();
@@ -2974,7 +3128,10 @@
       }));
       this.#checkboxElem = checkboxElem;
       this.#valuesView = this.#top.add(new ElementView('div', 'muigui-pop-down-values'));
-      this.#bottom = this.add(new ElementView('div', 'muigui-pop-down-bottom'));
+      const container = new ElementView('div', 'muigui-pop-down-bottom muigui-open-container');
+      this.#bottom = new ElementView('div');
+      container.add(this.#bottom);
+      this.add(container);
       this.setOptions(options);
     }
     setKnobColor(bgCssColor/*, fgCssColor*/) {
@@ -3010,7 +3167,6 @@
     #colorView;
     #textView;
     #to;
-    #setKnobHelper;
 
     constructor(object, property, options = {}) {
       super(object, property, 'muigui-color-chooser');
@@ -3022,20 +3178,22 @@
       this.addTop(this.#textView);
       this.addBottom(this.#colorView);
       // WTF! FIX!
-      this.#setKnobHelper = () => {
-        if (this.#to) {
-          const hex6Or8 = this.#to(this.getValue());
-          const hsl = rgbUint8ToHsl(hexToUint8RGB(hex6Or8));
-          hsl[2] = (hsl[2] + 50) % 100;
-          const hex = uint8RGBToHex(hslToRgbUint8(hsl));
-          this.setKnobColor(`${hex6Or8.substring(0, 7)}FF`, hex);
-        }
-      };
+      this.___setKnobHelper = true;
       this.updateDisplay();
+    }
+    #setKnobHelper() {
+      if (this.#to) {
+        const hex6Or8 = this.#to(this.getValue());
+        const alpha = hex6Or8.length === 9 ? hex6Or8.substring(7, 9) : 'FF';
+        const hsl = rgbUint8ToHsl(hexToUint8RGB(hex6Or8));
+        hsl[2] = (hsl[2] + 50) % 100;
+        const hex = uint8RGBToHex(hslToRgbUint8(hsl));
+        this.setKnobColor(`${hex6Or8.substring(0, 7)}${alpha}`, hex);
+      }
     }
     updateDisplay() {
       super.updateDisplay();
-      if (this.#setKnobHelper) {
+      if (this.___setKnobHelper) {
         this.#setKnobHelper();
       }
     }
@@ -3144,6 +3302,10 @@
     addLabel(text) {
       return this.addController(new Label(text));
     }
+    addButton(name, fn) {
+      const o = {fn};
+      return this.add(o, 'fn').name(name);
+    }
   }
 
   class MuiguiElement extends HTMLElement {
@@ -3156,7 +3318,7 @@
   customElements.define('muigui-element', MuiguiElement);
 
   const baseStyleSheet = new CSSStyleSheet();
-  baseStyleSheet.replaceSync(css.default);
+  //baseStyleSheet.replaceSync(css.default);
   const userStyleSheet = new CSSStyleSheet();
 
   function makeStyleSheetUpdater(styleSheet) {
@@ -3182,6 +3344,11 @@
 
   const updateBaseStyle = makeStyleSheetUpdater(baseStyleSheet);
   const updateUserStyle = makeStyleSheetUpdater(userStyleSheet);
+
+  function getTheme(name) {
+    const { include, css: cssStr } = css.themes[name];
+    return `${include.map(m => css[m]).join('\n')} : css.default}\n${cssStr || ''}`;
+  }
 
   class GUI extends GUIFolder {
     static converters = converters;
@@ -3214,13 +3381,14 @@
       }
       if (parent) {
         const muiguiElement = createElem('muigui-element');
-        muiguiElement.shadowRoot.adoptedStyleSheets = [baseStyleSheet, userStyleSheet, this.#localStyleSheet];
+        muiguiElement.shadowRoot.adoptedStyleSheets = [this.#localStyleSheet, baseStyleSheet, userStyleSheet];
         muiguiElement.shadow.appendChild(this.domElement);
         parent.appendChild(muiguiElement);
       }
       if (title) {
         this.title(title);
       }
+      this.#localStyleSheet.replaceSync(css.default);
       this.domElement.classList.add('muigui', 'muigui-colors');
     }
     setStyle(css) {
@@ -3238,8 +3406,11 @@
     static getUserStyleSheet() {
       return userStyleSheet;
     }
+    setTheme(name) {
+      this.setStyle(getTheme(name));
+    }
     static setTheme(name) {
-      GUI.setBaseStyles(`${css.default}\n${css.themes[name] || ''}`);
+      GUI.setBaseStyles(getTheme(name));
     }
   }
 

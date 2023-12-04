@@ -1,5 +1,5 @@
 export default class Canvas extends LabelController {
-    constructor();
+    constructor(name: any);
     get canvas(): HTMLElement;
     #private;
 }

@@ -22,15 +22,22 @@ export default class NumberView extends EditView {
     const wheelHelper = createWheelHelper();
     super(createElem('input', {
       type: 'number',
-      onInput: () => this.#handleInput(setValue, true),
-      onChange: () => this.#handleInput(setFinalValue, false),
+      onInput: () => {
+        this.#handleInput(setValue, true);
+      },
+      onChange: () => {
+        this.#handleInput(setFinalValue, false);
+      },
       onWheel: e => {
         e.preventDefault();
         const {min, max, step} = this.#options;
         const delta = wheelHelper(e, step);
         const v = parseFloat(this.domElement.value);
         const newV = clamp(stepify(v + delta, v => v, step), min, max);
-        setter.setValue(newV);
+        const [valid, outV] = this.#from(newV);
+        if (valid) {
+          setter.setValue(outV);
+        }
       },
     }));
     this.setOptions(options);

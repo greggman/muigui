@@ -583,6 +583,50 @@ export const colorFormatConverters = {
       to: v => Array.from(v).map(v => f3(v)).join(', '),
     },
   },
+  'float-hsv': {
+    color: {
+      from: v => [true, rgbFloatToHSV01(hexToFloatRGB(v))],
+      to: v => hsv01ToRGBFloat(floatRGBToHex(v)),
+    },
+    text: {
+      from: strTo3Floats,
+      // need Array.from because map of Float32Array makes a Float32Array
+      to: v => Array.from(v).map(v => f3(v)).join(', '),
+    },
+  },
+  'float-hsva': {
+    color: {
+      from: v => [true, rgbaFloatToHSVA01(hexToFloatRGB(v))],
+      to: v => hsva01ToRGBAFloat(floatRGBToHex(v)),
+    },
+    text: {
+      from: strTo4Floats,
+      // need Array.from because map of Float32Array makes a Float32Array
+      to: v => Array.from(v).map(v => f3(v)).join(', '),
+    },
+  },
+  //'float-hsl': {
+  //  color: {
+  //    from: v => [true, rgbFloatToHsl01(hexToFloatRGB(v))],
+  //    to: v => hsl01ToRGBFloat(floatRGBToHex(v)),
+  //  },
+  //  text: {
+  //    from: strTo3Floats,
+  //    // need Array.from because map of Float32Array makes a Float32Array
+  //    to: v => Array.from(v).map(v => f3(v)).join(', '),
+  //  },
+  //},
+  //'float-hsla': {
+  //  color: {
+  //    from: v => [true, hexToFloatRGBA(v)],
+  //    to: floatRGBAToHex,
+  //  },
+  //  text: {
+  //    from: strTo4Floats,
+  //    // need Array.from because map of Float32Array makes a Float32Array
+  //    to: v => Array.from(v).map(v => f3(v)).join(', '),
+  //  },
+  //},
   'object-rgb': {
     color: {
       from: v => [true, hexToObjectRGB(v)],
