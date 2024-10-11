@@ -179,9 +179,9 @@ into using tweakpane and it doesn't meet my needs as of v4.0.0. Examples below
   ```js
   const uniforms = {
     color1: [1, 0.5, 0.25],                   // orange
-    color2: new Float32Array([0, 1, 1]);      // cyan
-    color3: new Uint8Array([0, 128, 0, 128]); // transparent green
-  }
+    color2: new Float32Array([0, 1, 1]),      // cyan
+    color3: new Uint8Array([0, 128, 0, 128]), // transparent green
+  };
   ```
 
   Neither dat.gui, lil.gui, nor tweakpane can edit these AFAICT. (2023)
@@ -311,11 +311,11 @@ have not made it into muigui yet.
   But that's not really what you get from a typed system.
   In a typed system, the fact that `someOption` is an enum
   is known from its type. Similar that `someColor` is a
-  a color is known from it's type. `someNumber` is still
+  a color is known from its type. `someNumber` is still
   problematic because it needs a range which is probably
   not part of its type.
 
-  In any case, I'd be nice to find a way to get an
+  In any case, It'd be nice to find a way to get an
   instant UI like C#/Unity does.  
 
 * ## Modularity
@@ -325,7 +325,10 @@ have not made it into muigui yet.
   editor that is the combination of 3 number editors.
 
   I'm still experimenting. While muigui has components that
-  do this I'm not happy with the API ergonomics yet.
+  do this I'm not happy with the API ergonomics yet and is
+  why I haven't documented them. In fact I'd pretty much like
+  to re-write all of the code for like the 4th time 😅 but
+  I hope to keep the normal usage API the same.
 
   Similarly I'd like to more easily split layout so it's trivial
   to layout sub components. Again, still experimenting.
@@ -380,6 +383,36 @@ have not made it into muigui yet.
   just returned a canvas and left the rest outside
   the library made it way more flexible.
 
+  Another example might be monitoring. Some libraries
+  provide a way to make a GUI part poll its value for
+  the purpose of displaying values but does that really
+  need to be part of the library?
+
+  Compare
+
+  ```js
+  pane.addBinding(PARAMS, 'data', {
+    readonly: true,
+    interval: 200,
+  });
+  ```
+
+  vs
+
+  ```js
+  const label = gui.addLabel();
+  setInterval(() => {
+    label.text(JSON.stringify(PARAMS.data, null, 2));
+  }, 200);
+  ```
+
+  They're about the same amount of code but in the first version
+  you can only make that area show the data at `PARAMS.data` where
+  as in the 2nd version you can show whatever you want. Data
+  for the currently select item, player stats, a text based graph.
+  You're not limited to only properties of `PARAMS` nor are you
+  limited to how it chooses to format those.
+
   This problem of providing too specialized a solution
   is endemic throughout the library ecosystem of pretty much
   every language.
@@ -388,6 +421,8 @@ have not made it into muigui yet.
   to add more and more options then it was probably the
   wrong solution. It's better to provide the
   building blocks.
+
+  `</rant>` 😅
 
 ## No Save/Restore
 
