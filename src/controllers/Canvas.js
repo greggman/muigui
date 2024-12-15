@@ -14,4 +14,7 @@ export default class Canvas extends LabelController {
   get canvas() {
     return this.#canvasElem;
   }
+  listen() {
+    return this;
+  }
 }

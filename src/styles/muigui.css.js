@@ -287,7 +287,7 @@ export default {
 }
 .muigui-closed>.muigui-open-container>* {
   transition: all 0.1s ease-out;
-  margin-top: -100%;
+  margin-top: -1000%;
 }
 
 /* ---- popdown ---- */

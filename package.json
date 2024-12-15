@@ -1,6 +1,6 @@
 {
   "name": "muigui",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "description": "A Simple GUI",
   "main": "dist/0.x/muigui.js",
   "module": "dist/0.x/muigui.module.js",
