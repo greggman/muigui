@@ -32,6 +32,8 @@ async function test(port) {
       //'--enable-webgpu-developer-features',
       //'--use-angle=swiftshader',
       '--user-agent=puppeteer',
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
     ],
   });
   const page = await browser.newPage();
