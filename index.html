@@ -304,6 +304,8 @@ gui.addColor(s, 'byCSSHslAlpha');
 const s = {
   period1: 1,
   period2: 4,
+  period3: 10,
+  period4: 40,
 };
 
 //gui.add(s, 'period1', 0, 5);
@@ -313,13 +315,22 @@ setInterval(() => {
   waveData.shift();
   const v = performance.now() * 0.001;
   const s1 = Math.sin(v * s.period1);
-  const s2 = Math.sin(v * s.period2)
+  const s2 = Math.sin(v * s.period2);
   waveData.push(s1 + s2);
 }, 200);
+
+setInterval(() => {
+  waveData2.shift();
+  const v = performance.now() * 0.001;
+  const s1 = Math.sin(v * s.period3);
+  const s2 = Math.sin(v * s.period4);
+  waveData2.push(s1 + s2);
+}, 10);
 
   ">
     <pre><code class="language-javascript">
 const waveData = new Array(100).fill(0);
+const waveData2 = new Array(100).fill(0);
 
 const gui = new GUI();
 helpers.graph(
@@ -329,6 +340,14 @@ helpers.graph(
     min: -2,
     max: +2,
     interval: 200,
+  });
+helpers.graph(
+  gui.addCanvas('wave 2').canvas, 
+  waveData2,
+  {
+    min: -2,
+    max: +2,
+    interval: 10,
   });
     </code></pre>
   </div>
@@ -503,8 +522,33 @@ gui.add(new TextNumber(s, 'angleDeg', {
   </div>
 
   <!-- ============================================================ -->
+  <h2>Respond to changes:</h2>
+  <p>Get called when the user changes a value.</p>
+
+  <div data-example>
+    <pre><code class="language-javascript">
+const s = {
+  count: 123,
+  name: 'Buffy',
+  speed: 45,
+};
+
+const gui = new GUI();
+gui.add(s, 'count').onChange(logCount);
+gui.add(s, 'name').onChange(logName);
+gui.add(s, 'speed', 0, 100).onChange(logSpeed);
+gui.onChange(logAll);  // or folder
+
+function logCount(v) { log('count:', v); }
+function logName(v) { log('name:', v); }
+function logSpeed(v) { log('speed:', v); }
+function logAll() { log(JSON.stringify(s)); }
+    </code></pre>
+  </div>
+
+  <!-- ============================================================ -->
   <h2>Listen:</h2>
-  <p>Listens for changes.</p>
+  <p>Listens for changes. (auto update)</p>
 
   <div data-example>
     <pre><code class="language-javascript">
