@@ -1,6 +1,6 @@
 {
   "name": "muigui",
-  "version": "0.0.18",
+  "version": "0.0.19",
   "description": "A Simple GUI",
   "main": "dist/0.x/muigui.js",
   "module": "dist/0.x/muigui.module.js",
@@ -50,9 +50,9 @@
     "eslint-plugin-one-variable-per-var": "^0.0.3",
     "eslint-plugin-optional-comma-spacing": "0.0.4",
     "eslint-plugin-require-trailing-comma": "0.0.1",
-    "puppeteer": "^21.5.2",
+    "puppeteer": "^23.10.4",
     "rollup": "^3.20.2",
-    "servez": "^2.1.2",
+    "servez": "^2.2.4",
     "tslib": "^2.6.2",
     "typescript": "5.2"
   }
