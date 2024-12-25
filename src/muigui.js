@@ -47,8 +47,7 @@ function prepName(name) {
 
 export class GUIFolder extends Folder {
   add(object, property, ...args) {
-    const isController = object instanceof Controller
-    const controller = isController
+    const controller = object instanceof Controller
         ? object
         : createController(object, property, ...args).name(prepName(property));
     return this.addController(controller);

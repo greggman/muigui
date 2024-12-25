@@ -23,7 +23,7 @@ const radToDegOptions = { min: -180, max: 180, step: 1, converters: GUI.converte
 const cameraRadToDegOptions = { min: -180, max: 180, step: 1, converters: GUI.converters.radToDeg };
 
 gui.add(settings, 'baseRotation', cameraRadToDegOptions);
-const nodeLabel = gui.addLabel('node:');
+/*const nodeLabel =*/ gui.addLabel('node:');
 const trsFolder = gui.addFolder('orientation');
 trsFolder.add(settings.translation, '0', -50, 50, 1).name('translation x');
 trsFolder.add(settings.translation, '1', -50, 50, 1).name('translation y');
