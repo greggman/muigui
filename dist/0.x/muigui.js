@@ -1,4 +1,4 @@
-/* muigui@0.0.17, license MIT */
+/* muigui@0.0.20, license MIT */
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
@@ -91,6 +91,7 @@
   font-size: var(--font-size);
   box-sizing: border-box;
   line-height: 100%;
+  white-space: nowrap;
 }
 .muigui * {
   box-sizing: inherit;
@@ -294,7 +295,7 @@
 }
 .muigui-closed>.muigui-open-container>* {
   transition: all 0.1s ease-out;
-  margin-top: -100%;
+  margin-top: -1000%;
 }
 
 /* ---- popdown ---- */
@@ -1214,11 +1215,13 @@
     }
     name(name) {
       this.#buttonElem.textContent = name;
+      return this;
     }
     setOptions(options) {
       copyExistingProperties(this.#options, options);
       const {name} = this.#options;
       this.#buttonElem.textContent = name;
+      return this;
     }
   }
 
@@ -2626,6 +2629,9 @@
     get canvas() {
       return this.#canvasElem;
     }
+    listen() {
+      return this;
+    }
   }
 
   class ColorView extends EditView {
@@ -2765,6 +2771,12 @@
     }
     popContainer() {
       this.#childDestController = this.#childDestController.parent;
+      return this;
+    }
+    listen() {
+      this.#controllers.forEach(c => {
+        c.listen();
+      });
       return this;
     }
   }
@@ -3275,11 +3287,22 @@
     }
   }
 
+  function camelCaseToSnakeCase(id) {
+    return id
+      .replace(/(.)([A-Z][a-z]+)/g, '$1_$2')
+      .replace(/([a-z0-9])([A-Z])/g, '$1_$2')
+      .toLowerCase();
+  }
+
+  function prepName(name) {
+    return camelCaseToSnakeCase(name.toString()).replaceAll('_', ' ');
+  }
+
   class GUIFolder extends Folder {
     add(object, property, ...args) {
       const controller = object instanceof Controller
           ? object
-          : createController(object, property, ...args);
+          : createController(object, property, ...args).name(prepName(property));
       return this.addController(controller);
     }
     addCanvas(name) {
@@ -3288,9 +3311,13 @@
     addColor(object, property, options = {}) {
       const value = object[property];
       if (hasAlpha(options.format || guessFormat(value))) {
-        return this.addController(new ColorChooser(object, property, options));
+        return this
+          .addController(new ColorChooser(object, property, options))
+          .name(prepName(property));
       } else {
-        return this.addController(new Color(object, property, options));
+        return this
+          .addController(new Color(object, property, options))
+          .name(prepName(property));
       }
     }
     addDivider() {
@@ -3304,7 +3331,7 @@
     }
     addButton(name, fn) {
       const o = {fn};
-      return this.add(o, 'fn').name(name);
+      return this.add(o, 'fn').name(prepName(name));
     }
   }
 

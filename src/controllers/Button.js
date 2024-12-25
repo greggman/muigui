@@ -28,10 +28,12 @@ export default class Button extends Controller {
   }
   name(name) {
     this.#buttonElem.textContent = name;
+    return this;
   }
   setOptions(options) {
     copyExistingProperties(this.#options, options);
     const {name} = this.#options;
     this.#buttonElem.textContent = name;
+    return this;
   }
 }

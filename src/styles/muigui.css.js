@@ -84,6 +84,7 @@ export default {
   font-size: var(--font-size);
   box-sizing: border-box;
   line-height: 100%;
+  white-space: nowrap;
 }
 .muigui * {
   box-sizing: inherit;
@@ -287,7 +288,7 @@ export default {
 }
 .muigui-closed>.muigui-open-container>* {
   transition: all 0.1s ease-out;
-  margin-top: -100%;
+  margin-top: -1000%;
 }
 
 /* ---- popdown ---- */

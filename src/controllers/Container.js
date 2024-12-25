@@ -61,4 +61,10 @@ export default class Container extends Controller {
     this.#childDestController = this.#childDestController.parent;
     return this;
   }
+  listen() {
+    this.#controllers.forEach(c => {
+      c.listen();
+    });
+    return this;
+  }
 }

@@ -34,11 +34,22 @@ export {
   Row,
 };
 
+function camelCaseToSnakeCase(id) {
+  return id
+    .replace(/(.)([A-Z][a-z]+)/g, '$1_$2')
+    .replace(/([a-z0-9])([A-Z])/g, '$1_$2')
+    .toLowerCase();
+}
+
+function prepName(name) {
+  return camelCaseToSnakeCase(name.toString()).replaceAll('_', ' ');
+}
+
 export class GUIFolder extends Folder {
   add(object, property, ...args) {
     const controller = object instanceof Controller
         ? object
-        : createController(object, property, ...args);
+        : createController(object, property, ...args).name(prepName(property));
     return this.addController(controller);
   }
   addCanvas(name) {
@@ -47,9 +58,13 @@ export class GUIFolder extends Folder {
   addColor(object, property, options = {}) {
     const value = object[property];
     if (hasAlpha(options.format || guessFormat(value))) {
-      return this.addController(new ColorChooser(object, property, options));
+      return this
+        .addController(new ColorChooser(object, property, options))
+        .name(prepName(property));
     } else {
-      return this.addController(new Color(object, property, options));
+      return this
+        .addController(new Color(object, property, options))
+        .name(prepName(property));
     }
   }
   addDivider() {
@@ -63,7 +78,7 @@ export class GUIFolder extends Folder {
   }
   addButton(name, fn) {
     const o = {fn};
-    return this.add(o, 'fn').name(name);
+    return this.add(o, 'fn').name(prepName(name));
   }
 }
 
