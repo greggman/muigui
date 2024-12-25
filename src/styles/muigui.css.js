@@ -84,6 +84,7 @@ export default {
   font-size: var(--font-size);
   box-sizing: border-box;
   line-height: 100%;
+  white-space: nowrap;
 }
 .muigui * {
   box-sizing: inherit;

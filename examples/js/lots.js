@@ -154,70 +154,78 @@ if (showUI) {
       gui.disable();
     }
 
-    const f = gui.addFolder('Submenu');
-    const c = f.addCanvas('signal');
-    f.add(s, 'period1', {min: 0.1, max: 4});
-    f.add(s, 'period2', {min: 0.1, max: 4});
-    f.add(s, 'name').listen();
-    f.add(s, 'hobby').onFinishChange(e => log(new Date(), e.value));
-    f.add(s, 'propertyWithLongName', ['longNamedEnumThatWillPushSizeTooFar']);
-    f.addController(new Direction(s, 'direction')).listen();
-    f.addController(new Direction(s, 'hour', {
-      step: 360 / 12, conversion: {
-        to: v => {
-          const newV = (v - 3) * 360 / 12;
-          console.log('to:', v, newV);
-          return newV;
+    {
+      const f = gui.addFolder('Submenu');
+      const c = f.addCanvas('signal');
+      f.add(s, 'period1', {min: 0.1, max: 4});
+      f.add(s, 'period2', {min: 0.1, max: 4});
+      f.add(s, 'name').listen();
+      f.add(s, 'hobby').onFinishChange(e => log(new Date(), e.value));
+      f.add(s, 'propertyWithLongName', ['longNamedEnumThatWillPushSizeTooFar']);
+      f.addController(new Direction(s, 'direction')).listen();
+      f.addController(new Direction(s, 'hour', {
+        step: 360 / 12, conversion: {
+          to: v => {
+            const newV = (v - 3) * 360 / 12;
+            console.log('to:', v, newV);
+            return newV;
+          },
+          from: v => {
+            const newV = v * 12 / 360 + 3;
+            console.log('from:', v, newV);
+            return [true, newV];
+          },
         },
-        from: v => {
-          const newV = v * 12 / 360 + 3;
-          console.log('from:', v, newV);
-          return [true, newV];
-        },
-      },
-    })).listen();
-    f.addController(new Vec2(s, 'vec', {range: 100})).listen();
-    f.addController(new ColorChooser(s, 'c2'));//.listen();
+      })).listen();
+      f.addController(new Vec2(s, 'vec', {range: 100})).listen();
+      f.addController(new ColorChooser(s, 'c2'));//.listen();
 
-    const ctx = c.canvas.getContext('2d');
-    let lastY = 0;
-    let lTime1 = 0;
-    let lTime2 = 0;
-    let then = 0;
-    // eslint-disable-next-line no-loop-func
-    const draw = (now) => {
-      const elapsedTime = now - then;
-      then = now;
-      lTime1 += elapsedTime * s.period1;
-      lTime2 += elapsedTime * s.period2;
-      const res = 2;
-      resizeCanvasToDisplaySize(ctx.canvas, res);
+      const ctx = c.canvas.getContext('2d');
+      let lastY = 0;
+      let lTime1 = 0;
+      let lTime2 = 0;
+      let then = 0;
+      // eslint-disable-next-line no-loop-func
+      const draw = (now) => {
+        const elapsedTime = now - then;
+        then = now;
+        lTime1 += elapsedTime * s.period1;
+        lTime2 += elapsedTime * s.period2;
+        const res = 2;
+        resizeCanvasToDisplaySize(ctx.canvas, res);
 
-      const width = ctx.canvas.width;
-      const height = ctx.canvas.height;
-      if (width && height) {
-        ctx.save();
-        ctx.globalCompositeOperation = 'copy';
-        ctx.drawImage(
-            ctx.canvas,
-            res, 0, width - res, height,
-            0, 0, width - res, height);
-        ctx.clearRect(width - res, 0, res, height);
-        ctx.globalCompositeOperation = 'source-over';
-        ctx.strokeStyle = uiCSSColorVariableNames.color;
-        const s1 = Math.sin(lTime1 * 0.01);
-        const s2 = Math.sin(lTime2 * 0.01);
-        const newY = height / 2 + (s1 + s2) * (height - 1) / 4;
-        ctx.beginPath();
-        ctx.lineTo(width - res * 2, lastY);
-        ctx.lineTo(width - 1, newY);
-        ctx.stroke();
-        lastY = newY;
-      }
+        const width = ctx.canvas.width;
+        const height = ctx.canvas.height;
+        if (width && height) {
+          ctx.save();
+          ctx.globalCompositeOperation = 'copy';
+          ctx.drawImage(
+              ctx.canvas,
+              res, 0, width - res, height,
+              0, 0, width - res, height);
+          ctx.clearRect(width - res, 0, res, height);
+          ctx.globalCompositeOperation = 'source-over';
+          ctx.strokeStyle = uiCSSColorVariableNames.color;
+          const s1 = Math.sin(lTime1 * 0.01);
+          const s2 = Math.sin(lTime2 * 0.01);
+          const newY = height / 2 + (s1 + s2) * (height - 1) / 4;
+          ctx.beginPath();
+          ctx.lineTo(width - res * 2, lastY);
+          ctx.lineTo(width - 1, newY);
+          ctx.stroke();
+          lastY = newY;
+        }
+        requestAnimationFrame(draw);
+      };
       requestAnimationFrame(draw);
-    };
-    requestAnimationFrame(draw);
+    }
+
+    {
+      const f = gui.addFolder('Folder with a long long long long long long long name');
+      f.addButton('button with a long long long long long long long name', () => {});
+    }
   }
+
 }
 
 // Using Sliders
