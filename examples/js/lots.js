@@ -47,6 +47,8 @@ const getListOfUIColorCSSVariableNames = (() => {
 })();
 getListOfUIColorCSSVariableNames();
 
+const range = (n, fn) => new Array(n).fill(0).map((_, i) => fn(i));
+
 // eslint-disable-next-line no-constant-condition
 if (false) {
   const s = {
@@ -226,6 +228,29 @@ if (showUI) {
     }
   }
 
+}
+
+if (showUI) {
+  const div = document.createElement('div');
+  uiElem.appendChild(div);
+  const gui = new GUI({parent: div, title: 'Disabled Folder'});
+
+  const folders = range(3, (i) => {
+    const settings = {
+      name: 'test',
+      speed: 45,
+      toggle: true,
+      animal: 'bird',
+    };
+    const folder = gui.addFolder(`folder:${i}`);
+    folder.add(settings, 'name');
+    folder.add(settings, 'speed', 0, 100);
+    folder.add(settings, 'toggle');
+    folder.add(settings, 'animal', ['bird', 'cat', 'dog']);
+    return folder;
+  });
+
+  folders[1].enable(false);
 }
 
 // Using Sliders
