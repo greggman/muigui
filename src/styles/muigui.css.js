@@ -150,6 +150,10 @@ export default {
   --value-color: var(--disabled-color) !important;
   --range-left-color: var(--disabled-color) !important;
 }
+/* this shouldn't be needed! */
+.muigui-disabled label {
+  color: var(--disabled-color) 
+}
 
 .muigui canvas,
 .muigui svg {

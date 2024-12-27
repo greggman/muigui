@@ -1,4 +1,4 @@
-/* muigui@0.0.20, license MIT */
+/* muigui@0.0.21, license MIT */
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
@@ -156,6 +156,10 @@
   --color: var(--disabled-color) !important;
   --value-color: var(--disabled-color) !important;
   --range-left-color: var(--disabled-color) !important;
+}
+/* this shouldn't be needed! */
+.muigui-disabled label {
+  color: var(--disabled-color) 
 }
 
 .muigui canvas,

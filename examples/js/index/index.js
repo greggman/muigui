@@ -243,8 +243,8 @@ function log(...args) {
   const lineNo = parseInt(logElem.dataset.lineNo || 1);
   const lines = logElem.textContent.split('\\n');
   lines.push(\`\${lineNo}: \${args.join(' ')}\`);
-  if (lines.length > 3) {
-    lines.shift();
+  if (lines.length > 5) {
+    lines.splice(0, lines.length - 5);
   }
   logElem.textContent = lines.join('\\n');
   logElem.dataset.lineNo = lineNo + 1;
