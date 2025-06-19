@@ -1,4 +1,4 @@
-/* muigui@0.0.21, license MIT */
+/* muigui@0.0.22, license MIT */
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
@@ -2756,6 +2756,10 @@
         const elem = c0.domElement;
         elem.remove();
         c0.setParent(null);
+      } else {
+        this.#controllers.forEach(c => {
+          c.remove(controller);
+        });
       }
       return this;
     }
