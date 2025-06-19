@@ -40,6 +40,10 @@ export default class Container extends Controller {
       const elem = c0.domElement;
       elem.remove();
       c0.setParent(null);
+    } else {
+      this.#controllers.forEach(c => {
+        c.remove(controller);
+      });
     }
     return this;
   }
