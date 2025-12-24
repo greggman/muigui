@@ -1,4 +1,4 @@
-/* muigui@0.0.23, license MIT */
+/* muigui@0.0.24, license MIT */
 var css = {
   default: `
 .muigui {
