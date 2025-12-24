@@ -201,7 +201,7 @@ export default {
 }
 .muigui-root>div:nth-child(2),
 .muigui-menu>div:nth-child(2) {
-  flex: 1 1 auto;
+  flex: 0 0 auto;
 }
 
 .muigui-controller {
@@ -276,15 +276,20 @@ export default {
   background-image: var(--image-closed);
 }
 
-.muigui-open>.muigui-open-container {
+.muigui-open > .muigui-open-container {
   transition: all 0.1s ease-out;
   overflow: auto;
-  height: 100%;
+  max-height: calc(100vh - 3em);
 }
 .muigui-closed>.muigui-open-container {
   transition: all 0.1s ease-out;
+  max-height: 0;
+  height: 0;        /* make it unambiguous */
+  min-height: 0;    /* overrides .muigui-controller min-height */
   overflow: hidden;
-  min-height: 0;
+  padding: 0;
+  margin: 0;
+  border: 0;
 }
 .muigui-open>.muigui-open-container>* {
   transition: all 0.1s ease-out;
