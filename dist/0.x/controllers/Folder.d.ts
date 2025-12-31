@@ -1,5 +1,6 @@
 export default class Folder extends Container {
     constructor(name?: string, className?: string);
+    isOpen(): boolean;
     open(open?: boolean): this;
     close(): this;
     name(name: any): this;

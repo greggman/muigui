@@ -337,7 +337,7 @@ have not made it into muigui yet.
 
   This might be ranty, but I find libraries that try to do too much,
   frustrating. In this case, it would
-  be a library that graphs data for you. The problem
+  be a UI library that graphs data for you. The problem
   with this functionality is that there is no end to
   the number of features that will be requested.
 

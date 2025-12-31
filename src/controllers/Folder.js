@@ -16,9 +16,16 @@ export default class Folder extends Container {
     this.name(name);
     this.open();
   }
+  isOpen() {
+    return this.domElement.classList.contains('muigui-open');
+  }
   open(open = true) {
+    const old = this.isOpen();
     this.domElement.classList.toggle('muigui-closed', !open);
     this.domElement.classList.toggle('muigui-open', open);
+    if (old !== open) {
+      this.emitChange(open, this);
+    }
     return this;
   }
   close() {
@@ -32,7 +39,7 @@ export default class Folder extends Container {
     return this.name(title);
   }
   toggleOpen() {
-    this.open(!this.domElement.classList.contains('muigui-open'));
+    this.open(!this.isOpen());
     return this;
   }
 }
