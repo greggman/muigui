@@ -1,8 +1,11 @@
+import {addTask, removeTask} from '../libs/taskrunner.js';
 import Controller from './Controller.js';
 
 export default class Container extends Controller {
   #controllers;
   #childDestController;
+  #listening;
+  #updateFn;
 
   constructor(className) {
     super(className);
@@ -65,10 +68,21 @@ export default class Container extends Controller {
     this.#childDestController = this.#childDestController.parent;
     return this;
   }
-  listen() {
-    this.#controllers.forEach(c => {
-      c.listen();
-    });
+  listen(listen = true) {
+    if (!this.#updateFn) {
+      this.#updateFn = this.updateDisplay.bind(this);
+    }
+    if (listen) {
+      if (!this.#listening) {
+        this.#listening = true;
+        addTask(this.#updateFn);
+      }
+    } else {
+      if (this.#listening) {
+        this.#listening = false;
+        removeTask(this.#updateFn);
+      }
+    }
     return this;
   }
 }

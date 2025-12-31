@@ -8,7 +8,7 @@ export default class Container extends Controller {
     addController(controller: any): any;
     pushContainer(container: any): any;
     popContainer(): this;
-    listen(): this;
+    listen(listen?: boolean): this;
     #private;
 }
 import Controller from './Controller.js';
