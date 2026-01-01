@@ -3,6 +3,7 @@ export default class Folder extends Container {
     isOpen(): boolean;
     open(open?: boolean): this;
     close(): this;
+    getName(): any;
     name(name: any): this;
     title(title: any): this;
     toggleOpen(): this;

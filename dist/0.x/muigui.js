@@ -1,4 +1,4 @@
-/* muigui@0.0.26, license MIT */
+/* muigui@0.0.27, license MIT */
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
@@ -1222,6 +1222,9 @@
           }));
       this.setOptions({name: property, ...options});
     }
+    getName() {
+      return this.#buttonElem.textContent;
+    }
     name(name) {
       this.#buttonElem.textContent = name;
       return this;
@@ -1437,6 +1440,9 @@
     }
     get id() {
       return this.#id;
+    }
+    getName() {
+      return this.#nameElem.textContent;
     }
     name(name) {
       if (this.#nameElem.title === this.#nameElem.textContent) {
@@ -2836,6 +2842,9 @@
     }
     close() {
       return this.open(false);
+    }
+    getName() {
+      return this.#labelElem.textContent;
     }
     name(name) {
       this.#labelElem.textContent = name;

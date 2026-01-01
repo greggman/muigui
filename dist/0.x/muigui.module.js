@@ -1,4 +1,4 @@
-/* muigui@0.0.26, license MIT */
+/* muigui@0.0.27, license MIT */
 var css = {
   default: `
 .muigui {
@@ -1216,6 +1216,9 @@ class Button extends Controller {
         }));
     this.setOptions({name: property, ...options});
   }
+  getName() {
+    return this.#buttonElem.textContent;
+  }
   name(name) {
     this.#buttonElem.textContent = name;
     return this;
@@ -1431,6 +1434,9 @@ class LabelController extends Controller {
   }
   get id() {
     return this.#id;
+  }
+  getName() {
+    return this.#nameElem.textContent;
   }
   name(name) {
     if (this.#nameElem.title === this.#nameElem.textContent) {
@@ -2830,6 +2836,9 @@ class Folder extends Container {
   }
   close() {
     return this.open(false);
+  }
+  getName() {
+    return this.#labelElem.textContent;
   }
   name(name) {
     this.#labelElem.textContent = name;

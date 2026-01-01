@@ -266,7 +266,8 @@ document.querySelectorAll('[data-example]').forEach(elem => {
   elem.appendChild(logElem);
 
   const extra = elem.dataset.extraCode || '';
-  const code = elem.querySelector('code').textContent
+  const codeElem = elem.querySelector('code');
+  const code = codeElem.textContent
      .replace('GUI()', `GUI(document.querySelector('#${id}'))`)
      .replace(/import(.*?)'(\/.*?)'/g, `import$1'${window.location.origin}$2'`);
   const script = document.createElement('script');
