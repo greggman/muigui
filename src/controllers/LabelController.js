@@ -18,6 +18,9 @@ export default class LabelController extends Controller {
   get id() {
     return this.#id;
   }
+  getName() {
+    return this.#nameElem.textContent;
+  }
   name(name) {
     if (this.#nameElem.title === this.#nameElem.textContent) {
       this.#nameElem.title = name;

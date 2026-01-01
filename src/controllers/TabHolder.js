@@ -22,6 +22,9 @@ export default class TabHolder extends Controller {
   close() {
     return this.open(false);
   }
+  getName() {
+    return this.#labelElem.textContent;
+  }
   name(name) {
     this.#labelElem.textContent = name;
     return this;
