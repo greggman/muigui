@@ -52,7 +52,7 @@
     "eslint-plugin-require-trailing-comma": "0.0.1",
     "puppeteer": "^23.10.4",
     "rollup": "^3.20.2",
-    "servez": "^2.2.4",
+    "servez": "^2.3.2",
     "tslib": "^2.6.2",
     "typescript": "5.2"
   }
